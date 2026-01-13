@@ -1,12 +1,31 @@
 {
   "tenant": {
-    "url": "https://TENANT.sharepoint.com",
-    "adminUrl": "https://TENANT-admin.sharepoint.com",
-    "adminEmail": "admin@TENANT.onmicrosoft.com"
+    "url": "https://fassadenfix2401.sharepoint.com",
+    "adminUrl": "https://fassadenfix2401-admin.sharepoint.com",
+    "adminEmail": "admin@fassadenfix2401.onmicrosoft.com"
+  },
+  "corporateDesign": {
+    "colors": {
+      "primary": "#77BC1F",
+      "primaryName": "FassadenFix Grun (Pantone 368 C)",
+      "secondary": "#4E5758",
+      "secondaryName": "FassadenFix Grau (Pantone 445 C)"
+    },
+    "typography": {
+      "fontFamily": "Raleway",
+      "fontWeight": "Bold"
+    },
+    "images": {
+      "assetsPath": "FassadenFix/Marketing/Intranet_Assets/",
+      "heroSize": "1920x600",
+      "logoSize": "400x80",
+      "portraitSize": "800x800"
+    }
   },
   "hubSite": {
-    "name": "FassadenFix Intranet",
-    "url": "/sites/FassadenFix-Intranet",
+    "name": "FassadenFix Wissens-OS",
+    "url": "/sites/FassadenFixWissens-OS",
+    "siteAssetsUrl": "/sites/FassadenFixWissens-OS/SiteAssets",
     "language": 1031,
     "template": "SITEPAGEPUBLISHING#0",
     "description": "Zentrales Intranet der FassadenFix GmbH"
@@ -15,55 +34,55 @@
     "topNav": [
       {
         "title": "Start",
-        "url": "/sites/FassadenFix-Intranet"
+        "url": "/sites/FassadenFixWissens-OS"
       },
       {
         "title": "Unternehmen",
-        "url": "/sites/FassadenFix-Intranet/SitePages/Unternehmen-Ueberblick.aspx",
+        "url": "/sites/FassadenFixWissens-OS/SitePages/Unternehmen-Ueberblick.aspx",
         "children": [
           {
             "title": "Unternehmen - Überblick",
-            "url": "/sites/FassadenFix-Intranet/SitePages/Unternehmen-Ueberblick.aspx"
+            "url": "/sites/FassadenFixWissens-OS/SitePages/Unternehmen-Ueberblick.aspx"
           },
           {
             "title": "Organisation & Werte",
-            "url": "/sites/FassadenFix-Intranet/SitePages/Organisation-Werte.aspx"
+            "url": "/sites/FassadenFixWissens-OS/SitePages/Organisation-Werte.aspx"
           },
           {
             "title": "Arbeitsschutz & Pflichtunterweisungen",
-            "url": "/sites/FassadenFix-Intranet/SitePages/Arbeitsschutz.aspx"
+            "url": "/sites/FassadenFixWissens-OS/SitePages/Arbeitsschutz.aspx"
           }
         ]
       },
       {
         "title": "Abteilungen",
-        "url": "/sites/FassadenFix-Intranet/SitePages/Abteilungen.aspx",
+        "url": "/sites/FassadenFixWissens-OS/SitePages/Abteilungen.aspx",
         "children": [
           {
             "title": "Anwendungstechnik",
-            "url": "/sites/FassadenFix-Intranet/SitePages/Abteilung-Anwendungstechnik.aspx"
+            "url": "/sites/FassadenFixWissens-OS/SitePages/Abteilung-Anwendungstechnik.aspx"
           },
           {
             "title": "Verwaltung",
-            "url": "/sites/FassadenFix-Intranet/SitePages/Abteilung-Verwaltung.aspx"
+            "url": "/sites/FassadenFixWissens-OS/SitePages/Abteilung-Verwaltung.aspx"
           },
           {
             "title": "Vertrieb",
-            "url": "/sites/FassadenFix-Intranet/SitePages/Abteilung-Vertrieb.aspx"
+            "url": "/sites/FassadenFixWissens-OS/SitePages/Abteilung-Vertrieb.aspx"
           },
           {
             "title": "Operative Teams",
-            "url": "/sites/FassadenFix-Intranet/SitePages/Abteilung-Operative-Teams.aspx"
+            "url": "/sites/FassadenFixWissens-OS/SitePages/Abteilung-Operative-Teams.aspx"
           }
         ]
       },
       {
         "title": "Teams",
-        "url": "/sites/FassadenFix-Intranet/SitePages/Teams.aspx"
+        "url": "/sites/FassadenFixWissens-OS/SitePages/Teams.aspx"
       },
       {
         "title": "Mein Bereich",
-        "url": "/sites/FassadenFix-Intranet/SitePages/Mein-Bereich.aspx"
+        "url": "/sites/FassadenFixWissens-OS/SitePages/Mein-Bereich.aspx"
       }
     ]
   },

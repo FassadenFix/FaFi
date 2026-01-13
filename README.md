@@ -93,6 +93,8 @@ FaFi/
 ├── SETUP.md
 ├── config/
 │   └── settings.json
+├── docs/
+│   └── BILDER-ANLEITUNG.md
 ├── scripts/
 │   ├── Deploy-Intranet.ps1
 │   ├── 01-Create-HubSite.ps1
@@ -105,9 +107,21 @@ FaFi/
     └── mein-bereich-template.json
 ```
 
+## Corporate Design
+
+| Element | Wert |
+|---------|------|
+| **Primarfarbe** | #77BC1F (Pantone 368 C) |
+| **Sekundarfarbe** | #4E5758 (Pantone 445 C) |
+| **Schriftart** | Raleway Bold |
+
 ## Design-Prinzipien
 
 - Schlicht und übersichtlich
 - Keine Überfrachtung
 - Fokus auf Navigation und Klarheit
 - Skalierbar für zukünftige Erweiterungen
+
+## Dokumentation
+
+- [Bilder-Upload-Anleitung](docs/BILDER-ANLEITUNG.md) - Anleitung zum manuellen Hochladen von Bildern in SharePoint
