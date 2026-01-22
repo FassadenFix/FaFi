@@ -3,8 +3,14 @@
 // HubSpot-Suche und Synchronisation via Backend
 // ============================================
 
-// Backend API URL
-const API_BASE_URL = 'http://localhost:3001/api';
+// Backend API URL - dynamisch basierend auf Environment
+// Bei GitHub Pages: Render.com Backend verwenden
+// Lokal: localhost:3001
+const isProduction = window.location.hostname.includes('github.io') ||
+    window.location.hostname.includes('fassadenfix');
+const API_BASE_URL = isProduction
+    ? 'https://fassadenfix-backend.onrender.com/api'  // Render.com Backend
+    : 'http://localhost:3001/api';  // Lokale Entwicklung
 
 // ============================================
 // COMPANY SUCHE (via Backend)
