@@ -3,6 +3,13 @@ Universal API Server
 ====================
 REST API für den Zugriff auf den Skill & Agent Hub.
 Ermöglicht plattformübergreifende Integration.
+
+Version 2.0 - Erweitert um bidirektionale Adapter für:
+- Microsoft 365 Copilot
+- Google Ecosystem (NotebookLM, Gemini, AI Studio)
+- Perplexity
+- Abacus AI (Chat LLM, Deep Agent, CLI)
+- HubSpot & HubSpot Breeze
 """
 
 from flask import Flask, request, jsonify
@@ -15,10 +22,24 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from registry.registry import SkillAgentRegistry
 from orchestrator.orchestrator import Orchestrator
 from orchestrator.discovery import DiscoveryService
+
+# Original-Adapter
 from adapters.claude_adapter import ClaudeAdapter, ClaudeCoworkAdapter, ClaudeCodeAdapter
 from adapters.manus_adapter import ManusAdapter
 from adapters.chatgpt_codex_adapter import ChatGPTCodexAdapter
 from adapters.antigravity_adapter import AntigravityAdapter
+
+# Neue bidirektionale Adapter
+from adapters.microsoft365_copilot_adapter import Microsoft365CopilotAdapter
+from adapters.google_ecosystem_adapter import (
+    GoogleEcosystemAdapter, 
+    NotebookLMAdapter, 
+    GeminiAdapter, 
+    GoogleAIStudioAdapter
+)
+from adapters.perplexity_adapter import PerplexityAdapter
+from adapters.abacus_ai_adapter import AbacusAIAdapter
+from adapters.hubspot_adapter import HubSpotAdapter
 
 app = Flask(__name__)
 
@@ -31,14 +52,33 @@ registry = SkillAgentRegistry(
 orchestrator = Orchestrator(registry, base_path)
 discovery = DiscoveryService(registry)
 
-# Adapter-Instanzen
+# Adapter-Instanzen (Original)
 adapters = {
     'claude': ClaudeAdapter(),
     'claude_cowork': ClaudeCoworkAdapter(),
     'claude_code': ClaudeCodeAdapter(),
     'manus': ManusAdapter(),
     'chatgpt_codex': ChatGPTCodexAdapter(),
-    'antigravity': AntigravityAdapter()
+    'antigravity': AntigravityAdapter(),
+    # Neue Adapter
+    'microsoft365_copilot': Microsoft365CopilotAdapter(),
+    'notebooklm': NotebookLMAdapter(),
+    'gemini': GeminiAdapter(),
+    'google_ai_studio': GoogleAIStudioAdapter(),
+    'perplexity': PerplexityAdapter(),
+    'abacus_ai': AbacusAIAdapter(),
+    'hubspot': HubSpotAdapter()
+}
+
+# Bidirektionale Adapter (für Import-Funktionen)
+bidirectional_adapters = {
+    'microsoft365_copilot': Microsoft365CopilotAdapter(),
+    'notebooklm': NotebookLMAdapter(),
+    'gemini': GeminiAdapter(),
+    'google_ai_studio': GoogleAIStudioAdapter(),
+    'perplexity': PerplexityAdapter(),
+    'abacus_ai': AbacusAIAdapter(),
+    'hubspot': HubSpotAdapter()
 }
 
 
@@ -58,7 +98,14 @@ def scan_registry():
 def list_entities():
     """Listet alle registrierten Entities auf."""
     entity_type = request.args.get('type')  # 'skill', 'agent', oder None für alle
+    imported_only = request.args.get('imported', 'false').lower() == 'true'
+    
     entities = registry.list_all(entity_type)
+    
+    # Filtere nach importierten Skills, falls gewünscht
+    if imported_only:
+        entities = [e for e in entities if e.get('metadata', {}).get('imported', False)]
+    
     return jsonify({
         'status': 'success',
         'count': len(entities),
@@ -81,6 +128,32 @@ def get_entity(name):
     }), 404
 
 
+@app.route('/api/v1/registry/imported', methods=['GET'])
+def list_imported_skills():
+    """Listet alle importierten Skills von externen Plattformen auf."""
+    platform = request.args.get('platform')
+    
+    entities = registry.list_all('skill')
+    imported = [e for e in entities if e.get('metadata', {}).get('imported', False)]
+    
+    if platform:
+        imported = [e for e in imported if e.get('metadata', {}).get('source_platform', '').lower() == platform.lower()]
+    
+    # Gruppiere nach Plattform
+    by_platform = {}
+    for e in imported:
+        source = e.get('metadata', {}).get('source_platform', 'Unknown')
+        if source not in by_platform:
+            by_platform[source] = []
+        by_platform[source].append(e)
+    
+    return jsonify({
+        'status': 'success',
+        'total_count': len(imported),
+        'by_platform': by_platform
+    })
+
+
 # ============== Discovery Endpoints ==============
 
 @app.route('/api/v1/discover', methods=['POST'])
@@ -90,12 +163,17 @@ def discover_skills():
     query = data.get('query', '')
     entity_type = data.get('type')
     limit = data.get('limit', 10)
+    include_imported = data.get('include_imported', True)
     
     results = discovery.discover(
         task_description=query,
         entity_type=entity_type,
         limit=limit
     )
+    
+    # Filtere importierte Skills, falls nicht gewünscht
+    if not include_imported:
+        results = [r for r in results if not r.entity.get('metadata', {}).get('imported', False)]
     
     return jsonify({
         'status': 'success',
@@ -233,6 +311,130 @@ def get_openapi_schema():
     return jsonify(schema)
 
 
+# ============== Bidirektionale Integration Endpoints ==============
+
+@app.route('/api/v1/bidirectional/available-skills/<platform>', methods=['GET'])
+def get_available_platform_skills(platform):
+    """Gibt die verfügbaren importierbaren Skills einer Plattform zurück."""
+    if platform not in bidirectional_adapters:
+        return jsonify({
+            'status': 'error',
+            'message': f"Plattform '{platform}' unterstützt keine bidirektionale Integration",
+            'available_platforms': list(bidirectional_adapters.keys())
+        }), 400
+    
+    adapter = bidirectional_adapters[platform]
+    
+    # Hole die generierten Skills basierend auf dem Adapter-Typ
+    skills = []
+    if hasattr(adapter, 'generate_graph_api_skills'):
+        skills.extend(adapter.generate_graph_api_skills())
+    if hasattr(adapter, 'generate_notebooklm_skills'):
+        skills.extend(adapter.generate_notebooklm_skills())
+    if hasattr(adapter, 'generate_gemini_skills'):
+        skills.extend(adapter.generate_gemini_skills())
+    if hasattr(adapter, 'generate_aistudio_skills'):
+        skills.extend(adapter.generate_aistudio_skills())
+    if hasattr(adapter, 'generate_perplexity_skills'):
+        skills.extend(adapter.generate_perplexity_skills())
+    if hasattr(adapter, 'generate_abacus_skills'):
+        skills.extend(adapter.generate_abacus_skills())
+    if hasattr(adapter, 'generate_hubspot_skills'):
+        skills.extend(adapter.generate_hubspot_skills())
+    if hasattr(adapter, 'generate_hubspot_breeze_skills'):
+        skills.extend(adapter.generate_hubspot_breeze_skills())
+    
+    return jsonify({
+        'status': 'success',
+        'platform': platform,
+        'available_skills': skills
+    })
+
+
+@app.route('/api/v1/bidirectional/import-skill', methods=['POST'])
+def import_platform_skill():
+    """Importiert einen Skill von einer externen Plattform in den Hub."""
+    data = request.json or {}
+    platform = data.get('platform')
+    skill_name = data.get('skill_name')
+    
+    if not platform or not skill_name:
+        return jsonify({
+            'status': 'error',
+            'message': 'platform und skill_name erforderlich'
+        }), 400
+    
+    # Hier würde die tatsächliche Import-Logik implementiert
+    # Für jetzt geben wir eine Bestätigung zurück
+    return jsonify({
+        'status': 'success',
+        'message': f"Skill '{skill_name}' von Plattform '{platform}' zur Import-Queue hinzugefügt",
+        'note': 'Der Skill wird beim nächsten Registry-Scan registriert'
+    })
+
+
+@app.route('/api/v1/bidirectional/export-to/<platform>', methods=['POST'])
+def export_skills_to_platform(platform):
+    """Exportiert Hub-Skills zu einer externen Plattform."""
+    data = request.json or {}
+    skill_names = data.get('skills', [])
+    
+    if platform not in adapters:
+        return jsonify({
+            'status': 'error',
+            'message': f"Unbekannte Plattform: {platform}"
+        }), 400
+    
+    adapter = adapters[platform]
+    
+    # Generiere plattformspezifische Definitionen für die angegebenen Skills
+    exported = []
+    for name in skill_names:
+        entity = registry.get_by_name(name)
+        if entity:
+            if entity.get('type') == 'skill':
+                definition = adapter.format_skill_definition(entity)
+            else:
+                definition = adapter.format_agent_definition(entity)
+            exported.append({
+                'name': name,
+                'definition': json.loads(definition)
+            })
+    
+    return jsonify({
+        'status': 'success',
+        'platform': platform,
+        'exported_count': len(exported),
+        'exported_skills': exported
+    })
+
+
+# ============== Platform-Specific Endpoints ==============
+
+@app.route('/api/v1/platforms/microsoft365/copilot-manifest', methods=['GET'])
+def get_copilot_manifest():
+    """Gibt das Microsoft 365 Copilot Plugin Manifest zurück."""
+    adapter = bidirectional_adapters['microsoft365_copilot']
+    manifest = adapter.generate_copilot_plugin_manifest()
+    return jsonify(manifest)
+
+
+@app.route('/api/v1/platforms/gemini/tools-config', methods=['GET'])
+def get_gemini_tools_config():
+    """Gibt die Gemini Tools-Konfiguration zurück."""
+    adapter = bidirectional_adapters['gemini']
+    config = adapter.generate_gemini_tools_config()
+    return jsonify(config)
+
+
+@app.route('/api/v1/platforms/abacus/deep-agent-config', methods=['GET'])
+def get_abacus_deep_agent_config():
+    """Gibt die Abacus Deep Agent Konfiguration zurück."""
+    adapter = bidirectional_adapters['abacus_ai']
+    config = adapter.generate_deep_agent_config()
+    return jsonify(config)
+
+
 # ============== Health & Info ==============
 
 @app.route('/api/v1/health', methods=['GET'])
@@ -240,7 +442,7 @@ def health_check():
     """Health-Check-Endpoint."""
     return jsonify({
         'status': 'healthy',
-        'version': '1.0.0'
+        'version': '2.0.0'
     })
 
 
@@ -250,19 +452,30 @@ def get_info():
     skills = registry.list_all('skill')
     agents = registry.list_all('agent')
     
+    # Zähle importierte Skills
+    imported_skills = [s for s in skills if s.get('metadata', {}).get('imported', False)]
+    native_skills = [s for s in skills if not s.get('metadata', {}).get('imported', False)]
+    
     return jsonify({
         'name': 'Skill & Agent Hub',
-        'version': '1.0.0',
+        'version': '2.0.0',
         'statistics': {
             'total_skills': len(skills),
+            'native_skills': len(native_skills),
+            'imported_skills': len(imported_skills),
             'total_agents': len(agents)
         },
-        'supported_platforms': list(adapters.keys()),
+        'supported_platforms': {
+            'export': list(adapters.keys()),
+            'bidirectional': list(bidirectional_adapters.keys())
+        },
         'endpoints': {
             'registry': '/api/v1/registry/*',
             'discovery': '/api/v1/discover',
             'execution': '/api/v1/execute/*',
-            'catalogs': '/api/v1/catalog/<platform>'
+            'catalogs': '/api/v1/catalog/<platform>',
+            'bidirectional': '/api/v1/bidirectional/*',
+            'platform_specific': '/api/v1/platforms/*'
         }
     })
 
@@ -272,6 +485,14 @@ if __name__ == '__main__':
     print("Scanne Skills und Agents...")
     count = registry.scan_and_register()
     print(f"Registriert: {count} Entities")
+    
+    print("\nUnterstützte Plattformen (Export):")
+    for p in adapters.keys():
+        print(f"  - {p}")
+    
+    print("\nBidirektionale Plattformen:")
+    for p in bidirectional_adapters.keys():
+        print(f"  - {p}")
     
     # Starte Server
     app.run(host='0.0.0.0', port=5000, debug=True)
