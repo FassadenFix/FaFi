@@ -346,7 +346,7 @@ function renderSeiteDetails(immoIdx, seiteKey, seite, flaecheBerechnet) {
             <div class="abfrage-item" style="background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid ${seite.reinigungsprodukt?.zusaetzlichErforderlich ? '#f59e0b' : 'var(--ff-green)'};">
                 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
                     <span style="font-weight:600;font-size:13px;">C) Reinigungsprodukt</span>
-                    <span style="font-size:11px;color:var(--ff-green);font-weight:500;">✓ Standard: FFC / FFC Plus</span>
+                    <span style="font-size:11px;color:var(--ff-green);font-weight:500;">✓ Standard: HF1 plus</span>
                 </div>
                 <div style="display:flex;align-items:center;gap:8px;">
                     <label class="checkbox-label" style="font-size:12px;">
@@ -356,15 +356,15 @@ function renderSeiteDetails(immoIdx, seiteKey, seite, flaecheBerechnet) {
                 </div>
                 
                 ${seite.reinigungsprodukt?.zusaetzlichErforderlich ? `
-                <!-- Reinigungsprodukt Untermenü -->
+                <!-- Reinigungsprodukt Untermenü (HERMES Produkte) -->
                 <div class="submenu" style="margin-top:10px;padding:10px;background:#fff;border-radius:6px;border:1px solid #f59e0b;">
                     <div style="margin-bottom:10px;">
                         <label style="font-size:12px;font-weight:500;display:block;margin-bottom:6px;">1. Produkt (Multi-Select):</label>
                         <div style="display:flex;flex-wrap:wrap;gap:6px;">
-                            ${['icarly_stone', 's1_steinaner', 'm1', 'sonstiges'].map(prod => `
-                                <label class="checkbox-pill ${(seite.reinigungsprodukt?.zusaetzlichProdukte || []).includes(prod) ? 'checked' : ''}" onclick="toggleZusatzProdukt(${immoIdx},'${seiteKey}','${prod}',this)">
-                                    <input type="checkbox" ${(seite.reinigungsprodukt?.zusaetzlichProdukte || []).includes(prod) ? 'checked' : ''}>
-                                    ${prod === 'icarly_stone' ? 'iCarly Stone' : prod === 's1_steinaner' ? 'S.1/Steinaner' : prod === 'm1' ? 'M1' : 'Sonstiges'}
+                            ${REINIGUNGSPRODUKTE.zusaetzlich.map(prod => `
+                                <label class="checkbox-pill ${(seite.reinigungsprodukt?.zusaetzlichProdukte || []).includes(prod.id) ? 'checked' : ''}" onclick="toggleZusatzProdukt(${immoIdx},'${seiteKey}','${prod.id}',this)">
+                                    <input type="checkbox" ${(seite.reinigungsprodukt?.zusaetzlichProdukte || []).includes(prod.id) ? 'checked' : ''}>
+                                    ${prod.label}
                                 </label>
                             `).join('')}
                         </div>

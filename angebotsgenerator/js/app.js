@@ -97,16 +97,115 @@ const BUEHNEN_PREISE = {
 // Standard Bühne (390€)
 const FF_STANDARD_BUEHNE_PREIS = 390;
 
-// Reinigungsprodukte (NEU)
+// Reinigungsprodukte (gemäß HERMES Dokumentation 07/22)
 const REINIGUNGSPRODUKTE = {
+    // Kategorien nach Verschmutzungsart
+    kategorien: {
+        organisch: {
+            label: 'Organische Verschmutzung (Algen/Pilze)',
+            anteil: '90%',
+            color: '#22c55e'
+        },
+        atmosphaerisch: {
+            label: 'Atmosphärische Verschmutzung (Staub/Ruß)',
+            anteil: '10%',
+            color: '#3b82f6'
+        },
+        extrem: {
+            label: 'Extreme Verschmutzung (Ruß/Harz/Teer)',
+            anteil: 'sporadisch',
+            color: '#ef4444'
+        }
+    },
+
+    // Hauptprodukte
+    reiniger: [
+        {
+            id: 'hf1_plus',
+            label: 'HF1 plus',
+            typ: 'Putzfassadenreiniger (gebrauchsfertig)',
+            kategorie: 'organisch',
+            beschreibung: 'Standardreiniger für organische Verschmutzung',
+            selected: true // Standard vorausgewählt
+        },
+        {
+            id: 'hf1_plus_5',
+            label: 'HF1 plus-5',
+            typ: 'Putzfassadenreiniger (Konzentrat)',
+            kategorie: 'organisch',
+            beschreibung: 'Konzentrat zur Verdünnung'
+        },
+        {
+            id: 'alkalistar_5',
+            label: 'AlkaliStar-5',
+            typ: 'Universalreiniger (Konzentrat)',
+            kategorie: 'atmosphaerisch',
+            beschreibung: 'Für atmosphärische Verschmutzung (Staub, Ruß)'
+        },
+        {
+            id: 'spezial_s1',
+            label: 'Spezial S1',
+            typ: 'Spezialreiniger (Konzentrat)',
+            kategorie: 'extrem',
+            beschreibung: 'Für extreme Verschmutzung (Ruß, Harz, Teer)'
+        }
+    ],
+
+    // Schutzprodukte
+    schutz: [
+        {
+            id: 'hfs',
+            label: 'HFS',
+            typ: 'Fassadenschutz (gebrauchsfertig)',
+            kategorie: 'organisch',
+            beschreibung: 'Langzeitschutz gegen Algen/Pilze'
+        },
+        {
+            id: 'hfs_5',
+            label: 'HFS-5',
+            typ: 'Fassadenschutz (Konzentrat)',
+            kategorie: 'organisch',
+            beschreibung: 'Langzeitschutz Konzentrat'
+        },
+        {
+            id: 'hfi',
+            label: 'HFI',
+            typ: 'Universalhydrophobierung',
+            kategorie: 'atmosphaerisch',
+            beschreibung: 'Fassadenimprägnierung / Witterungsschutz'
+        }
+    ],
+
+    // Zusatzmittel
+    zusatzmittel: [
+        {
+            id: 'antimuff',
+            label: 'ANTIMUFF',
+            typ: 'Duftstoffkonzentrat',
+            verhaeltnis: '1:1000',
+            beschreibung: 'Überdeckt Schwimmbadgeruch, frisches Reinigungserlebnis'
+        },
+        {
+            id: 'reinigungsverstaerker',
+            label: 'Reinigungsverstärker',
+            typ: 'Reinigungsbooster',
+            verhaeltnis: '1:100',
+            beschreibung: 'Erhöht die Wirksamkeit der Hauptreiniger'
+        }
+    ],
+
+    // Legacy-Kompatibilität für UI
     standard: [
-        { id: 'ffc', label: 'FFC (Standard)', selected: true },
-        { id: 'ffc_plus', label: 'FFC Plus', selected: true }
+        { id: 'hf1_plus', label: 'HF1 plus (Standard)', selected: true }
     ],
     zusaetzlich: [
-        { id: 'icarly_stone', label: 'iCarly Stone' },
-        { id: 's1_steinaner', label: 'S.1/Steinaner' },
-        { id: 'm1', label: 'M1' },
+        { id: 'hf1_plus_5', label: 'HF1 plus-5 (Konzentrat)' },
+        { id: 'alkalistar_5', label: 'AlkaliStar-5' },
+        { id: 'spezial_s1', label: 'Spezial S1' },
+        { id: 'hfs', label: 'HFS (Schutz)' },
+        { id: 'hfi', label: 'HFI (Imprägnierung)' },
+        { id: 'antimuff', label: 'ANTIMUFF (Duftstoff)' },
+        { id: 'reinigungsverstaerker', label: 'Reinigungsverstärker' },
         { id: 'sonstiges', label: 'Sonstiges' }
     ]
 };

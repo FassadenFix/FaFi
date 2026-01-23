@@ -13,8 +13,27 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // === MIDDLEWARE ===
+// CORS für GitHub Pages (Production) und localhost (Development)
+const allowedOrigins = [
+    'https://fassadenfix.github.io',
+    'http://localhost:8888',
+    'http://localhost:3000',
+    'http://127.0.0.1:8888',
+    'http://127.0.0.1:3000'
+];
+
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:8888',
+    origin: function (origin, callback) {
+        // Allow requests with no origin (mobile apps, curl, etc.)
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.includes(origin) || process.env.FRONTEND_URL === origin) {
+            callback(null, true);
+        } else {
+            console.log('CORS blocked origin:', origin);
+            callback(null, true); // Allow anyway for now, log for debugging
+        }
+    },
     credentials: true
 }));
 app.use(express.json());
