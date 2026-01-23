@@ -653,8 +653,8 @@ function createEmptyImmobilie(nummer) {
         nummer: nummer,
         hubspotImmobilieId: null,
         hubspotAssociations: { companyId: null, contactId: null, dealId: null },
-        // Adresse
-        adresse: { strasse: '', hausnummer: '', plz: '', ort: '' },
+        // Adresse mit Koordinaten für Kartenintegration
+        adresse: { strasse: '', hausnummer: '', plz: '', ort: '', lat: null, lng: null, verified: false },
         // NEU: Kopfdaten
         datumObjektaufnahme: '', // Datum (YYYY-MM-DD)
         ffMitarbeiter: '', // HubSpot Owner ID

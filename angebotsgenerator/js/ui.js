@@ -23,28 +23,47 @@ function renderImmobilien() {
                 </div>
             </div>
             <div class="immobilie-body">
-                <!-- ADRESSE -->
-                <div style="margin-bottom:15px;padding-bottom:15px;border-bottom:1px solid var(--ff-border);">
-                    <div class="form-row">
-                        <div class="form-group" style="flex:2;">
-                            <label>Straße</label>
-                            <input type="text" value="${immo.adresse.strasse}" onchange="updateImmobilieAdresse(${immoIdx},'strasse',this.value)">
-                        </div>
-                        <div class="form-group" style="flex:1;">
-                            <label>Hausnummer(n)</label>
-                            <input type="text" value="${immo.adresse.hausnummer}" placeholder="z.B. 10-12" onchange="updateImmobilieAdresse(${immoIdx},'hausnummer',this.value)">
-                        </div>
+                <!-- ADRESSE (PROMINENT) -->
+                <div class="address-section-prominent">
+                    <div class="address-section-header">
+                        <span>📍 Objektadresse</span>
+                        ${immo.adresse.verified ? '<span class="address-verified-badge">✓ Verifiziert</span>' : '<span class="address-unverified-badge">Nicht verifiziert</span>'}
                     </div>
-                    <div class="form-row">
-                        <div class="form-group" style="max-width:100px;">
-                            <label>PLZ</label>
-                            <input type="text" value="${immo.adresse.plz}" onchange="updateImmobilieAdresse(${immoIdx},'plz',this.value)">
-                        </div>
-                        <div class="form-group">
-                            <label>Ort</label>
-                            <input type="text" value="${immo.adresse.ort}" onchange="updateImmobilieAdresse(${immoIdx},'ort',this.value)">
-                        </div>
+                    <div class="form-group" style="margin-bottom:12px;">
+                        <label>Adresse suchen <span class="required">*</span></label>
+                        <input type="text" 
+                            id="addressAutocomplete-${immoIdx}" 
+                            class="address-autocomplete-input"
+                            placeholder="Straße, PLZ Ort eingeben..." 
+                            value="${immo.adresse.strasse ? `${immo.adresse.strasse} ${immo.adresse.hausnummer}, ${immo.adresse.plz} ${immo.adresse.ort}`.trim() : ''}"
+                            onfocus="initAddressAutocomplete(${immoIdx})"
+                            onchange="handleManualAddressInput(${immoIdx}, this.value)">
                     </div>
+                    <details class="address-details-manual">
+                        <summary>Manuelle Eingabe / Details bearbeiten</summary>
+                        <div style="padding-top:10px;">
+                            <div class="form-row">
+                                <div class="form-group" style="flex:2;">
+                                    <label>Straße</label>
+                                    <input type="text" value="${immo.adresse.strasse}" onchange="updateImmobilieAdresse(${immoIdx},'strasse',this.value)">
+                                </div>
+                                <div class="form-group" style="flex:1;">
+                                    <label>Hausnummer(n)</label>
+                                    <input type="text" value="${immo.adresse.hausnummer}" placeholder="z.B. 10-12" onchange="updateImmobilieAdresse(${immoIdx},'hausnummer',this.value)">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group" style="max-width:100px;">
+                                    <label>PLZ</label>
+                                    <input type="text" value="${immo.adresse.plz}" onchange="updateImmobilieAdresse(${immoIdx},'plz',this.value)">
+                                </div>
+                                <div class="form-group">
+                                    <label>Ort</label>
+                                    <input type="text" value="${immo.adresse.ort}" onchange="updateImmobilieAdresse(${immoIdx},'ort',this.value)">
+                                </div>
+                            </div>
+                        </div>
+                    </details>
                 </div>
 
                 <!-- PFLICHTABFRAGEN -->
@@ -253,36 +272,48 @@ function renderSeiteDetails(immoIdx, seiteKey, seite, flaecheBerechnet) {
     const istSonderbuehne = buehnePreisInfo.preis === 'anfrage';
 
     return `
-        <!-- 2.1 KOPFBEREICH SEITE -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--ff-border);">
-            <div class="form-group">
-                <label>Letzte Sanierung (Jahr)</label>
-                <input type="number" min="1900" max="2030" value="${seite.letzteSanierung || ''}" placeholder="z.B. 2018" onchange="updateSeite(${immoIdx},'${seiteKey}','letzteSanierung',this.value)">
+        <!-- 2.1 MASSE (PFLICHTFELDER) -->
+        <div class="dimension-fields-required ${(seite.breite > 0 && seite.hoehe > 0) ? 'valid' : ''}">
+            <div class="dimension-header">
+                ${(seite.breite > 0 && seite.hoehe > 0) ? '✓ Maße eingegeben' : '⚠️ Pflichtfelder: Breite und Höhe eingeben'}
             </div>
-            <div class="form-group">
-                <label>Farbwerte</label>
-                <input type="text" value="${seite.farbwerte || ''}" placeholder="z.B. RAL 9010" onchange="updateSeite(${immoIdx},'${seiteKey}','farbwerte',this.value)">
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+                <div class="form-group">
+                    <label>Breite (m) <span class="required">*</span></label>
+                    <input type="number" 
+                        step="0.5" 
+                        min="0.5" 
+                        max="100" 
+                        value="${seite.breite || ''}" 
+                        placeholder="z.B. 15" 
+                        required
+                        onchange="updateSeiteDimension(${immoIdx},'${seiteKey}','breite',this.value)"
+                        onblur="validateDimension(this)">
+                </div>
+                <div class="form-group">
+                    <label>Höhe (m) <span class="required">*</span></label>
+                    <input type="number" 
+                        step="0.5" 
+                        min="0.5" 
+                        max="50" 
+                        value="${seite.hoehe || ''}" 
+                        placeholder="z.B. 12" 
+                        required
+                        onchange="updateSeiteDimension(${immoIdx},'${seiteKey}','hoehe',this.value)"
+                        onblur="validateDimension(this)">
+                </div>
+                <div class="form-group">
+                    <label>Fläche (m²)</label>
+                    <input type="number" value="${flaecheBerechnet}" style="background:#f0f0f0;font-weight:600;color:var(--ff-green);" readonly>
+                </div>
             </div>
         </div>
         
-        <!-- 2.2 MASSE -->
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:15px;">
-            <div class="form-group">
-                <label>Breite (m)</label>
-                <input type="number" step="0.1" value="${seite.breite || ''}" placeholder="0" onchange="updateSeite(${immoIdx},'${seiteKey}','breite',parseFloat(this.value)||0)">
+        <!-- 2.2 ABFRAGEN A-G (PFLICHTANGABEN) -->
+        <div class="abfragen-container" style="display:flex;flex-direction:column;gap:12px;margin-top:12px;">
+            <div style="font-size:12px;font-weight:600;color:#92400e;margin-bottom:4px;">
+                ⚠️ Pflichtangaben (A-G ausfüllen)
             </div>
-            <div class="form-group">
-                <label>Höhe (m)</label>
-                <input type="number" step="0.1" value="${seite.hoehe || ''}" placeholder="0" onchange="updateSeite(${immoIdx},'${seiteKey}','hoehe',parseFloat(this.value)||0)">
-            </div>
-            <div class="form-group">
-                <label>Fläche (m²)</label>
-                <input type="number" value="${flaecheBerechnet}" style="background:#f0f0f0;font-weight:600;" onchange="updateSeite(${immoIdx},'${seiteKey}','flaeche',parseFloat(this.value)||0)">
-            </div>
-        </div>
-        
-        <!-- 2.3 ABFRAGEN MIT LOGIK -->
-        <div class="abfragen-container" style="display:flex;flex-direction:column;gap:12px;">
             
             <!-- A) BALKONE VORHANDEN? -->
             <div class="abfrage-item" style="background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid var(--ff-border);">
@@ -451,10 +482,28 @@ function renderSeiteDetails(immoIdx, seiteKey, seite, flaecheBerechnet) {
                             </div>
                         </div>
                         ${seite.schaeden?.[schaden.id]?.aktiv ? `
-                        <div style="display:flex;gap:6px;margin-top:6px;">
-                            <button type="button" class="btn-upload" onclick="uploadSchadenFoto(${immoIdx},'${seiteKey}','${schaden.id}')" title="Foto hochladen">📷 Foto</button>
-                            <input type="text" value="${seite.schaeden?.[schaden.id]?.beschreibung || ''}" placeholder="Beschreibung..." style="flex:1;" onchange="setSchadenBeschreibung(${immoIdx},'${seiteKey}','${schaden.id}',this.value)">
-                            <button type="button" class="btn-mic" onclick="startSpeechToText(${immoIdx},'${seiteKey}','schaeden.${schaden.id}.beschreibung')" title="Spracheingabe">🎤</button>
+                        <div style="margin-top:8px;">
+                            <div style="display:flex;gap:6px;margin-bottom:8px;">
+                                <button type="button" class="btn-upload" onclick="uploadSchadenFoto(${immoIdx},'${seiteKey}','${schaden.id}')" title="Foto hochladen">📷 Foto hinzufügen</button>
+                                <span style="font-size:11px;color:#666;align-self:center;">${(seite.schaeden?.[schaden.id]?.fotos || []).length} Foto(s)</span>
+                            </div>
+                            ${(seite.schaeden?.[schaden.id]?.fotos || []).length > 0 ? `
+                            <div class="photo-thumbnail-grid">
+                                ${(seite.schaeden?.[schaden.id]?.fotos || []).map((foto, fotoIdx) => `
+                                    <div class="photo-thumbnail">
+                                        <img src="${typeof foto === 'string' ? foto : foto.data}" alt="Schaden-Foto">
+                                        <button type="button" class="photo-delete" onclick="removeSchadenFoto(${immoIdx},'${seiteKey}','${schaden.id}',${fotoIdx})">×</button>
+                                    </div>
+                                `).join('')}
+                            </div>
+                            ` : ''}
+                            <div style="display:flex;gap:6px;margin-top:8px;">
+                                <input type="text" value="${seite.schaeden?.[schaden.id]?.beschreibung || ''}" 
+                                    placeholder="Anzahl, Größe & Art beschreiben (z.B. 3 Graffitis, ca. 2x1m)" 
+                                    style="flex:1;" 
+                                    onchange="setSchadenBeschreibung(${immoIdx},'${seiteKey}','${schaden.id}',this.value)">
+                                <button type="button" class="btn-mic" onclick="startSpeechToText(${immoIdx},'${seiteKey}','schaeden.${schaden.id}.beschreibung')" title="Spracheingabe">🎤</button>
+                            </div>
                         </div>
                         ` : ''}
                     </div>
@@ -463,8 +512,15 @@ function renderSeiteDetails(immoIdx, seiteKey, seite, flaecheBerechnet) {
                     <div>
                         <label style="font-size:12px;font-weight:500;display:block;margin-bottom:6px;">Weitere Besonderheiten:</label>
                         <div style="display:flex;gap:6px;">
-                            <input type="text" value="${seite.schaeden?.weitereBesonderheiten || ''}" placeholder="Weitere Besonderheiten..." style="flex:1;" onchange="setWeitereSchaeden(${immoIdx},'${seiteKey}',this.value)">
-                            <button type="button" class="btn-mic" onclick="startSpeechToText(${immoIdx},'${seiteKey}','schaeden.weitereBesonderheiten')" title="Spracheingabe">🎤</button>
+                            <textarea 
+                                value="${seite.schaeden?.weitereBesonderheiten || ''}"
+                                placeholder="Beschreibung für Angebotserstellung durch Dritte:&#10;- Anzahl und Abmessungen der Schäden&#10;- Besondere Zugangsbedingungen&#10;- Zustand der Oberfläche" 
+                                style="flex:1;min-height:60px;resize:vertical;" 
+                                onchange="setWeitereSchaeden(${immoIdx},'${seiteKey}',this.value)">${seite.schaeden?.weitereBesonderheiten || ''}</textarea>
+                            <button type="button" class="btn-mic" onclick="startSpeechToText(${immoIdx},'${seiteKey}','schaeden.weitereBesonderheiten')" title="Spracheingabe" style="align-self:flex-start;">🎤</button>
+                        </div>
+                        <div style="font-size:10px;color:#666;margin-top:4px;">
+                            💡 Tipp: Beschreibung soll Dritte befähigen, ein Angebot zu erstellen
                         </div>
                     </div>
                 </div>
@@ -513,6 +569,21 @@ function renderSeiteDetails(immoIdx, seiteKey, seite, flaecheBerechnet) {
                 </div>
                 `}
             </div>
+            
+            <!-- H) WEITERE INFORMATIONEN (OPTIONAL) -->
+            <details class="optional-info" style="margin-top:12px;">
+                <summary>📋 Weitere Informationen (optional)</summary>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px;">
+                    <div class="form-group">
+                        <label>Letzte Sanierung (Jahr)</label>
+                        <input type="number" min="1900" max="2030" value="${seite.letzteSanierung || ''}" placeholder="z.B. 2018" onchange="updateSeite(${immoIdx},'${seiteKey}','letzteSanierung',this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>Farbwerte</label>
+                        <input type="text" value="${seite.farbwerte || ''}" placeholder="z.B. RAL 9010" onchange="updateSeite(${immoIdx},'${seiteKey}','farbwerte',this.value)">
+                    </div>
+                </div>
+            </details>
         </div>
     `;
 }
@@ -675,7 +746,116 @@ function removeImmobilie(index) {
 
 function updateImmobilieAdresse(immoIdx, field, value) {
     immobilien[immoIdx].adresse[field] = value;
+    // Bei manueller Änderung: Verifizierung entfernen
+    immobilien[immoIdx].adresse.verified = false;
     updatePreview();
+}
+
+// ============================================
+// GOOGLE MAPS ADDRESS AUTOCOMPLETE
+// ============================================
+let autocompleteInstances = {};
+
+function initAddressAutocomplete(immoIdx) {
+    // Prüfe ob Google Maps API geladen ist
+    if (typeof google === 'undefined' || typeof google.maps === 'undefined') {
+        console.warn('Google Maps API nicht verfügbar - manuelle Eingabe verwenden');
+        return;
+    }
+
+    // Verhindere mehrfache Initialisierung
+    if (autocompleteInstances[immoIdx]) {
+        return;
+    }
+
+    const inputElement = document.getElementById(`addressAutocomplete-${immoIdx}`);
+    if (!inputElement) return;
+
+    try {
+        const autocomplete = new google.maps.places.Autocomplete(inputElement, {
+            componentRestrictions: { country: 'de' },
+            fields: ['address_components', 'geometry', 'formatted_address'],
+            types: ['address']
+        });
+
+        autocomplete.addListener('place_changed', () => {
+            const place = autocomplete.getPlace();
+            if (!place.geometry) {
+                console.warn('Keine Geometrie für diese Adresse gefunden');
+                return;
+            }
+
+            // Adresse parsen
+            const addressData = parseGooglePlaceAddress(place);
+
+            // Immobilie aktualisieren
+            immobilien[immoIdx].adresse = {
+                strasse: addressData.strasse,
+                hausnummer: addressData.hausnummer,
+                plz: addressData.plz,
+                ort: addressData.ort,
+                lat: place.geometry.location.lat(),
+                lng: place.geometry.location.lng(),
+                verified: true
+            };
+
+            // UI aktualisieren
+            renderImmobilien();
+            updatePreview();
+
+            console.log(`📍 Adresse verifiziert für Immobilie ${immoIdx + 1}:`, addressData);
+        });
+
+        autocompleteInstances[immoIdx] = autocomplete;
+    } catch (e) {
+        console.error('Fehler bei Autocomplete-Initialisierung:', e);
+    }
+}
+
+function parseGooglePlaceAddress(place) {
+    const result = {
+        strasse: '',
+        hausnummer: '',
+        plz: '',
+        ort: ''
+    };
+
+    if (!place.address_components) return result;
+
+    for (const component of place.address_components) {
+        const types = component.types;
+
+        if (types.includes('route')) {
+            result.strasse = component.long_name;
+        } else if (types.includes('street_number')) {
+            result.hausnummer = component.long_name;
+        } else if (types.includes('postal_code')) {
+            result.plz = component.long_name;
+        } else if (types.includes('locality')) {
+            result.ort = component.long_name;
+        } else if (types.includes('sublocality_level_1') && !result.ort) {
+            result.ort = component.long_name;
+        }
+    }
+
+    return result;
+}
+
+function handleManualAddressInput(immoIdx, value) {
+    // Bei manueller Eingabe ohne Autocomplete: Parse versuchen
+    if (!value.trim()) return;
+
+    // Versuche einfaches Parsing: "Straße Nr, PLZ Ort"
+    const match = value.match(/^(.+?)\s+(\d+[a-zA-Z]?(?:-\d+[a-zA-Z]?)?)\s*,\s*(\d{5})\s+(.+)$/);
+
+    if (match) {
+        immobilien[immoIdx].adresse.strasse = match[1].trim();
+        immobilien[immoIdx].adresse.hausnummer = match[2].trim();
+        immobilien[immoIdx].adresse.plz = match[3].trim();
+        immobilien[immoIdx].adresse.ort = match[4].trim();
+        immobilien[immoIdx].adresse.verified = false;
+        updatePreview();
+    }
 }
 
 function toggleAlleSeiten(immoIdx, checked) {
@@ -829,6 +1009,51 @@ function updateSeite(immoIdx, seiteKey, field, value) {
     }
     renderImmobilien();
     updatePreview();
+}
+
+// ============================================
+// DIMENSION VALIDATION (0.5m steps)
+// ============================================
+function updateSeiteDimension(immoIdx, seiteKey, field, value) {
+    // Auf 0.5er Schritte runden
+    let numValue = parseFloat(value) || 0;
+    numValue = Math.round(numValue * 2) / 2; // Rundet auf 0.5
+
+    // Min/Max validieren
+    if (field === 'breite') {
+        numValue = Math.max(0.5, Math.min(100, numValue));
+    } else if (field === 'hoehe') {
+        numValue = Math.max(0.5, Math.min(50, numValue));
+    }
+
+    // Wert setzen
+    immobilien[immoIdx].seiten[seiteKey][field] = numValue;
+
+    // Fläche berechnen
+    const seite = immobilien[immoIdx].seiten[seiteKey];
+    if (seite.breite && seite.hoehe) {
+        seite.flaeche = Math.round(seite.breite * seite.hoehe);
+    }
+
+    renderImmobilien();
+    updatePreview();
+}
+
+function validateDimension(inputElement) {
+    let value = parseFloat(inputElement.value) || 0;
+
+    // Auf 0.5er Schritte runden
+    value = Math.round(value * 2) / 2;
+
+    // Mindestens 0.5
+    if (value < 0.5 && inputElement.value !== '') {
+        value = 0.5;
+    }
+
+    // Wert im Input aktualisieren
+    if (inputElement.value !== '' && value > 0) {
+        inputElement.value = value;
+    }
 }
 
 // MBS-Felder Event-Handler
@@ -1141,6 +1366,16 @@ function removeSeiteFoto(immoIdx, seiteKey, fotoIdx) {
         seite.fotos.splice(fotoIdx, 1);
         renderImmobilien();
         updatePreview();
+    }
+}
+
+function removeSchadenFoto(immoIdx, seiteKey, schadensTyp, fotoIdx) {
+    const seite = immobilien[immoIdx].seiten[seiteKey];
+    if (seite.schaeden?.[schadensTyp]?.fotos && seite.schaeden[schadensTyp].fotos[fotoIdx]) {
+        seite.schaeden[schadensTyp].fotos.splice(fotoIdx, 1);
+        renderImmobilien();
+        updatePreview();
+        console.log(`Foto ${fotoIdx + 1} für ${schadensTyp} gelöscht`);
     }
 }
 
