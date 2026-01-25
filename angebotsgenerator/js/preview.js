@@ -3,6 +3,40 @@
 // Preview-Rendering und PDF-Export
 // ============================================
 
+// Helper: Foto-Anhang-Hinweis generieren
+function getFotoAnhangHinweis(immobilien) {
+    let totalFotos = 0;
+    let immobilienMitFotos = [];
+
+    immobilien.forEach((immo, idx) => {
+        let immoFotoCount = 0;
+        Object.values(immo.seiten || {}).forEach(seite => {
+            // Seiten-Fotos
+            immoFotoCount += (seite.fotos || []).length;
+            // Schäden-Fotos
+            if (seite.schaeden) {
+                Object.values(seite.schaeden).forEach(schaden => {
+                    if (schaden && schaden.fotos) {
+                        immoFotoCount += schaden.fotos.length;
+                    }
+                });
+            }
+        });
+        if (immoFotoCount > 0) {
+            totalFotos += immoFotoCount;
+            immobilienMitFotos.push({ nr: idx + 1, count: immoFotoCount });
+        }
+    });
+
+    if (totalFotos === 0) return '';
+
+    const details = immobilienMitFotos.map(i => `Immo. ${i.nr}: ${i.count}`).join(', ');
+    return `<p style="margin-top:3mm;padding-top:2mm;border-top:1px dashed #e5e5e5;">
+        <strong>📷 Fotodokumentation:</strong> ${totalFotos} Foto(s) beigefügt (${details}). 
+        Vollständige Dokumentation auf Anfrage per E-Mail.
+    </p>`;
+}
+
 // ============================================
 // PREVIEW UPDATE
 // ============================================
@@ -136,6 +170,7 @@ function generatePreviewHTML(data, ff, totals, posHTML) {
             <p>Leistungsort: ${immobilienAdressen}</p>
             <p>Es gelten unsere Allgemeinen Geschäftsbedingungen (www.fassadenfix.de/agb). Mit Auftragserteilung bestätigen Sie, diese zur Kenntnis genommen zu haben.</p>
             <p>Die angebotenen Leistungen umfassen alle notwendigen Arbeiten zur Durchführung der FassadenFix Systemreinigung inkl. der 5-Jahres-Garantie auf Algenfreiheit.</p>
+            ${getFotoAnhangHinweis(data.immobilien)}
         </div>
         
         <div class="pdf-footer-content">

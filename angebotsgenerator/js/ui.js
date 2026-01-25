@@ -357,6 +357,10 @@ function renderSeiteDetails(immoIdx, seiteKey, seite, flaecheBerechnet) {
                         <option value="geruest" ${seite.buehne?.sonderTyp === 'geruest' ? 'selected' : ''}>Gerüst</option>
                         <option value="sonstiges" ${seite.buehne?.sonderTyp === 'sonstiges' ? 'selected' : ''}>Sonstiges</option>
                     </select>
+                    <div class="form-group" style="margin-top:10px;">
+                        <label style="font-size:12px;font-weight:500;">Anzahl Tage (Min. 6 Tage Mindestmietdauer)</label>
+                        <input type="number" min="6" value="${seite.buehne?.tage || 6}" style="width:80px;" onchange="updateSeite(${immoIdx},'${seiteKey}','buehne',{...immobilien[${immoIdx}].seiten['${seiteKey}'].buehne, tage: Math.max(6, parseInt(this.value)||6)})">
+                    </div>
                     <div style="margin-top:8px;padding:8px;background:#fef3c7;border-radius:4px;font-size:11px;color:#92400e;">
                         ⚠️ Preis wird mit "Auf Anfrage" im Angebot angezeigt - Rücksprache erforderlich
                     </div>
