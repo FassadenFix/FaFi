@@ -1197,10 +1197,12 @@ select:required:valid {
     left: 20mm;
     right: 20mm;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 15px;
+    align-items: start;
     font-size: 7pt;
     color: var(--ff-gray);
+    line-height: 1.4;
 }
 
 .pdf-footer-col strong {
@@ -1448,32 +1450,40 @@ details.optional-info[open] summary {
    ============================================ */
 .pdf-terms {
     margin-top: 8mm;
-    padding: 4mm;
-    background: #f8fafc;
-    border: 1px solid var(--ff-border);
-    border-radius: 4px;
+    padding: 4mm 5mm;
+    background: #fafafa;
+    border: 1px solid #e5e5e5;
+    border-left: 3px solid var(--ff-green);
     font-size: 8pt;
+    line-height: 1.5;
 }
 
 .pdf-terms-title {
     font-weight: 700;
     font-size: 9pt;
-    margin-bottom: 2mm;
+    margin-bottom: 3mm;
     color: var(--ff-dark);
 }
 
-.pdf-terms ul {
-    margin: 0;
-    padding-left: 5mm;
+.pdf-terms p {
+    margin: 0 0 2mm 0;
+    color: var(--ff-gray);
 }
 
-.pdf-terms li {
-    margin-bottom: 1mm;
-    line-height: 1.4;
+.pdf-terms p:last-child {
+    margin-bottom: 0;
 }
 
 .pdf-terms strong {
     color: var(--ff-green);
+}
+
+/* Footer-Icon Styling */
+.footer-icon {
+    display: inline-block;
+    width: 12px;
+    text-align: center;
+    margin-right: 2px;
 }
 
 /* ============================================
@@ -1482,6 +1492,11 @@ details.optional-info[open] summary {
 @media print {
 
     /* Seite vorbereiten */
+    * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
     body {
         background: white !important;
         margin: 0;
@@ -1498,6 +1513,7 @@ details.optional-info[open] summary {
 
     /* Preview-Panel vollflächig */
     .main-container {
+        display: block;
         padding: 0;
         max-width: none;
     }
@@ -1508,53 +1524,43 @@ details.optional-info[open] summary {
         border: none !important;
         border-radius: 0 !important;
         overflow: visible !important;
+        flex: none !important;
     }
 
-    /* PDF-Seite anpassen */
-    .pdf-page {
-        width: 100%;
-        min-height: auto;
+    /* PDF-Seite exakt wie Vorschau */
+    .pdf-page,
+    #pdfPreview {
+        width: 210mm;
+        min-height: 297mm;
         box-shadow: none;
-        padding: 15mm 20mm 25mm 20mm;
-        margin: 0;
+        padding: 15mm 20mm 30mm 20mm;
+        margin: 0 auto;
+        font-family: 'Raleway', sans-serif;
+        font-size: 10pt;
+    }
+
+    /* Tabelle */
+    .pdf-table {
+        font-size: 9pt;
     }
 
     /* Seitenumbrüche verhindern innerhalb von */
-    .pdf-table tr,
-    .pdf-terms,
-    .pdf-footer-content {
+    .pdf-table tr {
         page-break-inside: avoid;
     }
 
-    /* Seitenumbruch vor Footer erzwingen wenn nötig */
+    .pdf-terms {
+        page-break-inside: avoid;
+    }
+
+    /* Footer-Bereich */
     .pdf-footer-content {
-        page-break-before: auto;
+        position: relative;
+        margin-top: 10mm;
     }
 
-    /* Footer am Ende fixieren */
     .pdf-footer {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-    }
-
-    .pdf-footer-content {
-        position: fixed;
-        bottom: 10mm;
-        left: 20mm;
-        right: 20mm;
-    }
-
-    /* Farben druckfreundlich */
-    .pdf-table th {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-
-    .pdf-header-line,
-    .pdf-footer {
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
+        height: 6mm;
+        margin-top: 5mm;
     }
 }

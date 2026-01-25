@@ -131,12 +131,11 @@ function generatePreviewHTML(data, ff, totals, posHTML) {
         
         <div class="pdf-terms">
             <div class="pdf-terms-title">Hinweise zum Angebot</div>
-            <ul>
-                <li>Dieses Angebot ist gültig bis: <strong>${gueltigBisStr}</strong></li>
-                <li>Zahlungsziel: 14 Tage nach Rechnungsstellung</li>
-                <li>Leistungsort: ${immobilienAdressen}</li>
-                <li>Es gelten unsere AGB (www.fassadenfix.de/agb)</li>
-            </ul>
+            <p>Dieses Angebot ist gültig bis: <strong>${gueltigBisStr}</strong></p>
+            <p>Zahlungsziel: 14 Tage netto nach Rechnungsstellung ohne Abzug. Bei Auftragserteilung innerhalb der Angebotsfrist gewähren wir auf Wunsch eine Ratenzahlung.</p>
+            <p>Leistungsort: ${immobilienAdressen}</p>
+            <p>Es gelten unsere Allgemeinen Geschäftsbedingungen (www.fassadenfix.de/agb). Mit Auftragserteilung bestätigen Sie, diese zur Kenntnis genommen zu haben.</p>
+            <p>Die angebotenen Leistungen umfassen alle notwendigen Arbeiten zur Durchführung der FassadenFix Systemreinigung inkl. der 5-Jahres-Garantie auf Algenfreiheit.</p>
         </div>
         
         <div class="pdf-footer-content">
@@ -147,9 +146,9 @@ function generatePreviewHTML(data, ff, totals, posHTML) {
                 <div>06118 Halle (Saale)</div>
             </div>
             <div class="pdf-footer-col">
-                <div>📞 0345 218392 35</div>
-                <div>✉️ info@fassadenfix.de</div>
-                <div>🌐 www.fassadenfix.de</div>
+                <div><span class="footer-icon">📞</span> 0345 218392 35</div>
+                <div><span class="footer-icon">✉️</span> info@fassadenfix.de</div>
+                <div><span class="footer-icon">🌐</span> www.fassadenfix.de</div>
             </div>
             <div class="pdf-footer-col">
                 <div>Geschäftsführer: A. Retzlaff</div>
@@ -157,7 +156,7 @@ function generatePreviewHTML(data, ff, totals, posHTML) {
                 <div>USt-ID: DE265643072</div>
             </div>
             <div class="pdf-footer-col">
-                <div>Commerzbank</div>
+                <div>Commerzbank Halle</div>
                 <div>IBAN: DE49 8004 0000 0325 0123 00</div>
                 <div>BIC: COBADEFFXXX</div>
             </div>
