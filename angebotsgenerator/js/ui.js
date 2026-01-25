@@ -49,6 +49,8 @@ function completeBlock(blockNum) {
         if (nextBlockNum === 3) {
             generateObjektZusammenfassung();
             generateAngebotsnummer();
+            generatePositionsFromImmobilien();
+            setTimeout(() => renderPositionenListe(), 100);
         }
     }
 
@@ -161,6 +163,74 @@ function generateAngebotsnummer() {
     document.getElementById('angebotsdatum').value = today;
 }
 
+// Render positions list for Block 3
+function renderPositionenListe() {
+    const container = document.getElementById('positionenListe');
+    if (!container) return;
+
+    let html = '';
+    let nettoSum = 0;
+
+    positions.forEach((pos, idx) => {
+        const summe = pos.menge * pos.einzelpreis;
+        nettoSum += summe;
+
+        if (pos.istEckdatenPosition) {
+            // Eckdaten-Positionen ohne Preis
+            html += `
+            <div class="position-row eckdaten" style="background:#f0fdf4;border-left:3px solid #7AB800;padding:12px;margin-bottom:8px;border-radius:6px;">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+                    <div>
+                        <strong style="color:#7AB800;">Pos ${pos.pos}</strong>
+                        <span style="margin-left:8px;font-size:12px;color:#666;">${pos.bezeichnung}</span>
+                    </div>
+                    ${pos.immoNummer > 0 ? `<span style="font-size:10px;background:#7AB800;color:white;padding:2px 6px;border-radius:8px;">Immobilie ${pos.immoNummer}</span>` : ''}
+                </div>
+                <div style="font-size:11px;color:#444;margin-top:8px;white-space:pre-line;">${pos.beschreibung}</div>
+            </div>`;
+        } else {
+            // Normale Positionen mit Preis
+            const preisAnzeige = pos.einzelpreis === 0 ? '<span style="color:#f59e0b;font-weight:600;">Auf Anfrage</span>' :
+                `${pos.einzelpreis.toLocaleString('de-DE', { minimumFractionDigits: 2 })} €`;
+            const summeAnzeige = pos.einzelpreis === 0 ? '-' :
+                `${summe.toLocaleString('de-DE', { minimumFractionDigits: 2 })} €`;
+
+            html += `
+            <div class="position-row" style="display:grid;grid-template-columns:60px 1fr 80px 80px 100px;gap:8px;padding:10px;border-bottom:1px solid #eee;font-size:13px;${pos.bedarfsposition ? 'background:#fef3c7;' : ''}">
+                <div style="font-weight:600;color:#7AB800;">Pos ${pos.pos}</div>
+                <div>
+                    <strong>${pos.bezeichnung}</strong>
+                    ${pos.beschreibung ? `<div style="font-size:11px;color:#666;margin-top:2px;">${pos.beschreibung.substring(0, 100)}${pos.beschreibung.length > 100 ? '...' : ''}</div>` : ''}
+                </div>
+                <div style="text-align:right;">${pos.menge.toLocaleString('de-DE')} ${pos.einheit}</div>
+                <div style="text-align:right;">${preisAnzeige}</div>
+                <div style="text-align:right;font-weight:600;">${summeAnzeige}</div>
+            </div>`;
+        }
+    });
+
+    container.innerHTML = html || '<div style="text-align:center;color:#666;padding:20px;">Keine Positionen - erst Objekterfassung abschließen</div>';
+
+    // Rabatt berechnen
+    const fruehbucherAktiv = document.getElementById('fruehbucherAktiv')?.checked;
+    const fruehbucherProzent = parseFloat(document.getElementById('fruehbucherProzent')?.value || 0);
+    const rabatt = fruehbucherAktiv ? nettoSum * (fruehbucherProzent / 100) : 0;
+    const nettoNachRabatt = nettoSum - rabatt;
+    const mwst = nettoNachRabatt * 0.19;
+    const brutto = nettoNachRabatt + mwst;
+
+    // Summen aktualisieren
+    const nettoEl = document.getElementById('posNettoSum');
+    const mwstEl = document.getElementById('posMwst');
+    const bruttoEl = document.getElementById('dealAmount');
+    const sparEl = document.getElementById('fruehbucherErsparnis');
+
+    if (nettoEl) nettoEl.textContent = nettoNachRabatt.toLocaleString('de-DE', { minimumFractionDigits: 2 }) + ' €';
+    if (mwstEl) mwstEl.textContent = mwst.toLocaleString('de-DE', { minimumFractionDigits: 2 }) + ' €';
+    if (bruttoEl) bruttoEl.textContent = brutto.toLocaleString('de-DE', { minimumFractionDigits: 2 }) + ' €';
+    if (sparEl) sparEl.textContent = rabatt.toLocaleString('de-DE', { minimumFractionDigits: 2 }) + ' €';
+}
+
 // ============================================
 // IMMOBILIEN RENDERING
 // ============================================
@@ -174,9 +244,16 @@ function renderImmobilien() {
         return `
         <div class="immobilie-card">
             <div class="immobilie-header">
-                <span class="immobilie-nummer">Immobilie ${immo.nummer}</span>
+                <div style="display:flex;flex-direction:column;gap:4px;">
+                    <span class="immobilie-nummer">Immobilie ${immo.nummer}</span>
+                    <span style="font-size:12px;color:#666;font-weight:normal;">
+                        ${immo.adresse.strasse ? `📍 ${immo.adresse.strasse} ${immo.adresse.hausnummer}, ${immo.adresse.plz} ${immo.adresse.ort}` : '📍 Adresse noch nicht erfasst'}
+                    </span>
+                </div>
                 <div style="display:flex;align-items:center;gap:10px;">
-                    <span style="font-size:12px;">${aktiveSeitenCount}/4 Seiten • ${gesamtFlaeche.toLocaleString('de-DE')} m²</span>
+                    <span style="font-size:12px;padding:4px 10px;background:${aktiveSeitenCount > 0 ? '#7AB800' : '#e5e7eb'};color:${aktiveSeitenCount > 0 ? 'white' : '#666'};border-radius:12px;font-weight:600;">
+                        ${aktiveSeitenCount}/4 Seiten • ${gesamtFlaeche.toLocaleString('de-DE')} m²
+                    </span>
                     ${immobilien.length > 1 ? `<button class="position-remove" onclick="removeImmobilie(${immoIdx})">×</button>` : ''}
                 </div>
             </div>
@@ -387,38 +464,44 @@ function renderSeite(immoIdx, seiteKey, seite) {
     const statusClass = zuReinigenStatus === true ? 'zu-reinigen-ja' : (zuReinigenStatus === false ? 'zu-reinigen-nein' : 'zu-reinigen-unentschieden');
 
     return `
-    <div class="seite-card ${zuReinigenStatus === true ? 'active' : 'inactive'} ${statusClass}">
+    <div class="seite-card ${statusClass}" style="opacity: ${zuReinigenStatus === false ? '0.6' : '1'};">
         <div class="seite-header">
             <div class="seite-title">
                 <span>${typ.icon} ${typ.label}</span>
+                <span class="seite-flaeche" style="margin-left:10px;${flaecheBerechnet > 0 ? '' : 'opacity:0.5;'}">${flaecheBerechnet.toLocaleString('de-DE')} m²</span>
             </div>
             <div style="display:flex;align-items:center;gap:8px;">
-                <!-- ZU REINIGEN? - Pflichtfeld -->
-                <div class="zu-reinigen-toggle" style="display:flex;gap:2px;background:#e5e7eb;border-radius:6px;padding:2px;">
-                    <button type="button" class="toggle-btn ${zuReinigenStatus === true ? 'active yes' : ''}" 
-                            onclick="setZuReinigen(${immoIdx},'${seiteKey}',true)" 
-                            style="padding:4px 10px;border:none;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600;transition:all 0.2s;">
-                        ✓ Ja
-                    </button>
-                    <button type="button" class="toggle-btn ${zuReinigenStatus === false ? 'active no' : ''}" 
-                            onclick="setZuReinigen(${immoIdx},'${seiteKey}',false)" 
-                            style="padding:4px 10px;border:none;border-radius:4px;cursor:pointer;font-size:11px;font-weight:600;transition:all 0.2s;">
-                        ✗ Nein
-                    </button>
-                </div>
-                ${zuReinigenStatus === true ? `<span class="seite-flaeche">${flaecheBerechnet.toLocaleString('de-DE')} m²</span>` : ''}
-                ${zuReinigenStatus === true ? `<span style="font-size:16px;color:var(--ff-gray);cursor:pointer;" onclick="toggleSeiteExpand(${immoIdx},'${seiteKey}')">▼</span>` : ''}
+                ${zuReinigenStatus === true ? '<span style="background:#7AB800;color:white;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;">✓ Wird gereinigt</span>' : ''}
+                ${zuReinigenStatus === false ? '<span style="background:#ef4444;color:white;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;">✗ Nicht reinigen</span>' : ''}
+                ${zuReinigenStatus === null ? '<span style="background:#f59e0b;color:white;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;">⏳ Entscheidung offen</span>' : ''}
             </div>
         </div>
-        ${zuReinigenStatus === true ? `
         <div class="seite-body expanded" id="seite-body-${immoIdx}-${seiteKey}">
+            <!-- IMMER ALLE DETAILS ANZEIGEN -->
             ${renderSeiteDetails(immoIdx, seiteKey, seite, flaecheBerechnet)}
+            
+            <!-- SOLL GEREINIGT WERDEN? - AM ENDE JEDER SEITE -->
+            <div style="margin-top:15px;padding:15px;background:linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);border-radius:8px;border:2px solid ${zuReinigenStatus === null ? '#f59e0b' : (zuReinigenStatus === true ? '#7AB800' : '#ef4444')};">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <div>
+                        <span style="font-weight:700;font-size:14px;color:#1f2937;">Soll diese Seite gereinigt werden?</span>
+                        ${zuReinigenStatus === null ? '<span style="margin-left:8px;font-size:11px;color:#f59e0b;">⚠️ Pflichtangabe</span>' : ''}
+                    </div>
+                    <div class="zu-reinigen-toggle" style="display:flex;gap:4px;background:#e5e7eb;border-radius:8px;padding:3px;">
+                        <button type="button" class="toggle-btn ${zuReinigenStatus === true ? 'active yes' : ''}" 
+                                onclick="setZuReinigen(${immoIdx},'${seiteKey}',true)" 
+                                style="padding:8px 16px;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;transition:all 0.2s;${zuReinigenStatus === true ? 'background:#7AB800;color:white;' : 'background:transparent;color:#666;'}">
+                            ✓ Ja, reinigen
+                        </button>
+                        <button type="button" class="toggle-btn ${zuReinigenStatus === false ? 'active no' : ''}" 
+                                onclick="setZuReinigen(${immoIdx},'${seiteKey}',false)" 
+                                style="padding:8px 16px;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;transition:all 0.2s;${zuReinigenStatus === false ? 'background:#ef4444;color:white;' : 'background:transparent;color:#666;'}">
+                            ✗ Nein
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-        ` : (zuReinigenStatus === null ? `
-        <div class="seite-body" style="padding:10px;background:#fef3c7;border-radius:0 0 8px 8px;">
-            <span style="font-size:11px;color:#92400e;">⚠️ Bitte entscheiden: Soll diese Seite gereinigt werden?</span>
-        </div>
-        ` : '')}
     </div>
     `;
 }
