@@ -738,10 +738,24 @@ function addImmobilie() {
 function removeImmobilie(index) {
     if (immobilien.length > 1) {
         immobilien.splice(index, 1);
+        // Nummerierung korrigieren
         immobilien.forEach((immo, i) => immo.nummer = i + 1);
+        // Positionen neu generieren mit korrekter Nummerierung
+        generatePositionsFromImmobilien();
         renderImmobilien();
         updatePreview();
     }
+}
+
+// ============================================
+// ABWEICHENDER RECHNUNGSEMPFÄNGER (NEU)
+// ============================================
+function toggleAbweichenderRechnungsempfaenger(checked) {
+    const details = document.getElementById('rechnungsempfaengerDetails');
+    if (details) {
+        details.style.display = checked ? 'block' : 'none';
+    }
+    updatePreview();
 }
 
 function updateImmobilieAdresse(immoIdx, field, value) {

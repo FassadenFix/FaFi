@@ -302,6 +302,21 @@ function getPreisForFlaeche(qm) {
 }
 
 // ============================================
+// GESAMTFLÄCHE ALLER IMMOBILIEN (NEU)
+// ============================================
+function getGesamtflaecheAllerImmobilien() {
+    let gesamtFlaeche = 0;
+    immobilien.forEach(immo => {
+        Object.values(immo.seiten).forEach(seite => {
+            if (seite.zuReinigen === true && seite.flaeche > 0) {
+                gesamtFlaeche += seite.flaeche;
+            }
+        });
+    });
+    return gesamtFlaeche;
+}
+
+// ============================================
 // AUTOMATISCHE POSITIONS-GENERIERUNG
 // ============================================
 function generatePositionsFromImmobilien() {
@@ -309,7 +324,14 @@ function generatePositionsFromImmobilien() {
     const neuePositionen = [];
 
     // =========================================
-    // Position 0.0.0 - PREISSTAFFEL-ÜBERSICHT
+    // GESAMTFLÄCHE berechnen (für Preisstaffel)
+    // =========================================
+    const gesamtFlaecheAlle = getGesamtflaecheAllerImmobilien();
+    const preisInfoGesamt = getPreisForFlaeche(gesamtFlaecheAlle);
+    const einheitlicherPreis = preisInfoGesamt.preis;
+
+    // =========================================
+    // Position 0 - PREISSTAFFEL-ÜBERSICHT
     // (Stets als Grundinformation im Angebot)
     // =========================================
     const preisstaffelText = `FassadenFix Systemreinigung - Preisstaffel:
@@ -317,10 +339,14 @@ function generatePositionsFromImmobilien() {
 500 - 999 m²: 10,50 €/m²
 1.000 - 2.499 m²: 9,75 €/m²
 2.500 - 4.999 m²: 9,25 €/m²
-ab 5.000 m²: 8,75 €/m²`;
+ab 5.000 m²: 8,75 €/m²
+
+━━━━━━━━━━━━━━━━━━━━
+✓ Gesamtfläche: ${gesamtFlaecheAlle.toLocaleString('de-DE')} m²
+✓ Ihr Preis: ${einheitlicherPreis.toLocaleString('de-DE', { minimumFractionDigits: 2 })} €/m²`;
 
     neuePositionen.push({
-        pos: '0.0.0',
+        pos: '0',
         immoNummer: 0, // Global, nicht immobilienspezifisch
         artikelgruppe: 'reinigung',
         menge: 1,
@@ -411,8 +437,12 @@ ab 5.000 m²: 8,75 €/m²`;
         // Wenn keine Fläche, keine Positionen für diese Immobilie
         if (immoFlaeche === 0) return;
 
-        // Preis für Fläche dieser Immobilie ermitteln
-        const preisInfo = getPreisForFlaeche(immoFlaeche);
+        // Preis aus GESAMTFLÄCHE aller Immobilien (einheitlicher Preis)
+        // -> Vorteil für Kunden bei Gesamtbeauftragung!
+        const preisInfo = { preis: einheitlicherPreis };
+
+        // Positions-Zähler für diese Immobilie
+        let posNr = 1;
 
         // Adresse formatieren
         const adresse = `${immo.adresse.strasse} ${immo.adresse.hausnummer}, ${immo.adresse.plz} ${immo.adresse.ort}`.trim();
@@ -455,7 +485,7 @@ ab 5.000 m²: 8,75 €/m²`;
         }
 
         neuePositionen.push({
-            pos: `${immoNr}.0.0`,
+            pos: `${immoNr}.${posNr}`,
             immoNummer: immoNr,
             artikelgruppe: 'reinigung',
             menge: 1,
@@ -466,26 +496,27 @@ ab 5.000 m²: 8,75 €/m²`;
             istEckdatenPosition: true,
             beschreibung: eckdatenText
         });
+        posNr++;
 
         // =========================================
-        // Position X.0.1 - FassadenFix Systemreinigung
-        // (Kein Einzelpreis hier - wird über alle Immobilien kumuliert berechnet)
+        // Position X.2 - FassadenFix Systemreinigung
+        // Preis basiert auf GESAMTFLÄCHE aller Immobilien
         // =========================================
         neuePositionen.push({
-            pos: `${immoNr}.0.1`,
+            pos: `${immoNr}.${posNr}`,
             immoNummer: immoNr,
             artikelgruppe: 'reinigung',
             menge: immoFlaeche,
             einheit: 'm²',
-            bezeichnung: 'FassadenFix Systemreinigung - zertifizierte Eigenprodukte (exklusiv nur bei FassadenFix)',
-            einzelpreis: 0, // Preis wird kumuliert in Preisstaffel berechnet
+            bezeichnung: 'FassadenFix Systemreinigung - zertifizierte Eigenprodukte',
+            einzelpreis: einheitlicherPreis, // Preis aus Gesamtfläche!
             bedarfsposition: false,
-            preisInKumulierung: true, // Flag für kumulierte Preisberechnung
-            beschreibung: 'Leistungen: Auftragen der FassadenFix Reinigungslösung FFC Plus, Auffangen und Aufbereiten von Schmutz- und Abwasser (gesetzlich vorgeschrieben), Auftragen des hochwertigen Langzeitschutzes FFP - **bundesamtlich zertifiziert** nach BauA.'
+            beschreibung: `Leistungen: Auftragen der FassadenFix Reinigungslösung FFC Plus, Auffangen und Aufbereiten von Schmutz- und Abwasser (gesetzlich vorgeschrieben), Auftragen des hochwertigen Langzeitschutzes FFP - bundesamtlich zertifiziert nach BauA.\n\n💡 Preis basiert auf Gesamtfläche: ${gesamtFlaecheAlle.toLocaleString('de-DE')} m²`
         });
+        posNr++;
 
         // =========================================
-        // Position X.0.2 - Bühnen (automatisch berechnet)
+        // Position X.3 - Bühnen (automatisch berechnet)
         // =========================================
         if (hatStandardBuehne) {
             // Berechnung: 500 m²/Tag, aufrunden
@@ -493,7 +524,7 @@ ab 5.000 m²: 8,75 €/m²`;
             const buehnenPreis = 390; // €/Tag
 
             neuePositionen.push({
-                pos: `${immoNr}.0.2`,
+                pos: `${immoNr}.${posNr}`,
                 immoNummer: immoNr,
                 artikelgruppe: 'technik',
                 menge: buehnenTage,
@@ -503,13 +534,14 @@ ab 5.000 m²: 8,75 €/m²`;
                 bedarfsposition: false,
                 beschreibung: `Berechnung: ${immoFlaeche.toLocaleString('de-DE')} m² ÷ 500 m²/Tag = ${buehnenTage} Tag(e)`
             });
+            posNr++;
         }
 
         // =========================================
-        // Position X.0.3 - Baustelleneinrichtung (IMMER, 100€ pauschal)
+        // Position X.4 - Baustelleneinrichtung (IMMER, 100€ pauschal)
         // =========================================
         neuePositionen.push({
-            pos: `${immoNr}.0.3`,
+            pos: `${immoNr}.${posNr}`,
             immoNummer: immoNr,
             artikelgruppe: 'nebenkosten',
             menge: 1,
@@ -519,8 +551,7 @@ ab 5.000 m²: 8,75 €/m²`;
             bedarfsposition: false,
             beschreibung: 'Pauschale für Baustelleneinrichtung, -absicherung und -räumung.'
         });
-
-        let zusatzPosNr = 4; // Weitere Positionen beginnen bei X.0.4
+        posNr++;
 
         // =========================================
         // Auf-Anfrage-Positionen
@@ -537,7 +568,7 @@ ab 5.000 m²: 8,75 €/m²`;
                 'sonstiges': 'Sonderbühne'
             };
             neuePositionen.push({
-                pos: `${immoNr}.0.${zusatzPosNr}`,
+                pos: `${immoNr}.${posNr}`,
                 immoNummer: immoNr,
                 artikelgruppe: 'technik',
                 menge: 1,
@@ -547,13 +578,13 @@ ab 5.000 m²: 8,75 €/m²`;
                 bedarfsposition: true,
                 beschreibung: 'Preis wird nach Klärung der Anforderungen separat kalkuliert'
             });
-            zusatzPosNr++;
+            posNr++;
         }
 
         // Zugänglichkeits-Maßnahmen
         if (zugaenglichkeitsEinschraenkungen.length > 0) {
             neuePositionen.push({
-                pos: `${immoNr}.0.${zusatzPosNr}`,
+                pos: `${immoNr}.${posNr}`,
                 immoNummer: immoNr,
                 artikelgruppe: 'nebenkosten',
                 menge: 1,
@@ -563,13 +594,13 @@ ab 5.000 m²: 8,75 €/m²`;
                 bedarfsposition: true,
                 beschreibung: `Erforderlich: ${zugaenglichkeitsEinschraenkungen.join(', ')}. Preis wird separat kalkuliert.`
             });
-            zusatzPosNr++;
+            posNr++;
         }
 
         // Zusätzliche Reinigungsmittel
         if (zusaetzlicheReinigungsmittel.length > 0) {
             neuePositionen.push({
-                pos: `${immoNr}.0.${zusatzPosNr}`,
+                pos: `${immoNr}.${posNr}`,
                 immoNummer: immoNr,
                 artikelgruppe: 'nebenkosten',
                 menge: 1,
@@ -579,7 +610,7 @@ ab 5.000 m²: 8,75 €/m²`;
                 bedarfsposition: true,
                 beschreibung: `Erforderlich: ${zusaetzlicheReinigungsmittel.join(', ')}. Preis wird separat kalkuliert.`
             });
-            zusatzPosNr++;
+            posNr++;
         }
     });
 
@@ -775,9 +806,9 @@ function loadInitialData() {
 ab 5.000 m²: 8,75 €/m²`;
 
     positions = [
-        // 0.0.0 - Preisstaffel
+        // 0 - Preisstaffel (wird bei Positions-Generierung überschrieben)
         {
-            pos: '0.0.0',
+            pos: '0',
             immoNummer: 0,
             artikelgruppe: 'reinigung',
             menge: 1,
@@ -788,9 +819,9 @@ ab 5.000 m²: 8,75 €/m²`;
             istEckdatenPosition: true,
             beschreibung: preisstaffelBeschreibung
         },
-        // 0.0.1 - Jährliche Inspektion (Inklusivleistung) ✅
+        // 0.1 - Jährliche Inspektion (Inklusivleistung) ✅
         {
-            pos: '0.0.1',
+            pos: '0.1',
             immoNummer: 0,
             artikelgruppe: 'reinigung',
             menge: 1,
@@ -801,9 +832,9 @@ ab 5.000 m²: 8,75 €/m²`;
             istEckdatenPosition: true,
             beschreibung: 'Im Leistungsumfang enthalten: Jährliche Sichtprüfung der gereinigten Fassadenflächen während der Garantiezeit.'
         },
-        // 0.0.2 - Ergebnisgarantie - 5 Jahre Algenfreiheit (Inklusivleistung) ✅
+        // 0.2 - Ergebnisgarantie - 5 Jahre Algenfreiheit (Inklusivleistung) ✅
         {
-            pos: '0.0.2',
+            pos: '0.2',
             immoNummer: 0,
             artikelgruppe: 'reinigung',
             menge: 1,
@@ -814,9 +845,9 @@ ab 5.000 m²: 8,75 €/m²`;
             istEckdatenPosition: true,
             beschreibung: 'Wir garantieren Ihnen 5 Jahre Algenfreiheit. Bei erneutem Befall innerhalb der Garantiezeit erfolgt kostenlose Nachbehandlung.'
         },
-        // 0.0.3 - Pauschalfestpreisgarantie - Nachträge ausgeschlossen! (Inklusivleistung) ✅
+        // 0.3 - Pauschalfestpreisgarantie - Nachträge ausgeschlossen! (Inklusivleistung) ✅
         {
-            pos: '0.0.3',
+            pos: '0.3',
             immoNummer: 0,
             artikelgruppe: 'reinigung',
             menge: 1,
