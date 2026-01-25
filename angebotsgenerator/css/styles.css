@@ -1442,3 +1442,119 @@ details.optional-info[open] summary {
 .photo-thumbnail:hover .photo-delete {
     opacity: 1;
 }
+
+/* ============================================
+   PDF TERMS BLOCK (ANGEBOTSBEDINGUNGEN)
+   ============================================ */
+.pdf-terms {
+    margin-top: 8mm;
+    padding: 4mm;
+    background: #f8fafc;
+    border: 1px solid var(--ff-border);
+    border-radius: 4px;
+    font-size: 8pt;
+}
+
+.pdf-terms-title {
+    font-weight: 700;
+    font-size: 9pt;
+    margin-bottom: 2mm;
+    color: var(--ff-dark);
+}
+
+.pdf-terms ul {
+    margin: 0;
+    padding-left: 5mm;
+}
+
+.pdf-terms li {
+    margin-bottom: 1mm;
+    line-height: 1.4;
+}
+
+.pdf-terms strong {
+    color: var(--ff-green);
+}
+
+/* ============================================
+   PRINT STYLES (@media print)
+   ============================================ */
+@media print {
+
+    /* Seite vorbereiten */
+    body {
+        background: white !important;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Formular und Header ausblenden */
+    .app-header,
+    .form-panel,
+    .preview-header,
+    .panel-header {
+        display: none !important;
+    }
+
+    /* Preview-Panel vollflächig */
+    .main-container {
+        padding: 0;
+        max-width: none;
+    }
+
+    .preview-panel {
+        width: 100% !important;
+        box-shadow: none !important;
+        border: none !important;
+        border-radius: 0 !important;
+        overflow: visible !important;
+    }
+
+    /* PDF-Seite anpassen */
+    .pdf-page {
+        width: 100%;
+        min-height: auto;
+        box-shadow: none;
+        padding: 15mm 20mm 25mm 20mm;
+        margin: 0;
+    }
+
+    /* Seitenumbrüche verhindern innerhalb von */
+    .pdf-table tr,
+    .pdf-terms,
+    .pdf-footer-content {
+        page-break-inside: avoid;
+    }
+
+    /* Seitenumbruch vor Footer erzwingen wenn nötig */
+    .pdf-footer-content {
+        page-break-before: auto;
+    }
+
+    /* Footer am Ende fixieren */
+    .pdf-footer {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    .pdf-footer-content {
+        position: fixed;
+        bottom: 10mm;
+        left: 20mm;
+        right: 20mm;
+    }
+
+    /* Farben druckfreundlich */
+    .pdf-table th {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .pdf-header-line,
+    .pdf-footer {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}

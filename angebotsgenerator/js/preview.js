@@ -41,23 +41,20 @@ function updatePreview() {
         const ges = p.menge * p.einzelpreis;
         const cls = p.bedarfsposition ? 'bedarfs' : (p.istEckdatenPosition ? 'eckdaten' : '');
         const gesStr = p.bedarfsposition ? `(${formatCurrency(ges)})` : formatCurrency(ges);
-        const bzLabel = p.bedarfsposition ? `${p.bezeichnung} (Bedarfsposition)` : p.bezeichnung;
+        const bzLabel = p.bedarfsposition ? `${p.bezeichnung} (Bedarfspos.)` : p.bezeichnung;
 
         // Bei Eckdaten-Position keine Menge anzeigen
         const mengeStr = p.istEckdatenPosition ? '' : `${p.menge.toLocaleString('de-DE')} ${p.einheit}`;
 
-        let beschrHTML = '';
-        if (p.beschreibung) {
-            beschrHTML = `<div class="beschreibung">${p.beschreibung.split('\n').join('<br>')}</div>`;
-        }
-
-        // Bezeichnung mit Zeilenumbrüchen formatieren
-        const bzFormatted = bzLabel.split('\n').join('<br>');
+        // KOMPAKT: Keine Beschreibung in Tabelle (max 2 Zeilen)
+        // Bezeichnung kürzen wenn zu lang
+        const bzShort = bzLabel.length > 60 ? bzLabel.substring(0, 57) + '...' : bzLabel;
+        const bzFormatted = bzShort.split('\n').slice(0, 2).join('<br>');
 
         return `<tr class="${cls}">
             <td class="pos-col">${p.pos}</td>
             <td>${mengeStr}</td>
-            <td><span class="bezeichnung">${bzFormatted}</span>${beschrHTML}</td>
+            <td><span class="bezeichnung">${bzFormatted}</span></td>
             <td class="price-col">${p.einzelpreis > 0 ? formatCurrency(p.einzelpreis) : ''}</td>
             <td class="total-col">${ges > 0 ? gesStr : ''}</td>
         </tr>`;
@@ -67,6 +64,17 @@ function updatePreview() {
 }
 
 function generatePreviewHTML(data, ff, totals, posHTML) {
+    // Gültigkeitsdatum berechnen (30 Tage)
+    const heute = new Date();
+    const gueltigBis = new Date(heute.getTime() + 30 * 24 * 60 * 60 * 1000);
+    const gueltigBisStr = gueltigBis.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+    // Immobilien-Adressen für Leistungsort
+    const immobilienAdressen = data.immobilien
+        .filter(i => i.adresse.strasse)
+        .map(i => `${i.adresse.strasse} ${i.adresse.hausnummer}, ${i.adresse.plz} ${i.adresse.ort}`)
+        .join(' | ') || 'wie vereinbart';
+
     return `
         <div class="pdf-header">
             <img src="assets/logo.png" alt="FassadenFix" style="height: 20mm; width: auto;">
@@ -88,7 +96,7 @@ function generatePreviewHTML(data, ff, totals, posHTML) {
                 <div class="pdf-meta-row"><span class="pdf-meta-label">Angebotsnummer</span><span class="pdf-meta-value">${data.angNr}</span></div>
                 <div class="pdf-meta-row"><span class="pdf-meta-label">Kundennummer</span><span class="pdf-meta-value">${data.kundNr}</span></div>
                 <div class="pdf-meta-row"><span class="pdf-meta-label">Datum</span><span class="pdf-meta-value">${formatDate(data.datum)}</span></div>
-                <div class="pdf-meta-row"><span class="pdf-meta-label">Ansprechpartner</span><span class="pdf-meta-value">${ff[0]}</span></div>
+                <div class="pdf-meta-row"><span class="pdf-meta-label">Ihr Ansprechpartner</span><span class="pdf-meta-value">${ff[0]}</span></div>
                 <div class="pdf-meta-row"><span class="pdf-meta-label">Mobil</span><span class="pdf-meta-value">${ff[2]}</span></div>
                 <div class="pdf-meta-row"><span class="pdf-meta-label">E-Mail</span><span class="pdf-meta-value">${ff[1]}</span></div>
             </div>
@@ -97,8 +105,8 @@ function generatePreviewHTML(data, ff, totals, posHTML) {
         <div class="pdf-title">Angebot Nr. ${data.angNr}</div>
         
         <div class="pdf-intro">
-            Wir freuen uns über Ihr Interesse an unserer FassadenFix - Systemreinigung.<br>
-            Gerne erstellen wir Ihnen wunschgemäß ein Angebot.
+            Vielen Dank für Ihr Interesse an unserer FassadenFix Systemreinigung!<br>
+            Nachfolgend unser individuelles Angebot für Sie:
         </div>
         
         <table class="pdf-table">
@@ -107,7 +115,7 @@ function generatePreviewHTML(data, ff, totals, posHTML) {
                     <th>Pos</th>
                     <th>Menge</th>
                     <th>Bezeichnung</th>
-                    <th>Einheitspreis</th>
+                    <th>Einzelpreis</th>
                     <th>Gesamt</th>
                 </tr>
             </thead>
@@ -121,6 +129,16 @@ function generatePreviewHTML(data, ff, totals, posHTML) {
             <div class="pdf-total-row final"><span>Gesamtsumme</span><span>${formatCurrency(totals.brutto)}</span></div>
         </div>
         
+        <div class="pdf-terms">
+            <div class="pdf-terms-title">Hinweise zum Angebot</div>
+            <ul>
+                <li>Dieses Angebot ist gültig bis: <strong>${gueltigBisStr}</strong></li>
+                <li>Zahlungsziel: 14 Tage nach Rechnungsstellung</li>
+                <li>Leistungsort: ${immobilienAdressen}</li>
+                <li>Es gelten unsere AGB (www.fassadenfix.de/agb)</li>
+            </ul>
+        </div>
+        
         <div class="pdf-footer-content">
             <div class="pdf-footer-col">
                 <strong>FASSADENFIX</strong>
@@ -129,19 +147,19 @@ function generatePreviewHTML(data, ff, totals, posHTML) {
                 <div>06118 Halle (Saale)</div>
             </div>
             <div class="pdf-footer-col">
-                <div>T  0345 218392 35</div>
-                <div>E  info@fassadenfix.de</div>
-                <div>W www.fassadenfix.de</div>
+                <div>📞 0345 218392 35</div>
+                <div>✉️ info@fassadenfix.de</div>
+                <div>🌐 www.fassadenfix.de</div>
+            </div>
+            <div class="pdf-footer-col">
+                <div>Geschäftsführer: A. Retzlaff</div>
+                <div>HRA 4244 • AG Stendal</div>
+                <div>USt-ID: DE265643072</div>
             </div>
             <div class="pdf-footer-col">
                 <div>Commerzbank</div>
                 <div>IBAN: DE49 8004 0000 0325 0123 00</div>
                 <div>BIC: COBADEFFXXX</div>
-            </div>
-            <div class="pdf-footer-col">
-                <div>Geschäftsführer:</div>
-                <div>Alexander Retzlaff</div>
-                <div>HRA 4244</div>
             </div>
         </div>
         <div class="pdf-footer"></div>
