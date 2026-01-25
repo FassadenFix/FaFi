@@ -353,6 +353,45 @@
                             </div>
                         </div>
 
+                        <!-- TEXTBAUSTEINE -->
+                        <div class="form-subsection"
+                            style="margin-top:15px;padding-top:15px;border-top:1px dashed #ddd;">
+                            <div class="form-subsection-title" style="color:#3b82f6;font-weight:600;">📝 Textbausteine
+                            </div>
+
+                            <!-- EINLEITUNGSTEXT -->
+                            <div style="margin-bottom:12px;">
+                                <label style="font-weight:600;font-size:12px;">Einleitungstext</label>
+                                <select id="einleitungstext" onchange="updateTextbaustein('einleitung')"
+                                    style="width:100%;margin-top:4px;">
+                                    <option value="standard">Standard - Vielen Dank für Ihr Interesse</option>
+                                    <option value="bestandskunde">Bestandskunde - Freuen uns auf weitere Zusammenarbeit
+                                    </option>
+                                    <option value="hausverwaltung">Hausverwaltung - Gemäß Ihrer Ausschreibung</option>
+                                    <option value="empfehlung">Empfehlung - Auf Empfehlung von...</option>
+                                </select>
+                                <textarea id="einleitungstextPreview" rows="3"
+                                    style="width:100%;margin-top:8px;font-size:12px;border-radius:6px;border:1px solid #ddd;padding:8px;"
+                                    placeholder="Text wird automatisch befüllt..."></textarea>
+                            </div>
+
+                            <!-- SCHLUSSTEXT -->
+                            <div>
+                                <label style="font-weight:600;font-size:12px;">Schlusstext</label>
+                                <select id="schlusstext" onchange="updateTextbaustein('schluss')"
+                                    style="width:100%;margin-top:4px;">
+                                    <option value="standard">Standard - Wir freuen uns auf Ihren Auftrag</option>
+                                    <option value="fruehbucher">Frühbucher - Rabatt-Hinweis aktiv</option>
+                                    <option value="sofort">Sofort-Start - Kurzfristige Ausführung möglich</option>
+                                    <option value="wirtschaftlichkeit">Wirtschaftlichkeit - Langfristiger Werterhalt
+                                    </option>
+                                </select>
+                                <textarea id="schlusstextPreview" rows="3"
+                                    style="width:100%;margin-top:8px;font-size:12px;border-radius:6px;border:1px solid #ddd;padding:8px;"
+                                    placeholder="Text wird automatisch befüllt..."></textarea>
+                            </div>
+                        </div>
+
                         <!-- POSITIONEN -->
                         <div class="form-subsection"
                             style="margin-top:15px;padding-top:15px;border-top:1px dashed #ddd;">
@@ -375,6 +414,40 @@
                                     style="display:flex;justify-content:space-between;font-size:16px;font-weight:700;margin-top:10px;padding-top:10px;border-top:2px solid #7AB800;">
                                     <span>Gesamtsumme Brutto:</span>
                                     <span style="color:#7AB800;" id="dealAmount">0,00 €</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- HUBSPOT DEAL INTEGRATION -->
+                        <div class="form-subsection"
+                            style="margin-top:15px;padding-top:15px;border-top:1px dashed #ddd;">
+                            <div class="form-subsection-title" style="color:#ff7a59;font-weight:600;">🔗 HubSpot Deal
+                            </div>
+                            <div style="background:#fff7ed;border-radius:8px;padding:12px;border:1px solid #ff7a5933;">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>Deal-Name</label>
+                                        <input type="text" id="dealName" readonly style="background:#f5f5f5;"
+                                            placeholder="Wird automatisch generiert">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Deal-Stage</label>
+                                        <select id="dealStage">
+                                            <option value="appointmentscheduled">Termin vereinbart</option>
+                                            <option value="qualifiedtobuy" selected>Angebot erstellt</option>
+                                            <option value="presentationscheduled">Präsentation</option>
+                                            <option value="decisionmakerboughtin">Entscheidung</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div
+                                    style="margin-top:10px;padding:10px;background:#fff;border-radius:6px;border:1px solid #ddd;">
+                                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                                        <span style="font-size:12px;color:#666;">Status:</span>
+                                        <span id="hubspotDealStatus"
+                                            style="font-size:11px;padding:2px 8px;background:#e5e7eb;border-radius:10px;">Noch
+                                            nicht synchronisiert</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>

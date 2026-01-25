@@ -77,16 +77,40 @@ function checkBlock1Complete() {
     }
 }
 
-// Check if Block 2 is complete (at least 1 immobilie with at least 1 side)
+// Check if Block 2 is complete (ALL sides must be decided - not null)
 function checkBlock2Complete() {
     const hasImmobilien = immobilien.length > 0;
-    const hasSeiten = immobilien.some(immo =>
+
+    // Check if ALL sides of ALL immobilien have a decision (not null)
+    const allSeitenEntschieden = immobilien.every(immo =>
+        Object.values(immo.seiten).every(seite => seite.zuReinigen !== null)
+    );
+
+    // Must have at least one side marked for cleaning
+    const hasAtLeastOneSide = immobilien.some(immo =>
         Object.values(immo.seiten).some(seite => seite.zuReinigen === true)
     );
 
+    // Count undecided sides for user feedback
+    let undecidedCount = 0;
+    immobilien.forEach(immo => {
+        Object.values(immo.seiten).forEach(seite => {
+            if (seite.zuReinigen === null) undecidedCount++;
+        });
+    });
+
     const btn = document.getElementById('block2CompleteBtn');
     if (btn) {
-        btn.disabled = !(hasImmobilien && hasSeiten);
+        btn.disabled = !(hasImmobilien && allSeitenEntschieden && hasAtLeastOneSide);
+
+        // Update button text based on state
+        if (undecidedCount > 0) {
+            btn.textContent = `⚠️ Noch ${undecidedCount} Seite(n) ohne Entscheidung`;
+        } else if (!hasAtLeastOneSide) {
+            btn.textContent = `⚠️ Mindestens 1 Seite zur Reinigung auswählen`;
+        } else {
+            btn.textContent = `✓ Objekterfassung abschließen → weiter zu Angebotserstellung`;
+        }
     }
 
     // Update block info
@@ -161,6 +185,96 @@ function generateAngebotsnummer() {
     // Set today's date
     const today = new Date().toISOString().split('T')[0];
     document.getElementById('angebotsdatum').value = today;
+
+    // Generate Deal Name
+    generateDealName();
+
+    // Initialize Textbausteine
+    updateTextbaustein('einleitung');
+    updateTextbaustein('schluss');
+}
+
+// Textbausteine with macro substitution
+const TEXTBAUSTEINE = {
+    einleitung: {
+        standard: `Sehr geehrte Damen und Herren,
+
+vielen Dank für Ihr Interesse an unseren Leistungen zur professionellen Fassadenreinigung. Gerne unterbreiten wir Ihnen hiermit ein unverbindliches Angebot für die nachfolgend aufgeführten Objekte.`,
+        bestandskunde: `Sehr geehrte(r) {ansprechpartner},
+
+wir freuen uns über Ihre erneute Anfrage und die Möglichkeit, auch weiterhin für {firma} tätig sein zu dürfen. Nachfolgend unser Angebot für die gewünschten Reinigungsarbeiten.`,
+        hausverwaltung: `Sehr geehrte Damen und Herren,
+
+gemäß Ihrer Ausschreibung bzw. Ihrer Anfrage erlauben wir uns, Ihnen nachfolgendes Angebot für die Reinigung der von Ihnen verwalteten Liegenschaften zu unterbreiten.`,
+        empfehlung: `Sehr geehrte(r) {ansprechpartner},
+
+wir bedanken uns für Ihr Vertrauen und die Empfehlung. Gerne erstellen wir Ihnen nachfolgendes Angebot für die professionelle Fassadenreinigung Ihrer Immobilie(n).`
+    },
+    schluss: {
+        standard: `Wir freuen uns auf Ihren Auftrag und stehen für Rückfragen jederzeit gerne zur Verfügung.
+
+Mit freundlichen Grüßen
+Ihr FassadenFix-Team`,
+        fruehbucher: `Profitieren Sie von unserem aktuellen Frühbucherrabatt! Bei zeitnaher Beauftragung sichern Sie sich den angegebenen Preisvorteil.
+
+Wir freuen uns auf Ihre positive Rückmeldung.
+
+Mit freundlichen Grüßen
+Ihr FassadenFix-Team`,
+        sofort: `Bei kurzfristiger Beauftragung können wir mit den Arbeiten umgehend beginnen. Sprechen Sie uns gerne an – wir finden einen zeitnahen Termin.
+
+Mit freundlichen Grüßen
+Ihr FassadenFix-Team`,
+        wirtschaftlichkeit: `Eine regelmäßige Fassadenreinigung schützt den Wert Ihrer Immobilie nachhaltig und verhindert kostspielige Sanierungen. Vertrauen Sie auf unsere zertifizierten Eigenprodukte für langanhaltenden Schutz.
+
+Mit freundlichen Grüßen
+Ihr FassadenFix-Team`
+    }
+};
+
+// Update Textbaustein with macros
+function updateTextbaustein(type) {
+    const selectId = type === 'einleitung' ? 'einleitungstext' : 'schlusstext';
+    const previewId = type === 'einleitung' ? 'einleitungstextPreview' : 'schlusstextPreview';
+
+    const select = document.getElementById(selectId);
+    const preview = document.getElementById(previewId);
+    if (!select || !preview) return;
+
+    const template = TEXTBAUSTEINE[type][select.value] || '';
+
+    // Macro substitution
+    const companyName = document.getElementById('companyName')?.value || '{Firma}';
+    const contactFirst = document.getElementById('contactFirstname')?.value || '';
+    const contactLast = document.getElementById('contactLastname')?.value || '';
+    const ansprechpartner = contactFirst && contactLast ? `${contactFirst} ${contactLast}` : '{Ansprechpartner}';
+
+    let text = template
+        .replace(/{firma}/gi, companyName)
+        .replace(/{ansprechpartner}/gi, ansprechpartner);
+
+    preview.value = text;
+}
+
+// Generate HubSpot Deal Name
+function generateDealName() {
+    const companyName = document.getElementById('companyName')?.value || 'Unbekannt';
+    const angNr = document.getElementById('angebotsnummer')?.value || 'NEU';
+
+    // Get total sqm
+    let totalQm = 0;
+    immobilien.forEach(immo => {
+        Object.values(immo.seiten).forEach(seite => {
+            if (seite.zuReinigen === true) {
+                totalQm += seite.flaeche || 0;
+            }
+        });
+    });
+
+    const dealName = `${companyName} - ${angNr} (${totalQm.toLocaleString('de-DE')} m²)`;
+
+    const dealNameEl = document.getElementById('dealName');
+    if (dealNameEl) dealNameEl.value = dealName;
 }
 
 // Render positions list for Block 3
@@ -298,54 +412,9 @@ function renderImmobilien() {
                                 </div>
                             </div>
                         </div>
-                    </details>
                 </div>
 
-                <!-- PFLICHTABFRAGEN -->
-                <div style="margin-bottom:15px;padding:12px;background:${immo.reinigungMoeglich === false ? '#fef2f2' : '#f8fafc'};border-radius:8px;border:2px solid ${immo.reinigungMoeglich === null ? '#f59e0b' : (immo.reinigungMoeglich === false ? '#ef4444' : 'var(--ff-green)')};">
-                    <div style="font-size:11px;font-weight:600;color:${immo.reinigungMoeglich === false ? '#ef4444' : 'var(--ff-green)'};text-transform:uppercase;margin-bottom:10px;">
-                        ⚠️ Pflichtabfragen
-                    </div>
-                    
-                    <!-- 1. Reinigung möglich? -->
-                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:10px;background:#fff;border-radius:6px;border-left:3px solid ${immo.reinigungMoeglich === null ? '#f59e0b' : (immo.reinigungMoeglich === false ? '#ef4444' : 'var(--ff-green)')};">
-                        <span style="font-weight:600;font-size:13px;">1. Ist Reinigung möglich?</span>
-                        <div style="display:flex;gap:4px;">
-                            <button type="button" class="toggle-btn-sm ${immo.reinigungMoeglich === true ? 'active yes' : ''}" onclick="setPflichtabfrage(${immoIdx},'reinigungMoeglich',true)">✓ Ja</button>
-                            <button type="button" class="toggle-btn-sm ${immo.reinigungMoeglich === false ? 'active no' : ''}" onclick="setPflichtabfrage(${immoIdx},'reinigungMoeglich',false)">✗ Nein</button>
-                        </div>
-                    </div>
-                    ${immo.reinigungMoeglich === false ? `
-                    <div style="background:#fef2f2;border:1px solid #ef4444;border-radius:6px;padding:10px;margin-bottom:12px;">
-                        <div style="color:#ef4444;font-weight:600;font-size:12px;">⛔ Angebotserstellung nicht möglich</div>
-                        <div style="color:#991b1b;font-size:11px;margin-top:4px;">Die Reinigung dieser Immobilie wurde als nicht möglich markiert. Ein Angebot kann nicht erstellt werden.</div>
-                    </div>
-                    ` : ''}
-                    
-                    <!-- 2. Marketing geeignet? -->
-                    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:#fff;border-radius:6px;border-left:3px solid ${immo.marketingGeeignet === true ? '#8b5cf6' : 'var(--ff-border)'};">
-                        <div>
-                            <span style="font-weight:600;font-size:13px;">2. Marketing geeignet?</span>
-                            ${immo.marketingGeeignet === true ? '<span style="margin-left:8px;font-size:10px;background:#8b5cf6;color:white;padding:2px 6px;border-radius:10px;">📸 Marketing</span>' : ''}
-                        </div>
-                        <div style="display:flex;gap:4px;">
-                            <button type="button" class="toggle-btn-sm ${immo.marketingGeeignet === true ? 'active yes' : ''}" onclick="setPflichtabfrage(${immoIdx},'marketingGeeignet',true)" style="${immo.marketingGeeignet === true ? 'background:#8b5cf6 !important;' : ''}">✓ Ja</button>
-                            <button type="button" class="toggle-btn-sm ${immo.marketingGeeignet === false ? 'active no' : ''}" onclick="setPflichtabfrage(${immoIdx},'marketingGeeignet',false)">✗ Nein</button>
-                        </div>
-                    </div>
-                    ${immo.marketingGeeignet === true ? `
-                    <div style="background:#ede9fe;border:1px solid #8b5cf6;border-radius:6px;padding:10px;margin-top:8px;">
-                        <div style="color:#7c3aed;font-weight:600;font-size:12px;">📸 Marketing-Kandidat markiert</div>
-                        <div style="color:#6d28d9;font-size:11px;margin-top:4px;">
-                            ${immo.marketingAufgabeErstellt
-                    ? '✓ HubSpot-Aufgabe wurde erstellt (48h Frist für Abstimmung)'
-                    : '⏳ HubSpot-Aufgabe wird bei Speicherung/Sync erstellt'
-                }
-                        </div>
-                    </div>
-                    ` : ''}
-                </div>
-                
+
                 <!-- NEU: KOPFDATEN (Objektaufnahme) -->
                 <div style="margin-bottom:15px;padding-bottom:15px;border-bottom:1px solid var(--ff-border);background:#f0fdf4;border-radius:8px;padding:12px;">
                     <div style="font-size:11px;font-weight:600;color:var(--ff-green);text-transform:uppercase;margin-bottom:10px;">📝 Objektaufnahme</div>
@@ -359,8 +428,8 @@ function renderImmobilien() {
                             <select onchange="updateImmobilieKopfdaten(${immoIdx},'ffMitarbeiter',this.value)">
                                 <option value="">-- Bitte wählen --</option>
                                 ${Object.entries(hubspotOwners).map(([id, owner]) =>
-                    `<option value="${id}" ${immo.ffMitarbeiter === id ? 'selected' : ''}>${owner.name}</option>`
-                ).join('')}
+            `<option value="${id}" ${immo.ffMitarbeiter === id ? 'selected' : ''}>${owner.name}</option>`
+        ).join('')}
                             </select>
                         </div>
                     </div>
@@ -430,8 +499,8 @@ function renderImmobilien() {
                         <div style="font-size:11px;color:#666;margin-top:6px;">
                             ${immo.adresse.strasse} ${immo.adresse.hausnummer}, ${immo.adresse.plz} ${immo.adresse.ort}<br>
                             ${Object.entries(immo.seiten).filter(([k, s]) => s.zuReinigen === true).map(([k, s]) =>
-                    SEITEN_TYPEN[k].label + ' (' + (s.flaeche || 0).toLocaleString('de-DE') + ' m²)'
-                ).join(', ') || 'Keine Seiten ausgewählt'}
+            SEITEN_TYPEN[k].label + ' (' + (s.flaeche || 0).toLocaleString('de-DE') + ' m²)'
+        ).join(', ') || 'Keine Seiten ausgewählt'}
                         </div>
                     </div>
                     ` : `
