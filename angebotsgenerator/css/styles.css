@@ -214,6 +214,202 @@ body {
     background: var(--ff-gray-light);
 }
 
+/* ============================================
+   WORKFLOW BLOCKS
+   ============================================ */
+.workflow-block {
+    margin-bottom: 16px;
+    border-radius: var(--ff-radius-lg);
+    border: 2px solid var(--ff-border);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.workflow-block[data-status="active"] {
+    border-color: var(--ff-green);
+    box-shadow: 0 0 0 3px rgba(122, 184, 0, 0.1);
+}
+
+.workflow-block[data-status="complete"] {
+    border-color: var(--ff-green);
+    background: linear-gradient(to right, rgba(122, 184, 0, 0.03), transparent);
+}
+
+.workflow-block[data-status="locked"] {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.workflow-block[data-status="locked"] .block-header {
+    cursor: not-allowed;
+}
+
+.block-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 18px;
+    background: var(--ff-light-gray);
+    cursor: pointer;
+    -webkit-user-select: none;
+    user-select: none;
+    transition: background 0.2s ease;
+}
+
+.block-header:hover {
+    background: #e8e8e8;
+}
+
+.workflow-block[data-status="active"] .block-header {
+    background: linear-gradient(135deg, #7AB800 0%, #5a9000 100%);
+    color: white;
+}
+
+.workflow-block[data-status="active"] .block-header .hubspot-badge {
+    background: white;
+    color: #ff7a59;
+}
+
+.block-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.block-number {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: white;
+    color: var(--ff-green);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.workflow-block[data-status="complete"] .block-number {
+    background: var(--ff-green);
+    color: white;
+}
+
+.workflow-block[data-status="complete"] .block-number::after {
+    content: "✓";
+}
+
+.block-title {
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.block-status {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #666;
+}
+
+.workflow-block[data-status="active"] .block-status {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.block-header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.block-info {
+    font-size: 12px;
+    color: #666;
+}
+
+.block-toggle {
+    font-size: 12px;
+    transition: transform 0.3s ease;
+}
+
+.workflow-block[data-status="active"] .block-toggle {
+    color: white;
+}
+
+.workflow-block .block-content.collapsed+.block-header .block-toggle {
+    transform: rotate(-90deg);
+}
+
+.block-content {
+    padding: 20px;
+    background: white;
+    max-height: 2000px;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+}
+
+.block-content.collapsed {
+    max-height: 0;
+    padding: 0 20px;
+}
+
+.block-footer {
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px dashed var(--ff-border);
+}
+
+.btn-block-complete {
+    width: 100%;
+    padding: 14px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: var(--ff-radius-md);
+    transition: all 0.2s ease;
+}
+
+.btn-block-complete:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.immobilien-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    background: #f8fafc;
+    border-radius: var(--ff-radius-md);
+    margin-bottom: 15px;
+}
+
+.immobilien-stats {
+    font-size: 13px;
+    color: #666;
+}
+
+.objekt-summary {
+    background: #f8fafc;
+    border-radius: var(--ff-radius-md);
+    padding: 15px;
+}
+
+.objekt-summary-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #e5e5e5;
+    font-size: 13px;
+}
+
+.objekt-summary-row:last-child {
+    border-bottom: none;
+    font-weight: 600;
+    color: var(--ff-green);
+}
+
 .form-section {
     margin-bottom: 28px;
 }

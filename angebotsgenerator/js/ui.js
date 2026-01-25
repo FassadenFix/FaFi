@@ -4,6 +4,164 @@
 // ============================================
 
 // ============================================
+// WORKFLOW BLOCK CONTROLS
+// ============================================
+
+// Toggle Block Collapse
+function toggleBlock(blockNum) {
+    const block = document.getElementById(`block${blockNum}`);
+    const content = document.getElementById(`block${blockNum}Content`);
+    const status = block.getAttribute('data-status');
+
+    // Don't toggle locked blocks
+    if (status === 'locked') return;
+
+    content.classList.toggle('collapsed');
+}
+
+// Complete a block and unlock next
+function completeBlock(blockNum) {
+    const block = document.getElementById(`block${blockNum}`);
+    const content = document.getElementById(`block${blockNum}Content`);
+    const statusSpan = document.getElementById(`block${blockNum}Status`);
+
+    // Mark as complete
+    block.setAttribute('data-status', 'complete');
+    statusSpan.textContent = '✓ Abgeschlossen';
+    content.classList.add('collapsed');
+
+    // Unlock next block
+    const nextBlockNum = blockNum + 1;
+    const nextBlock = document.getElementById(`block${nextBlockNum}`);
+    if (nextBlock) {
+        nextBlock.setAttribute('data-status', 'active');
+        const nextStatus = document.getElementById(`block${nextBlockNum}Status`);
+        nextStatus.textContent = '⏳ In Bearbeitung';
+        document.getElementById(`block${nextBlockNum}Content`).style.display = 'block';
+        document.getElementById(`block${nextBlockNum}Content`).classList.remove('collapsed');
+
+        // Show footer for block 2
+        if (nextBlockNum === 2) {
+            document.getElementById('block2Footer').style.display = 'block';
+        }
+
+        // Generate summary for block 3
+        if (nextBlockNum === 3) {
+            generateObjektZusammenfassung();
+            generateAngebotsnummer();
+        }
+    }
+
+    // Regenerate positions
+    if (typeof generatePositionsFromImmobilien === 'function') {
+        generatePositionsFromImmobilien();
+    }
+    updatePreview();
+}
+
+// Check if Block 1 is complete
+function checkBlock1Complete() {
+    const companyName = document.getElementById('companyName').value.trim();
+    const contactFirstname = document.getElementById('contactFirstname').value.trim();
+    const contactLastname = document.getElementById('contactLastname').value.trim();
+    const contactEmail = document.getElementById('contactEmail').value.trim();
+    const owner = document.getElementById('hubspotOwnerId').value;
+
+    const isComplete = companyName && contactFirstname && contactLastname && contactEmail && owner;
+
+    const btn = document.getElementById('block1CompleteBtn');
+    if (btn) {
+        btn.disabled = !isComplete;
+    }
+}
+
+// Check if Block 2 is complete (at least 1 immobilie with at least 1 side)
+function checkBlock2Complete() {
+    const hasImmobilien = immobilien.length > 0;
+    const hasSeiten = immobilien.some(immo =>
+        Object.values(immo.seiten).some(seite => seite.zuReinigen === true)
+    );
+
+    const btn = document.getElementById('block2CompleteBtn');
+    if (btn) {
+        btn.disabled = !(hasImmobilien && hasSeiten);
+    }
+
+    // Update block info
+    updateBlock2Info();
+}
+
+// Update Block 2 header info
+function updateBlock2Info() {
+    const totalImmo = immobilien.length;
+    let totalQm = 0;
+
+    immobilien.forEach(immo => {
+        Object.values(immo.seiten).forEach(seite => {
+            if (seite.zuReinigen === true) {
+                totalQm += seite.flaeche || 0;
+            }
+        });
+    });
+
+    const info = document.getElementById('block2Info');
+    if (info) {
+        info.textContent = `${totalImmo} Immobilie(n) • ${totalQm.toLocaleString('de-DE')} m²`;
+    }
+
+    const immoCount = document.getElementById('immoCount');
+    const totalQmEl = document.getElementById('totalQm');
+    if (immoCount) immoCount.textContent = totalImmo;
+    if (totalQmEl) totalQmEl.textContent = totalQm.toLocaleString('de-DE');
+}
+
+// Generate Objekt-Zusammenfassung for Block 3
+function generateObjektZusammenfassung() {
+    const container = document.getElementById('objektZusammenfassung');
+    if (!container) return;
+
+    let totalQm = 0;
+    let html = '';
+
+    immobilien.forEach((immo, idx) => {
+        const immoQm = Object.values(immo.seiten)
+            .filter(s => s.zuReinigen === true)
+            .reduce((sum, s) => sum + (s.flaeche || 0), 0);
+        totalQm += immoQm;
+
+        const adresse = immo.adresse.strasse ?
+            `${immo.adresse.strasse} ${immo.adresse.hausnummer}, ${immo.adresse.plz} ${immo.adresse.ort}` :
+            'Keine Adresse';
+
+        html += `<div class="objekt-summary-row">
+            <span>Immobilie ${idx + 1}: ${adresse}</span>
+            <span>${immoQm.toLocaleString('de-DE')} m²</span>
+        </div>`;
+    });
+
+    html += `<div class="objekt-summary-row">
+        <span>GESAMT</span>
+        <span>${totalQm.toLocaleString('de-DE')} m²</span>
+    </div>`;
+
+    container.innerHTML = html;
+}
+
+// Generate dynamic Angebotsnummer
+function generateAngebotsnummer() {
+    const year = new Date().getFullYear();
+    const kundenNr = document.getElementById('kundennummer').value || '000';
+    const laufNr = String(Math.floor(Math.random() * 99) + 1).padStart(2, '0');
+
+    const angNr = `${year}-${kundenNr}-${laufNr}`;
+    document.getElementById('angebotsnummer').value = angNr;
+
+    // Set today's date
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('angebotsdatum').value = today;
+}
+
+// ============================================
 // IMMOBILIEN RENDERING
 // ============================================
 function renderImmobilien() {
