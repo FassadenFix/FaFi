@@ -1,8 +1,9 @@
 // ============================================
 // FASSADENFIX ANGEBOTSGENERATOR - PDF.JS
-// PDF-Export mit jsPDF - Exakt wie Original ANG-2644
+// PDF-Export mit html2pdf - 1:1 wie Vorschau
 // ============================================
 
+// Color constants (legacy, for fallback jsPDF)
 const GREEN = [122, 184, 0];
 const GREEN_LIGHT = [143, 194, 27];
 const DARK = [26, 26, 26];
@@ -36,6 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
     loadLogoForPDF();
 });
 
+// ============================================
+// NEUE generatePDF - HTML2PDF für 1:1 Export
+// ============================================
 async function generatePDF() {
     // Validierung: Ist Angebotserstellung möglich?
     if (typeof canCreateOffer === 'function') {
@@ -46,6 +50,74 @@ async function generatePDF() {
         }
     }
 
+    // Hole den Preview-Container
+    const previewElement = document.getElementById('pdfPreview');
+    if (!previewElement) {
+        alert('Fehler: Vorschau-Element nicht gefunden');
+        return;
+    }
+
+    // Loading-Indikator
+    const statusEl = document.getElementById('previewStatus');
+    if (statusEl) statusEl.innerHTML = '<span style="color:#f59e0b;">⏳ PDF wird erstellt...</span>';
+
+    try {
+        // Dateiname generieren
+        const firma = document.getElementById('companyName')?.value || 'Unbekannt';
+        const angNr = document.getElementById('angebotsnummer')?.value || 'NEU';
+        const filename = `Angebot-${angNr}-${firma.replace(/[^a-zA-Z0-9äöüÄÖÜß]/g, '-')}.pdf`;
+
+        // html2pdf Optionen für A4 Format wie Vorschau
+        const options = {
+            margin: [10, 0, 10, 0], // top, right, bottom, left (mm)
+            filename: filename,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: {
+                scale: 2,
+                useCORS: true,
+                logging: false,
+                letterRendering: true,
+                allowTaint: true
+            },
+            jsPDF: {
+                unit: 'mm',
+                format: 'a4',
+                orientation: 'portrait',
+                compress: true
+            },
+            pagebreak: {
+                mode: ['avoid-all', 'css', 'legacy'],
+                before: '.page-break-before',
+                after: '.page-break-after',
+                avoid: ['.pdf-table tr', '.pdf-terms', '.pdf-totals']
+            }
+        };
+
+        // PDF generieren aus dem Preview-HTML (1:1 Kopie)
+        await html2pdf().set(options).from(previewElement).save();
+
+        // Erfolgsmeldung
+        if (statusEl) statusEl.innerHTML = '<span style="color:#7AB800;">✓ PDF erstellt</span>';
+
+        console.log('PDF erfolgreich erstellt:', filename);
+
+    } catch (error) {
+        console.error('PDF-Export Fehler:', error);
+        if (statusEl) statusEl.innerHTML = '<span style="color:#ef4444;">❌ Fehler beim PDF-Export</span>';
+
+        // Fallback: Browser-Print verwenden
+        if (confirm('PDF-Export fehlgeschlagen. Browser-Druck verwenden?')) {
+            window.print();
+        }
+    }
+}
+
+// ============================================
+// LEGACY jsPDF FUNCTIONS (für Fallback/Kompatibilität)
+// ============================================
+
+// Legacy generatePDF with jsPDF (alternative to html2pdf)
+async function generatePDFLegacy() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
@@ -60,234 +132,15 @@ async function generatePDF() {
         await loadLogoForPDF();
     }
 
-    // Daten sammeln
-    const street = document.getElementById('companyStreet').value;
-    const streetNum = document.getElementById('companyStreetNumber').value;
-    const fullStreet = streetNum ? `${street} ${streetNum}` : street;
-
-    const salutation = document.getElementById('contactSalutation').value;
-    const firstname = document.getElementById('contactFirstname').value;
-    const lastname = document.getElementById('contactLastname').value;
-    const fullContact = `${salutation} ${firstname} ${lastname}`.trim();
-
-    const ownerParts = document.getElementById('hubspotOwnerId').value.split('|');
-
-    const data = {
-        firma: document.getElementById('companyName').value,
-        ansprechpartner: fullContact,
-        strasse: fullStreet,
-        plz: document.getElementById('companyZip').value,
-        ort: document.getElementById('companyCity').value,
-        angNr: document.getElementById('angebotsnummer').value,
-        kundNr: document.getElementById('kundennummer').value,
-        datum: formatDate(document.getElementById('angebotsdatum').value),
-        immobilien: immobilien
-    };
-
-    const ff = [ownerParts[1] || '', ownerParts[2] || '', ownerParts[3] || ''];
-    const totals = calculateTotals();
-
-    // === SEITE 1 HEADER ===
-    drawHeader(doc, margin, pageW, data, ff, cachedLogoImage);
-
-    // === IMMOBILIEN ===
-    let y = 102;
-    data.immobilien.forEach((immo, idx) => {
-        const adresse = getFormattedAdresse(immo);
-        const aktivSeiten = Object.entries(immo.seiten)
-            .filter(([k, s]) => s.aktiv)
-            .map(([k, s]) => ({ key: k, ...s, label: SEITEN_TYPEN[k].label }));
-        const gesamtFlaeche = aktivSeiten.reduce((sum, s) => sum + (s.flaeche || 0), 0);
-        const seitenBeschreibung = aktivSeiten.map(s => s.label).join(', ');
-
-        if (idx > 0) {
-            doc.setDrawColor(200, 200, 200);
-            doc.line(margin, y - 2, pageW - margin - 32, y - 2);
-            y += 2;
-        }
-
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(10);
-        doc.setTextColor(...DARK);
-        doc.text(`Immobilie ${immo.nummer}: ${adresse}`, margin, y);
-        y += 5;
-
-        doc.setTextColor(...GREEN);
-        const objText = `${seitenBeschreibung} - ${gesamtFlaeche.toLocaleString('de-DE')}m²`;
-        const objLines = doc.splitTextToSize(objText, contentW - 35);
-        doc.text(objLines, margin, y);
-        y += objLines.length * 5;
-
-        // Seiten-Details (klein)
-        if (aktivSeiten.length > 0) {
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(8);
-            doc.setTextColor(...GRAY);
-            const detailText = aktivSeiten.map(s => `${s.label}: ${(s.flaeche || 0).toLocaleString('de-DE')}m²`).join(' | ');
-            doc.text(detailText, margin, y);
-        }
-    });
-
-    // === POSITIONS-TABELLE === (direkt nach Immobilien)
-    y += 8;
-
-    // === POSITIONS-TABELLE ===
-    y = drawTableHeader(doc, y, margin, pageW, contentW);
-
-    // Tabellen-Zeilen
-    doc.setFontSize(9);
-    positions.forEach((p, idx) => {
-        // Seitenumbruch prüfen
-        if (y > 245) {
-            addFooter(doc, pageW, pageH, margin);
-            addSidebarLogos(doc, sidebarX);
-            doc.addPage();
-            y = 35;
-            y = drawTableHeader(doc, y, margin, pageW, contentW);
-        }
-
-        const ges = p.menge * p.einzelpreis;
-        const gesStr = p.bedarfsposition ? `(${formatCurrency(ges)})` : formatCurrency(ges);
-        const color = p.bedarfsposition ? GRAY : DARK;
-
-        // Position
-        doc.setTextColor(...GREEN);
-        doc.setFont('helvetica', 'normal');
-        doc.text(p.pos, margin + 2, y);
-
-        // Menge
-        doc.setTextColor(...color);
-        doc.text(`${p.menge} ${p.einheit}`, margin + 14, y);
-
-        // Bezeichnung (fett)
-        doc.setFont('helvetica', 'bold');
-        const bezText = p.bedarfsposition ? `${p.bezeichnung} (Bedarfsposition)` : p.bezeichnung;
-        const bezLines = doc.splitTextToSize(bezText, 65);
-        doc.text(bezLines, margin + 38, y);
-
-        // Beschreibung (normal, kleiner)
-        let bezHeight = bezLines.length * 4;
-        if (p.beschreibung && !p.bedarfsposition) {
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(8);
-            const beschrLines = doc.splitTextToSize(p.beschreibung.replace(/\n/g, ' '), 65);
-            if (beschrLines.length > 0) {
-                doc.text(beschrLines, margin + 38, y + bezHeight);
-                bezHeight += beschrLines.length * 3.5;
-            }
-            doc.setFontSize(9);
-        }
-
-        doc.setFont('helvetica', 'normal');
-
-        // Preise
-        doc.setTextColor(...color);
-        doc.text(formatCurrency(p.einzelpreis), margin + 125, y, { align: 'right' });
-        doc.text(gesStr, margin + 150, y, { align: 'right' });
-
-        // Trennlinie
-        doc.setDrawColor(230, 230, 230);
-        doc.setLineWidth(0.15);
-        const nextY = y + Math.max(bezHeight, 5) + 2;
-        doc.line(margin, nextY, pageW - margin - 32, nextY);
-
-        y = nextY + 4;
-    });
-
-    // === SUMMEN ===
-    y += 6;
-    if (y > 250) {
-        addFooter(doc, pageW, pageH, margin);
-        addSidebarLogos(doc, sidebarX);
-        doc.addPage();
-        y = 50;
-    }
-
-    const sumX = margin + 95;
-    const sumValX = margin + 150;
-
-    // Bedarfspositionen (wenn vorhanden)
-    if (totals.bedarfs !== 0) {
-        doc.setTextColor(...GRAY);
-        doc.setFont('helvetica', 'normal');
-        doc.setFontSize(9);
-        doc.text('Bedarfspositionen', sumX, y);
-        doc.text(`(${formatCurrency(totals.bedarfs)})`, sumValX, y, { align: 'right' });
-        y += 5;
-    }
-
-    doc.setTextColor(...DARK);
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    doc.text('Nettobetrag', sumX, y);
-    doc.text(formatCurrency(totals.netto), sumValX, y, { align: 'right' });
-    y += 5;
-
-    doc.text('zzgl. 19% MwSt.', sumX, y);
-    doc.text(formatCurrency(totals.mwst), sumValX, y, { align: 'right' });
-    y += 3;
-
-    // Trennlinie vor Gesamtsumme
-    doc.setDrawColor(...DARK);
-    doc.setLineWidth(0.4);
-    doc.line(sumX, y, sumValX, y);
-    y += 5;
-
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(11);
-    doc.text('Gesamtsumme', sumX, y);
-    doc.text(formatCurrency(totals.brutto), sumValX, y, { align: 'right' });
-
-    // === WICHTIGER HINWEIS ===
-    y += 18;
-    if (y > 240) {
-        addFooter(doc, pageW, pageH, margin);
-        addSidebarLogos(doc, sidebarX);
-        doc.addPage();
-        y = 40;
-    }
-
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(10);
-    doc.setTextColor(...DARK);
-    doc.text('WICHTIGER HINWEIS ZUM OBJEKT:', margin, y);
-
-    y += 6;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(9);
-    const hinweisText = 'Um bei der Umsetzung der Reinigungsarbeiten die notwendige Zugänglichkeit und Arbeitsfreiheit gewährleisten zu können, ist die kurzzeitige Nutzung der Parkplätze, Gehwege und ggf. Straßenteilbereiche notwendig. Mit erfolgter Auftragsbestätigung stehen wir Ihnen hierzu für die konkrete Abstimmung und Vorbereitung gerne unterstützend zur Verfügung.';
-    const hinweisLines = doc.splitTextToSize(hinweisText, contentW - 35);
-    doc.text(hinweisLines, margin, y);
-    y += hinweisLines.length * 4;
-
-    // === UNTERSCHRIFTSFELD ===
-    y += 12;
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(10);
-    doc.text('Angebot erhalten und bestätigt:', margin, y);
-
-    y += 20;
-    doc.setDrawColor(...DARK);
-    doc.setLineWidth(0.3);
-    doc.line(margin, y, margin + 45, y);
-    doc.line(margin + 60, y, margin + 120, y);
-
-    doc.setFontSize(7);
-    doc.setTextColor(...GRAY);
-    doc.text('Ort, Datum', margin, y + 4);
-    doc.text('Unterschrift', margin + 60, y + 4);
-
-    // === FOOTER & SIDEBAR AUF ALLEN SEITEN ===
-    const totalPages = doc.internal.getNumberOfPages();
-    for (let i = 1; i <= totalPages; i++) {
-        doc.setPage(i);
-        addFooter(doc, pageW, pageH, margin);
-        addSidebarLogos(doc, sidebarX);
-    }
-
-    // Speichern
-    doc.save(`Angebot-${data.angNr}-${data.firma.replace(/[^a-zA-Z0-9]/g, '-')}.pdf`);
+    // Legacy function stub - full jsPDF implementation deprecated
+    // Use generatePDF() which uses html2pdf for exact 1:1 preview match
+    console.warn('generatePDFLegacy not implemented - use generatePDF()');
+    return;
 }
+
+// Removed: deprecated jsPDF inline code 
+// All PDF rendering now goes through html2pdf in generatePDF()
+// Legacy Helper Functions kept below for potential future use
 
 // === HELPER FUNCTIONS ===
 
