@@ -292,6 +292,177 @@ app.get('/api/hubspot/owners', async (req, res) => {
 });
 
 // ============================================
+// HUBSPOT DEAL API ROUTES - CREATE & UPDATE
+// ============================================
+
+// Create Deal with associations
+app.post('/api/hubspot/deals', async (req, res) => {
+    try {
+        const {
+            dealName,
+            amount,
+            stage = 'qualifiedtobuy',
+            pipeline = 'default',
+            ownerId,
+            companyId,
+            contactId,
+            angebotsnummer,
+            closeDate
+        } = req.body;
+
+        const client = getHubSpotClient();
+
+        if (!client) {
+            // Mock Response for development
+            const mockDealId = 'mock-' + Date.now();
+            return res.json({
+                success: true,
+                mock: true,
+                deal: {
+                    id: mockDealId,
+                    dealname: dealName,
+                    amount: amount,
+                    dealstage: stage,
+                    pipeline: pipeline
+                },
+                message: 'Mock Deal created (HubSpot nicht konfiguriert)'
+            });
+        }
+
+        // Create the Deal
+        const dealProperties = {
+            dealname: dealName,
+            amount: String(amount),
+            dealstage: stage,
+            pipeline: pipeline,
+            closedate: closeDate || new Date().toISOString().split('T')[0]
+        };
+
+        // Add optional properties
+        if (ownerId) dealProperties.hubspot_owner_id = ownerId;
+        if (angebotsnummer) dealProperties.angebotsnummer = angebotsnummer;
+
+        const dealResponse = await client.crm.deals.basicApi.create({
+            properties: dealProperties
+        });
+
+        const dealId = dealResponse.id;
+
+        // Associate with Company if provided
+        if (companyId) {
+            await client.crm.deals.associationsApi.create(
+                dealId,
+                'companies',
+                companyId,
+                [{ associationCategory: 'HUBSPOT_DEFINED', associationTypeId: 5 }]
+            );
+        }
+
+        // Associate with Contact if provided
+        if (contactId) {
+            await client.crm.deals.associationsApi.create(
+                dealId,
+                'contacts',
+                contactId,
+                [{ associationCategory: 'HUBSPOT_DEFINED', associationTypeId: 3 }]
+            );
+        }
+
+        res.json({
+            success: true,
+            mock: false,
+            deal: {
+                id: dealId,
+                ...dealResponse.properties
+            },
+            message: 'Deal erfolgreich in HubSpot erstellt'
+        });
+
+    } catch (error) {
+        console.error('HubSpot Deal Create Error:', error.message);
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
+// Update existing Deal
+app.put('/api/hubspot/deals/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const {
+            dealName,
+            amount,
+            stage,
+            closeDate,
+            ownerId
+        } = req.body;
+
+        const client = getHubSpotClient();
+
+        if (!client) {
+            return res.json({
+                success: true,
+                mock: true,
+                deal: { id, dealname: dealName, amount, dealstage: stage },
+                message: 'Mock Deal updated (HubSpot nicht konfiguriert)'
+            });
+        }
+
+        const updateProperties = {};
+        if (dealName) updateProperties.dealname = dealName;
+        if (amount !== undefined) updateProperties.amount = String(amount);
+        if (stage) updateProperties.dealstage = stage;
+        if (closeDate) updateProperties.closedate = closeDate;
+        if (ownerId) updateProperties.hubspot_owner_id = ownerId;
+
+        const dealResponse = await client.crm.deals.basicApi.update(id, {
+            properties: updateProperties
+        });
+
+        res.json({
+            success: true,
+            mock: false,
+            deal: {
+                id: dealResponse.id,
+                ...dealResponse.properties
+            },
+            message: 'Deal erfolgreich aktualisiert'
+        });
+
+    } catch (error) {
+        console.error('HubSpot Deal Update Error:', error.message);
+        res.status(500).json({
+            success: false,
+            error: error.message
+        });
+    }
+});
+
+// Get Deal by ID
+app.get('/api/hubspot/deals/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const client = getHubSpotClient();
+
+        if (!client) {
+            return res.status(503).json({ error: 'HubSpot nicht konfiguriert' });
+        }
+
+        const deal = await client.crm.deals.basicApi.getById(id, [
+            'dealname', 'amount', 'dealstage', 'pipeline',
+            'hubspot_owner_id', 'closedate', 'angebotsnummer'
+        ]);
+
+        res.json(deal.properties);
+    } catch (error) {
+        console.error('HubSpot Deal Get Error:', error.message);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// ============================================
 // AI TEXTOPTIMIERUNG ROUTES
 // ============================================
 

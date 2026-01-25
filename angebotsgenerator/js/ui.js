@@ -277,6 +277,121 @@ function generateDealName() {
     if (dealNameEl) dealNameEl.value = dealName;
 }
 
+// Create HubSpot Deal via Backend API
+async function createHubSpotDeal() {
+    const statusEl = document.getElementById('hubspotDealStatus');
+    if (statusEl) statusEl.innerHTML = '<span style="color:#f59e0b;">⏳ Wird erstellt...</span>';
+
+    try {
+        // Collect data
+        const dealName = document.getElementById('dealName')?.value || 'Neues Angebot';
+        const angebotsnummer = document.getElementById('angebotsnummer')?.value;
+        const dealStage = document.getElementById('dealStage')?.value || 'qualifiedtobuy';
+        const ownerId = document.getElementById('hubspotOwnerId')?.value;
+
+        // Calculate total amount
+        let totalAmount = 0;
+        positions.forEach(pos => {
+            if (!pos.bedarfsposition && pos.einzelpreis > 0) {
+                totalAmount += pos.menge * pos.einzelpreis;
+            }
+        });
+
+        // Apply discount if active
+        const fruehbucherAktiv = document.getElementById('fruehbucherAktiv')?.checked;
+        const fruehbucherProzent = parseFloat(document.getElementById('fruehbucherProzent')?.value || 0);
+        if (fruehbucherAktiv && fruehbucherProzent > 0) {
+            totalAmount = totalAmount * (1 - fruehbucherProzent / 100);
+        }
+
+        // Get company/contact IDs from selected data
+        const companyId = selectedCompany?.id;
+        const contactId = selectedContact?.id;
+
+        const API_BASE = window.API_BASE || 'http://localhost:3001';
+
+        const response = await fetch(`${API_BASE}/api/hubspot/deals`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                dealName,
+                amount: totalAmount,
+                stage: dealStage,
+                ownerId,
+                companyId,
+                contactId,
+                angebotsnummer,
+                closeDate: document.getElementById('angebotsdatum')?.value
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            const dealId = result.deal?.id;
+            document.getElementById('hubspotDealId').value = dealId || '';
+
+            if (statusEl) {
+                if (result.mock) {
+                    statusEl.innerHTML = '<span style="color:#f59e0b;">⚠️ Mock-Deal erstellt (Backend offline)</span>';
+                } else {
+                    statusEl.innerHTML = `<span style="color:#7AB800;">✓ Deal #${dealId} erstellt</span>`;
+                }
+            }
+            return result.deal;
+        } else {
+            throw new Error(result.error || 'Unbekannter Fehler');
+        }
+
+    } catch (error) {
+        console.error('HubSpot Deal Create Error:', error);
+        if (statusEl) {
+            statusEl.innerHTML = `<span style="color:#ef4444;">❌ Fehler: ${error.message}</span>`;
+        }
+        return null;
+    }
+}
+
+// Load price data from JSON
+let priceData = null;
+
+async function loadPriceData() {
+    try {
+        const response = await fetch('data/preisstufen.json');
+        priceData = await response.json();
+        console.log('Preisdaten geladen:', priceData.meta.stand);
+
+        // Update Rabatt dropdown if needed
+        updateRabattDropdownFromData();
+        return priceData;
+    } catch (e) {
+        console.error('Fehler beim Laden der Preisdaten:', e);
+        return null;
+    }
+}
+
+// Update Rabatt dropdown from loaded price data
+function updateRabattDropdownFromData() {
+    if (!priceData?.preisstufen?.rabatte?.aktionen?.fruehbucher_2026) return;
+
+    const staffelung = priceData.preisstufen.rabatte.aktionen.fruehbucher_2026.staffelung;
+    const select = document.getElementById('fruehbucherProzent');
+    if (!select) return;
+
+    const today = new Date().toISOString().split('T')[0];
+
+    select.innerHTML = '';
+    staffelung.forEach(stufe => {
+        const isExpired = stufe.bis < today;
+        const option = document.createElement('option');
+        option.value = stufe.prozent;
+        option.textContent = `${stufe.prozent}% Rabatt (bis ${stufe.bis})${isExpired ? ' — ABGELAUFEN' : ''}`;
+        option.disabled = isExpired;
+        if (!isExpired && select.options.length === 0) option.selected = true;
+        select.appendChild(option);
+    });
+}
+
 // Render positions list for Block 3
 function renderPositionenListe() {
     const container = document.getElementById('positionenListe');
