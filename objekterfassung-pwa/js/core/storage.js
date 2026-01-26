@@ -329,7 +329,7 @@ class StorageManager {
      * @param {number} id - Queue-Eintrags-ID
      * @returns {Promise<void>}
      */
-    async removeFr omSyncQueue(id) {
+    async removeFromSyncQueue(id) {
         if (!this.isInitialized) {
             return Promise.resolve();
         }
