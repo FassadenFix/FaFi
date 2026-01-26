@@ -510,10 +510,15 @@
     <script src="js/hubspot.js" defer></script>
     <script src="js/pdf.js" defer></script>
 
-    <!-- Block Modules -->
+    <!-- Block Modules (Data & UI) -->
     <script src="blocks/auftraggeber/auftraggeber.js" defer></script>
+    <script src="blocks/auftraggeber/ui.js" defer></script>
+
     <script src="blocks/objekterfassung/objekterfassung.js" defer></script>
+    <script src="blocks/objekterfassung/ui.js" defer></script>
+
     <script src="blocks/angebot/angebot.js" defer></script>
+    <script src="blocks/angebot/ui.js" defer></script>
 
     <!-- Orchestrator (lädt zuletzt) -->
     <script src="js/orchestrator.js" defer></script>
@@ -527,22 +532,21 @@
             }
 
             // Block-Module initialisieren
-            if (typeof AuftraggeberModule !== 'undefined') {
-                AuftraggeberModule.init();
-            }
-            if (typeof ObjekterfassungModule !== 'undefined') {
-                ObjekterfassungModule.init();
-            }
-            if (typeof AngebotModule !== 'undefined') {
-                AngebotModule.init();
-            }
+            if (typeof AuftraggeberModule !== 'undefined') AuftraggeberModule.init();
+            if (typeof AuftraggeberUI !== 'undefined') AuftraggeberUI.init();
+
+            if (typeof ObjekterfassungModule !== 'undefined') ObjekterfassungModule.init();
+            if (typeof ObjekterfassungUI !== 'undefined') ObjekterfassungUI.init();
+
+            if (typeof AngebotModule !== 'undefined') AngebotModule.init();
+            if (typeof AngebotUI !== 'undefined') AngebotUI.init();
 
             // State synchronisieren mit Legacy-Variablen
             if (typeof AppState !== 'undefined' && typeof immobilien !== 'undefined') {
                 AppState.immobilien = immobilien;
             }
 
-            console.info('✅ FassadenFix Angebotsgenerator geladen');
+            console.info('✅ FassadenFix Angebotsgenerator geladen (Refactored Architecture)');
         });
     </script>
 
