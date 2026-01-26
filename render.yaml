@@ -1,16 +1,49 @@
+# Render.com Blueprint
+# https://render.com/docs/blueprint-spec
+# Deploy: render.com → New → Blueprint → GitHub Repo wählen
+
 services:
+  # ============================================
+  # Backend API Service (Node.js)
+  # ============================================
   - type: web
-    name: fassadenfix-backend
+    name: fassadenfix-api
     runtime: node
-    region: frankfurt
-    plan: free
+    region: frankfurt  # EU-Region (DSGVO)
+    plan: free  # free | starter ($7) | standard ($25)
     rootDir: angebotsgenerator/backend
     buildCommand: npm install
     startCommand: node server.js
+    healthCheckPath: /api/health
+    autoDeploy: true
     envVars:
       - key: NODE_ENV
         value: production
-      - key: HUBSPOT_API_KEY
-        sync: false # User muss diesen Wert in Render Dashboard setzen
-      - key: OPENAI_API_KEY
-        sync: false # User muss diesen Wert in Render Dashboard setzen
+      - key: PORT
+        value: 3001
+      - key: HUBSPOT_ACCESS_TOKEN
+        sync: false  # Manuell im Dashboard setzen
+      - key: CORS_ORIGIN
+        value: https://fassadenfix-app.onrender.com
+
+  # ============================================
+  # Frontend Static Site
+  # ============================================
+  - type: web
+    name: fassadenfix-app
+    runtime: static
+    region: frankfurt
+    plan: free
+    rootDir: angebotsgenerator
+    buildCommand: ""  # Keine Build-Step nötig (reine HTML/JS/CSS)
+    staticPublishPath: .
+    autoDeploy: true
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=3600
+    routes:
+      # API-Requests zum Backend weiterleiten
+      - type: rewrite
+        source: /api/*
+        destination: https://fassadenfix-api.onrender.com/api/*
