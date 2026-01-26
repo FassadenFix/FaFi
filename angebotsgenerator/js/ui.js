@@ -2015,3 +2015,28 @@ function regenerateAllPosNummern() {
         });
     });
 }
+
+// ============================================
+// GLOBAL EXPORTS - Für onclick/onchange Attribute
+// ============================================
+// Diese Funktionen müssen global verfügbar sein, da sie von HTML-Attributen aufgerufen werden
+window.toggleAbweichenderRechnungsempfaenger = toggleAbweichenderRechnungsempfaenger;
+window.toggleBlock = toggleBlock;
+window.completeBlock = completeBlock;
+window.updatePreview = updatePreview;
+window.checkBlock1Complete = checkBlock1Complete;
+window.addImmobilie = addImmobilie;
+window.removeImmobilie = removeImmobilie;
+window.toggleAlleSeiten = toggleAlleSeiten;
+window.setZuReinigen = setZuReinigen;
+window.updateSeite = updateSeite;
+window.updateSeiteDimension = updateSeiteDimension;
+window.setBuehneTyp = setBuehneTyp;
+window.setZugaenglichkeit = setZugaenglichkeit;
+window.setSchaedenVorhanden = setSchaedenVorhanden;
+window.setPflichtabfrage = setPflichtabfrage;
+window.updateImmobilieAdresse = updateImmobilieAdresse;
+window.renderImmobilien = renderImmobilien;
+window.renderPositions = renderPositions;
+
+console.info('✅ UI.js geladen - Alle Funktionen global exportiert');
