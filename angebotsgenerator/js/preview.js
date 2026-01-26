@@ -68,10 +68,18 @@ function updatePreview() {
         immobilien: immobilien
     };
 
-    const ff = [ownerParts[1] || '', ownerParts[2] || '', ownerParts[3] || ''];
+    // ff = [Vorname Nachname, Email, Mobil]
+    const ffVorname = ownerParts[1] || '';
+    const ffNachname = ownerParts[2] || '';
+    const ffEmail = ownerParts[3] || '';
+    const ffMobil = ownerParts[4] || '';
+    const ff = [`${ffVorname} ${ffNachname}`.trim(), ffEmail, ffMobil];
     const totals = calculateTotals();
 
-    let posHTML = positions.map(p => {
+    // Position 0.x Einträge NICHT in Tabelle anzeigen (gehen ins Versprechen-Block)
+    const displayPositions = positions.filter(p => !p.pos.toString().startsWith('0'));
+
+    let posHTML = displayPositions.map(p => {
         const ges = p.menge * p.einzelpreis;
         const cls = p.bedarfsposition ? 'bedarfs' : (p.istEckdatenPosition ? 'eckdaten' : '');
         const gesStr = p.bedarfsposition ? `(${formatCurrency(ges)})` : formatCurrency(ges);
@@ -98,9 +106,9 @@ function updatePreview() {
 }
 
 function generatePreviewHTML(data, ff, totals, posHTML) {
-    // Gültigkeitsdatum berechnen (30 Tage)
+    // Gültigkeitsdatum berechnen (28 Tage = 4 Wochen)
     const heute = new Date();
-    const gueltigBis = new Date(heute.getTime() + 30 * 24 * 60 * 60 * 1000);
+    const gueltigBis = new Date(heute.getTime() + 28 * 24 * 60 * 60 * 1000);
     const gueltigBisStr = gueltigBis.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
 
     // Immobilien-Adressen für Leistungsort
@@ -131,8 +139,8 @@ function generatePreviewHTML(data, ff, totals, posHTML) {
                 <div class="pdf-meta-row"><span class="pdf-meta-label">Kundennummer</span><span class="pdf-meta-value">${data.kundNr}</span></div>
                 <div class="pdf-meta-row"><span class="pdf-meta-label">Datum</span><span class="pdf-meta-value">${formatDate(data.datum)}</span></div>
                 <div class="pdf-meta-row"><span class="pdf-meta-label">Ihr Ansprechpartner</span><span class="pdf-meta-value">${ff[0]}</span></div>
-                <div class="pdf-meta-row"><span class="pdf-meta-label">Mobil</span><span class="pdf-meta-value">${ff[2]}</span></div>
                 <div class="pdf-meta-row"><span class="pdf-meta-label">E-Mail</span><span class="pdf-meta-value">${ff[1]}</span></div>
+                <div class="pdf-meta-row"><span class="pdf-meta-label">Mobil</span><span class="pdf-meta-value">${ff[2]}</span></div>
             </div>
         </div>
         
@@ -163,15 +171,44 @@ function generatePreviewHTML(data, ff, totals, posHTML) {
             <div class="pdf-total-row final"><span>Gesamtsumme</span><span>${formatCurrency(totals.brutto)}</span></div>
         </div>
         
+        <div class="pdf-versprechen">
+            <div class="pdf-versprechen-header">Das FassadenFix Versprechen</div>
+            <div class="pdf-versprechen-body">
+                <div class="pdf-versprechen-left">
+                    <div class="pdf-versprechen-subtitle">Transparente Preisstaffel</div>
+                    <table class="pdf-preisstaffel">
+                        <thead>
+                            <tr><th>Fläche</th><th>€/m²</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>500 – 999 m²</td><td>10,50 €</td></tr>
+                            <tr><td>1.000 – 2.499 m²</td><td>9,75 €</td></tr>
+                            <tr><td>2.500 – 4.999 m²</td><td>9,25 €</td></tr>
+                            <tr><td>ab 5.000 m²</td><td>8,75 €</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pdf-versprechen-right">
+                    <div class="pdf-versprechen-subtitle">Unsere Garantien</div>
+                    <ul class="pdf-garantien-liste">
+                        <li>5-Jahres-Garantie auf Algenfreiheit</li>
+                        <li>Ergebnisgarantie bei Systemreinigung</li>
+                        <li>Jährliche Inspektion inklusive</li>
+                        <li>Pauschalfestpreis – keine versteckten Kosten</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pdf-versprechen-footer">FassadenFix – der sichere Weg zur sauberen Fassade</div>
+        </div>
+        
         <div class="pdf-terms">
-            <div class="pdf-terms-title">Hinweise zum Angebot</div>
-            <p>Dieses Angebot ist gültig bis: <strong>${gueltigBisStr}</strong></p>
-            <p>Zahlungsziel: 14 Tage netto nach Rechnungsstellung ohne Abzug. Bei Auftragserteilung innerhalb der Angebotsfrist gewähren wir auf Wunsch eine Ratenzahlung.</p>
-            <p>Leistungsort: ${immobilienAdressen}</p>
-            <p>Es gelten unsere Allgemeinen Geschäftsbedingungen (www.fassadenfix.de/agb). Mit Auftragserteilung bestätigen Sie, diese zur Kenntnis genommen zu haben.</p>
-            <p>Die angebotenen Leistungen umfassen alle notwendigen Arbeiten zur Durchführung der FassadenFix Systemreinigung inkl. der 5-Jahres-Garantie auf Algenfreiheit.</p>
+            <div class="pdf-terms-title">Angebotsbedingungen</div>
+            <p><strong>Gültigkeit:</strong> ${gueltigBisStr} (4 Wochen) · <strong>Zahlung:</strong> 7 Tage netto · <strong>Leistungsort:</strong> ${immobilienAdressen}</p>
+            <p class="pdf-terms-agb">Sperrungen: Beantragung und Verantwortung beim AG. Es gelten unsere AGB (www.fassadenfix.de/agb).</p>
             ${getFotoAnhangHinweis(data.immobilien)}
         </div>
+        
+        <div class="pdf-content-end"></div>
         
         <div class="pdf-footer-content">
             <div class="pdf-footer-col">
@@ -181,18 +218,18 @@ function generatePreviewHTML(data, ff, totals, posHTML) {
                 <div>06118 Halle (Saale)</div>
             </div>
             <div class="pdf-footer-col">
-                <div><span class="footer-icon">📞</span> 0345 218392 35</div>
-                <div><span class="footer-icon">✉️</span> info@fassadenfix.de</div>
-                <div><span class="footer-icon">🌐</span> www.fassadenfix.de</div>
+                <div>Tel: 0345 218392 35</div>
+                <div>info@fassadenfix.de</div>
+                <div>www.fassadenfix.de</div>
             </div>
             <div class="pdf-footer-col">
                 <div>Geschäftsführer: A. Retzlaff</div>
-                <div>HRA 4244 • AG Stendal</div>
+                <div>HRA 4244 · AG Stendal</div>
                 <div>USt-ID: DE265643072</div>
             </div>
             <div class="pdf-footer-col">
                 <div>Commerzbank Halle</div>
-                <div>IBAN: DE49 8004 0000 0325 0123 00</div>
+                <div>DE49 8004 0000 0325 0123 00</div>
                 <div>BIC: COBADEFFXXX</div>
             </div>
         </div>

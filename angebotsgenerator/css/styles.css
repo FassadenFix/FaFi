@@ -1377,6 +1377,13 @@ select:required:valid {
     background: transparent;
 }
 
+/* Content-End Separator - Klare Trennung vor Footer */
+.pdf-content-end {
+    margin-top: 8mm;
+    margin-bottom: 25mm;
+    border-bottom: 1px solid var(--ff-green);
+}
+
 /* Footer - Exakt wie Original */
 .pdf-footer {
     position: absolute;
@@ -1384,7 +1391,7 @@ select:required:valid {
     left: 0;
     right: 0;
     background: linear-gradient(to bottom, transparent 0%, var(--ff-green) 100%);
-    height: 8mm;
+    height: 6mm;
 }
 
 .pdf-footer-content {
@@ -1394,21 +1401,31 @@ select:required:valid {
     right: 20mm;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 15px;
-    align-items: start;
+    gap: 10px;
+    align-items: end;
     font-size: 7pt;
     color: var(--ff-gray);
-    line-height: 1.4;
+    line-height: 1.5;
 }
 
-.pdf-footer-col strong {
+.pdf-footer-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 12mm;
+}
+
+.pdf-footer-col:first-child strong {
     color: var(--ff-green);
-    display: block;
+    font-size: 8pt;
+    letter-spacing: 0.3px;
     margin-bottom: 1mm;
 }
 
 .pdf-footer-col div {
-    margin-bottom: 0.5mm;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Modal */
@@ -1642,23 +1659,165 @@ details.optional-info[open] summary {
 }
 
 /* ============================================
+   PDF FASSADENFIX VERSPRECHEN BLOCK
+   Markenkonformes Design nach FassadenFix Guidelines
+   ============================================ */
+.pdf-versprechen {
+    margin-top: 6mm;
+    padding: 0;
+    border: 1px solid var(--ff-green);
+    border-radius: 2mm;
+    overflow: hidden;
+    page-break-inside: avoid;
+}
+
+.pdf-versprechen-header {
+    background: var(--ff-green);
+    color: white;
+    padding: 2mm 4mm;
+    font-weight: 700;
+    font-size: 9pt;
+    letter-spacing: 0.3px;
+}
+
+.pdf-versprechen-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+}
+
+.pdf-versprechen-left,
+.pdf-versprechen-right {
+    padding: 3mm 4mm;
+    font-size: 7.5pt;
+    line-height: 1.4;
+}
+
+.pdf-versprechen-left {
+    border-right: 1px solid #e5e5e5;
+}
+
+.pdf-versprechen-subtitle {
+    font-weight: 600;
+    font-size: 8pt;
+    color: var(--ff-dark);
+    margin-bottom: 2mm;
+    padding-bottom: 1mm;
+    border-bottom: 1px solid var(--ff-green);
+}
+
+/* Preisstaffel Tabelle */
+.pdf-preisstaffel {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 7pt;
+}
+
+.pdf-preisstaffel th {
+    text-align: left;
+    font-weight: 600;
+    color: var(--ff-gray);
+    padding: 1mm 2mm;
+    border-bottom: 1px solid #e5e5e5;
+    font-size: 6.5pt;
+    text-transform: uppercase;
+}
+
+.pdf-preisstaffel td {
+    padding: 1mm 2mm;
+    border-bottom: 1px dotted #e5e5e5;
+}
+
+.pdf-preisstaffel td:last-child {
+    text-align: right;
+    font-weight: 600;
+    color: var(--ff-green);
+}
+
+.pdf-preisstaffel tr:last-child td {
+    border-bottom: none;
+}
+
+.pdf-preisstaffel tr.active {
+    background: rgba(122, 184, 0, 0.1);
+}
+
+.pdf-preisstaffel tr.active td:last-child {
+    font-weight: 700;
+}
+
+/* Garantien Liste */
+.pdf-garantien-liste {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.pdf-garantien-liste li {
+    padding: 1mm 0;
+    padding-left: 4mm;
+    position: relative;
+    font-size: 7.5pt;
+    color: var(--ff-text);
+}
+
+.pdf-garantien-liste li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--ff-green);
+    font-weight: 700;
+}
+
+.pdf-versprechen-footer {
+    background: #f8f8f8;
+    padding: 2mm 4mm;
+    text-align: center;
+    font-size: 8pt;
+    font-weight: 600;
+    color: var(--ff-green);
+    font-style: italic;
+    border-top: 1px solid #e5e5e5;
+}
+
+/* ============================================
    PDF TERMS BLOCK (ANGEBOTSBEDINGUNGEN)
    ============================================ */
 .pdf-terms {
-    margin-top: 8mm;
-    padding: 4mm 5mm;
-    background: #fafafa;
-    border: 1px solid #e5e5e5;
-    border-left: 3px solid var(--ff-green);
-    font-size: 8pt;
+    margin-top: 4mm;
+    padding: 2mm 0;
+    font-size: 7pt;
     line-height: 1.5;
+    color: var(--ff-gray);
+    page-break-inside: avoid;
 }
 
 .pdf-terms-title {
     font-weight: 700;
-    font-size: 9pt;
-    margin-bottom: 3mm;
+    font-size: 8pt;
+    margin-bottom: 1mm;
     color: var(--ff-dark);
+}
+
+.pdf-terms p {
+    margin: 0 0 1mm 0;
+}
+
+.pdf-terms strong {
+    color: var(--ff-dark);
+}
+
+.pdf-terms-agb {
+    font-size: 6.5pt;
+    color: var(--ff-gray);
+}
+
+.pdf-terms-agb {
+    margin-top: 2mm;
+    padding-top: 2mm;
+    border-top: 1px dashed #e5e5e5;
+    color: var(--ff-gray);
+    font-size: 6.5pt;
 }
 
 .pdf-terms p {

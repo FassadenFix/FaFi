@@ -655,8 +655,8 @@ function renderSeite(immoIdx, seiteKey, seite) {
                 <span class="seite-flaeche" style="margin-left:10px;${flaecheBerechnet > 0 ? '' : 'opacity:0.5;'}">${flaecheBerechnet.toLocaleString('de-DE')} m²</span>
             </div>
             <div style="display:flex;align-items:center;gap:8px;">
-                ${zuReinigenStatus === true ? '<span style="background:#7AB800;color:white;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;">✓ Wird gereinigt</span>' : ''}
-                ${zuReinigenStatus === false ? '<span style="background:#ef4444;color:white;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;">✗ Nicht reinigen</span>' : ''}
+                ${zuReinigenStatus === true ? '<span style="background:#7AB800;color:white;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;">✓ Im Angebot</span>' : ''}
+                ${zuReinigenStatus === false ? '<span style="background:#ef4444;color:white;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;">✗ Nicht im Angebot</span>' : ''}
                 ${zuReinigenStatus === null ? '<span style="background:#f59e0b;color:white;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;">⏳ Entscheidung offen</span>' : ''}
             </div>
         </div>
@@ -668,14 +668,14 @@ function renderSeite(immoIdx, seiteKey, seite) {
             <div style="margin-top:15px;padding:15px;background:linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);border-radius:8px;border:2px solid ${zuReinigenStatus === null ? '#f59e0b' : (zuReinigenStatus === true ? '#7AB800' : '#ef4444')};">
                 <div style="display:flex;justify-content:space-between;align-items:center;">
                     <div>
-                        <span style="font-weight:700;font-size:14px;color:#1f2937;">Soll diese Seite gereinigt werden?</span>
+                        <span style="font-weight:700;font-size:14px;color:#1f2937;">Seite in das Angebot aufnehmen?</span>
                         ${zuReinigenStatus === null ? '<span style="margin-left:8px;font-size:11px;color:#f59e0b;">⚠️ Pflichtangabe</span>' : ''}
                     </div>
                     <div class="zu-reinigen-toggle" style="display:flex;gap:4px;background:#e5e7eb;border-radius:8px;padding:3px;">
                         <button type="button" class="toggle-btn ${zuReinigenStatus === true ? 'active yes' : ''}" 
                                 onclick="setZuReinigen(${immoIdx},'${seiteKey}',true)" 
                                 style="padding:8px 16px;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;transition:all 0.2s;${zuReinigenStatus === true ? 'background:#7AB800;color:white;' : 'background:transparent;color:#666;'}">
-                            ✓ Ja, reinigen
+                            ✓ Ja, aufnehmen
                         </button>
                         <button type="button" class="toggle-btn ${zuReinigenStatus === false ? 'active no' : ''}" 
                                 onclick="setZuReinigen(${immoIdx},'${seiteKey}',false)" 
@@ -713,6 +713,7 @@ function renderSeiteDetails(immoIdx, seiteKey, seite, flaecheBerechnet) {
                         placeholder="z.B. 15" 
                         required
                         onchange="updateSeiteDimension(${immoIdx},'${seiteKey}','breite',this.value)"
+                        onkeyup="updateSeiteDimension(${immoIdx},'${seiteKey}','breite',this.value)"
                         onblur="validateDimension(this)">
                 </div>
                 <div class="form-group">
@@ -725,6 +726,7 @@ function renderSeiteDetails(immoIdx, seiteKey, seite, flaecheBerechnet) {
                         placeholder="z.B. 12" 
                         required
                         onchange="updateSeiteDimension(${immoIdx},'${seiteKey}','hoehe',this.value)"
+                        onkeyup="updateSeiteDimension(${immoIdx},'${seiteKey}','hoehe',this.value)"
                         onblur="validateDimension(this)">
                 </div>
                 <div class="form-group">
