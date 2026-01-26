@@ -342,4 +342,6 @@ const Orchestrator = {
 if (typeof window !== 'undefined') {
     window.Orchestrator = Orchestrator;
     window.BlockRegistry = BlockRegistry;
+    // Legacy/HTML Support
+    window.completeBlock = (num) => Orchestrator.completeBlock(num);
 }
