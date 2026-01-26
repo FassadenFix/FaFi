@@ -99,7 +99,6 @@ async function generatePDF() {
         // Erfolgsmeldung
         if (statusEl) statusEl.innerHTML = '<span style="color:#7AB800;">✓ PDF erstellt</span>';
 
-        console.log('PDF erfolgreich erstellt:', filename);
 
     } catch (error) {
         console.error('PDF-Export Fehler:', error);

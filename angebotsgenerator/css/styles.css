@@ -1919,3 +1919,197 @@ details.optional-info[open] summary {
         margin-top: 5mm;
     }
 }
+
+/* ============================================
+   UTILITY CLASSES (Refactoring)
+   ============================================ */
+
+/* Layout-Trenner für Subsektionen */
+.subsection-divider {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px dashed #ddd;
+}
+
+/* Kleine Hinweistexte */
+.hint-text {
+    font-size: 10px;
+    color: #666;
+}
+
+/* Readonly Input-Styling */
+.input-readonly {
+    background: #f5f5f5;
+    color: #666;
+}
+
+/* Angebotsnummer-Styling */
+.input-angebotsnummer {
+    background: #f5f5f5;
+    font-weight: 600;
+    color: #7AB800;
+}
+
+/* Flex-Row mit Space-Between */
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Rabatte/Aktionen Box */
+.rabatt-box {
+    background: #f0fdf4;
+    border-radius: 8px;
+    padding: 12px;
+    border: 1px solid rgba(122, 184, 0, 0.2);
+}
+
+/* Frühbucher-Badge */
+.fruehbucher-badge {
+    font-size: 11px;
+    margin-left: 8px;
+    padding: 2px 8px;
+    background: #7AB800;
+    color: white;
+    border-radius: 10px;
+}
+
+/* Ersparnis-Box */
+.ersparnis-box {
+    margin-top: 10px;
+    background: #fff;
+    border-radius: 6px;
+    padding: 10px;
+    border: 1px solid rgba(122, 184, 0, 0.2);
+}
+
+/* Ersparnis-Wert */
+.ersparnis-value {
+    font-size: 16px;
+    color: #7AB800;
+}
+
+/* Textbausteine Label */
+.textbaustein-label {
+    font-weight: 600;
+    font-size: 12px;
+}
+
+/* Textbaustein-Select */
+.textbaustein-select {
+    width: 100%;
+    margin-top: 4px;
+}
+
+/* Textbaustein-Preview */
+.textbaustein-preview {
+    width: 100%;
+    margin-top: 8px;
+    font-size: 12px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+/* Positionen-Summe Box */
+.positionen-summe {
+    margin-top: 15px;
+    padding: 15px;
+    background: #f0fdf4;
+    border-radius: 8px;
+}
+
+/* Summen-Zeile */
+.summe-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+}
+
+.summe-row-mwst {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+}
+
+.summe-row-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    font-weight: 700;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 2px solid #7AB800;
+}
+
+/* HubSpot Deal Box */
+.hubspot-deal-box {
+    background: #fff7ed;
+    border-radius: 8px;
+    padding: 12px;
+    border: 1px solid rgba(255, 122, 89, 0.2);
+}
+
+/* HubSpot Deal Status Box */
+.hubspot-status-box {
+    margin-top: 10px;
+    padding: 10px;
+    background: #fff;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}
+
+/* HubSpot Deal Status Badge */
+.hubspot-status-badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    background: #e5e7eb;
+    border-radius: 10px;
+}
+
+/* Hidden Element */
+.hidden {
+    display: none;
+}
+
+/* Form-Row Varianten */
+.form-row-address {
+    grid-template-columns: 80px 1fr 100px;
+}
+
+.form-row-contact {
+    grid-template-columns: 100px 1fr 1fr;
+}
+
+.form-row-plz {
+    grid-template-columns: 100px 1fr;
+}
+
+/* Abweichender Rechnungsempfänger Box */
+.rechnungsempfaenger-box {
+    display: none;
+    margin-top: 12px;
+    padding: 12px;
+    background: #f8fafc;
+    border-radius: 8px;
+    border: 1px solid var(--ff-border);
+}
+
+/* Section Titles mit Farben */
+.section-title-green {
+    color: #7AB800;
+    font-weight: 600;
+}
+
+.section-title-blue {
+    color: #3b82f6;
+    font-weight: 600;
+}
+
+.section-title-orange {
+    color: #ff7a59;
+    font-weight: 600;
+}

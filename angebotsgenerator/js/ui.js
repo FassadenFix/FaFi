@@ -359,7 +359,6 @@ async function loadPriceData() {
     try {
         const response = await fetch('data/preisstufen.json');
         priceData = await response.json();
-        console.log('Preisdaten geladen:', priceData.meta.stand);
 
         // Update Rabatt dropdown if needed
         updateRabattDropdownFromData();
@@ -1248,7 +1247,6 @@ function initAddressAutocomplete(immoIdx) {
             renderImmobilien();
             updatePreview();
 
-            console.log(`📍 Adresse verifiziert für Immobilie ${immoIdx + 1}:`, addressData);
         });
 
         autocompleteInstances[immoIdx] = autocomplete;
@@ -1334,7 +1332,6 @@ function setPflichtabfrage(immoIdx, field, value) {
 
     // Bei Marketing geeignet = true: E-Mail-Entwurf öffnen
     if (field === 'marketingGeeignet' && value === true) {
-        console.log(`📸 Marketing-Kandidat: Immobilie ${immoIdx + 1} markiert`);
 
         // E-Mail-Benachrichtigung vorbereiten
         const immo = immobilien[immoIdx];
@@ -1386,7 +1383,6 @@ FassadenFix Vertrieb`;
 
     // Bei Reinigung möglich = false: Warnung anzeigen
     if (field === 'reinigungMoeglich' && value === false) {
-        console.log(`⛔ Reinigung nicht möglich: Immobilie ${immoIdx + 1}`);
     }
 
     renderImmobilien();
@@ -1746,7 +1742,6 @@ function uploadSchadenFoto(immoIdx, seiteKey, schadensTyp) {
         renderImmobilien();
         updatePreview();
 
-        console.log(`${files.length} Foto(s) hochgeladen für ${SEITEN_TYPEN[seiteKey].label} - ${schadensTyp}`);
     };
 
     document.body.appendChild(fileInput);
@@ -1797,7 +1792,6 @@ function uploadSeiteFoto(immoIdx, seiteKey) {
         renderImmobilien();
         updatePreview();
 
-        console.log(`${files.length} Foto(s) für ${SEITEN_TYPEN[seiteKey].label} hochgeladen`);
     };
 
     document.body.appendChild(fileInput);
@@ -1820,7 +1814,6 @@ function removeSchadenFoto(immoIdx, seiteKey, schadensTyp, fotoIdx) {
         seite.schaeden[schadensTyp].fotos.splice(fotoIdx, 1);
         renderImmobilien();
         updatePreview();
-        console.log(`Foto ${fotoIdx + 1} für ${schadensTyp} gelöscht`);
     }
 }
 

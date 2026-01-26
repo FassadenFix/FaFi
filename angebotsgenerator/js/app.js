@@ -270,7 +270,6 @@ async function loadPreisstufen() {
     try {
         const response = await fetch('data/preisstufen.json');
         preisstufen = await response.json();
-        console.log('Preisstufen geladen');
         return preisstufen;
     } catch (e) {
         console.error('Fehler beim Laden der Preisstufen:', e);
@@ -621,7 +620,6 @@ ab 5.000 m²: 8,75 €/m²
     if (typeof renderImmobilien === 'function') renderImmobilien();
     if (typeof updatePreview === 'function') updatePreview();
 
-    console.log('Positionen automatisch generiert:', positions.length, 'für', immobilien.length, 'Immobilien');
 }
 
 
@@ -722,7 +720,6 @@ async function loadArtikelKatalog() {
     try {
         const response = await fetch('data/artikel.json');
         artikelKatalog = await response.json();
-        console.log('Artikelkatalog geladen:', Object.keys(artikelKatalog.artikelgruppen).length, 'Gruppen');
         return artikelKatalog;
     } catch (e) {
         console.error('Fehler beim Laden des Artikelkatalogs:', e);
@@ -791,7 +788,6 @@ async function initApp() {
         }
     });
 
-    console.log('FassadenFix Angebotsgenerator initialisiert');
 }
 
 function loadInitialData() {

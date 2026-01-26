@@ -266,7 +266,6 @@ document.addEventListener('DOMContentLoaded', () => {
     fetch(`${API_BASE_URL}/health`)
         .then(res => res.json())
         .then(data => {
-            console.log('Backend Status:', data);
             if (!data.hubspot) {
                 console.warn('⚠️ HubSpot nicht konfiguriert - Mock-Modus aktiv');
             }
