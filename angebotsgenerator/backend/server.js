@@ -186,15 +186,21 @@ app.get('/api/hubspot/companies/:id/contacts', async (req, res) => {
             return res.status(503).json({ error: 'HubSpot nicht konfiguriert' });
         }
 
-        const associations = await client.crm.companies.associationsApi.getAll(
-            id, 'contacts'
+        // HubSpot API v4: Verwende associations.v4.basicApi.getPage
+        // 'company' zu 'contact' Assoziation
+        const associations = await client.crm.associations.v4.basicApi.getPage(
+            'company',
+            id,
+            'contact',
+            undefined, // after cursor
+            500 // limit
         );
 
-        if (associations.results.length === 0) {
+        if (!associations.results || associations.results.length === 0) {
             return res.json({ results: [] });
         }
 
-        const contactIds = associations.results.map(a => a.id);
+        const contactIds = associations.results.map(a => a.toObjectId);
 
         const batchRead = await client.crm.contacts.batchApi.read({
             inputs: contactIds.map(id => ({ id })),
@@ -229,15 +235,20 @@ app.get('/api/hubspot/companies/:id/deals', async (req, res) => {
             return res.status(503).json({ error: 'HubSpot nicht konfiguriert' });
         }
 
-        const associations = await client.crm.companies.associationsApi.getAll(
-            id, 'deals'
+        // HubSpot API v4: Verwende associations.v4.basicApi.getPage
+        const associations = await client.crm.associations.v4.basicApi.getPage(
+            'company',
+            id,
+            'deal',
+            undefined, // after cursor
+            500 // limit
         );
 
-        if (associations.results.length === 0) {
+        if (!associations.results || associations.results.length === 0) {
             return res.json({ results: [] });
         }
 
-        const dealIds = associations.results.map(a => a.id);
+        const dealIds = associations.results.map(a => a.toObjectId);
 
         const batchRead = await client.crm.deals.batchApi.read({
             inputs: dealIds.map(id => ({ id })),
