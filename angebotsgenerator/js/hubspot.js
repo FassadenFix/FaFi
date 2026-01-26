@@ -69,12 +69,12 @@ function selectCompany(company) {
     // Adresse parsen (falls als einzelnes Feld)
     if (company.address) {
         const addressParts = company.address.match(/^(.+?)\s+(\d+.*)$/) || [null, company.address, ''];
-        document.getElementById('companyStreet').value = addressParts[1] || company.address;
-        document.getElementById('companyStreetNumber').value = addressParts[2] || '';
+        document.getElementById('companyStrasse').value = addressParts[1] || company.address;
+        document.getElementById('companyHausnummer').value = addressParts[2] || '';
     }
 
-    document.getElementById('companyZip').value = company.zip || '';
-    document.getElementById('companyCity').value = company.city || '';
+    document.getElementById('companyPlz').value = company.zip || '';
+    document.getElementById('companyOrt').value = company.city || '';
     document.getElementById('companyPhone').value = company.phone || '';
     document.getElementById('companyEmail').value = company.email || company.domain ? `info@${company.domain}` : '';
 
@@ -93,10 +93,10 @@ function selectCompany(company) {
 function createNewCompany(name) {
     document.getElementById('hubspotCompanyId').value = '';
     document.getElementById('companyName').value = name;
-    document.getElementById('companyStreet').value = '';
-    document.getElementById('companyStreetNumber').value = '';
-    document.getElementById('companyZip').value = '';
-    document.getElementById('companyCity').value = '';
+    document.getElementById('companyStrasse').value = '';
+    document.getElementById('companyHausnummer').value = '';
+    document.getElementById('companyPlz').value = '';
+    document.getElementById('companyOrt').value = '';
     document.getElementById('companySearch').value = name;
     document.getElementById('companyResults').classList.remove('active');
     document.getElementById('contactSelect').innerHTML = '<option value="">-- Kontakt wählen oder neu anlegen --</option>';

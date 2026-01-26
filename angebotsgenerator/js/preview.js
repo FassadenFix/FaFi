@@ -45,8 +45,8 @@ function updatePreview() {
     updateFruehbucherErsparnis();
     updatePreviewStatus();
 
-    const street = document.getElementById('companyStreet').value;
-    const streetNum = document.getElementById('companyStreetNumber').value;
+    const street = document.getElementById('companyStrasse').value;
+    const streetNum = document.getElementById('companyHausnummer').value;
     const fullStreet = streetNum ? `${street} ${streetNum}` : street;
 
     const salutation = document.getElementById('contactSalutation').value;
@@ -59,8 +59,8 @@ function updatePreview() {
     const data = {
         firma: document.getElementById('companyName').value,
         strasse: fullStreet,
-        plz: document.getElementById('companyZip').value,
-        ort: document.getElementById('companyCity').value,
+        plz: document.getElementById('companyPlz').value,
+        ort: document.getElementById('companyOrt').value,
         ansprechpartner: fullContact,
         angNr: document.getElementById('angebotsnummer').value,
         kundNr: document.getElementById('kundennummer').value,
