@@ -1,0 +1,203 @@
+/* ============================================
+   MOBILE-FIRST STYLES
+   ============================================ */
+
+/* App Container */
+.app-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--ff-light-gray);
+}
+
+/* Header */
+.app-header {
+    background: var(--ff-white);
+    box-shadow: var(--ff-shadow-md);
+    position: sticky;
+    top: 0;
+    z-index: var(--z-sticky);
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--spacing-md);
+    min-height: 64px;
+}
+
+.header-left,
+.header-right {
+    flex: 0 0 48px;
+}
+
+.header-center {
+    flex: 1;
+    text-align: center;
+}
+
+.app-title {
+    font-size: 20px;
+    font-weight: var(--ff-font-weight-bold);
+    color: var(--ff-green);
+    margin: 0;
+    line-height: 1.2;
+}
+
+.app-subtitle {
+    font-size: 12px;
+    color: var(--ff-gray);
+    margin: 0;
+}
+
+/* Icon Button */
+.icon-button {
+    width: 48px;
+    height: 48px;
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    cursor: pointer;
+    border-radius: var(--ff-radius-md);
+    transition: var(--ff-transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon-button:hover {
+    background: var(--ff-light-gray);
+}
+
+.icon-button:active {
+    transform: scale(0.95);
+}
+
+/* Offline Indicator */
+.offline-indicator {
+    background: var(--status-warning);
+    color: white;
+    padding: var(--spacing-sm) var(--spacing-md);
+    text-align: center;
+    font-size: 14px;
+    font-weight: var(--ff-font-weight-medium);
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: var(--spacing-md);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Loading Screen */
+.loading-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+    color: var(--ff-gray);
+}
+
+.spinner {
+    width: 48px;
+    height: 48px;
+    border: 4px solid var(--ff-border);
+    border-top-color: var(--ff-green);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: var(--spacing-md);
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* FAB (Floating Action Button) */
+.fab {
+    position: fixed;
+    bottom: var(--spacing-lg);
+    right: var(--spacing-lg);
+    width: var(--touch-large);
+    height: var(--touch-large);
+    background: var(--ff-green);
+    color: white;
+    border: none;
+    border-radius: var(--ff-radius-full);
+    font-size: 32px;
+    font-weight: 300;
+    box-shadow: var(--ff-shadow-green);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: var(--z-fixed);
+    transition: var(--ff-transition);
+}
+
+.fab:hover {
+    background: var(--ff-green-dark);
+    transform: scale(1.05);
+}
+
+.fab:active {
+    transform: scale(0.95);
+}
+
+/* Toast Container */
+.toast-container {
+    position: fixed;
+    top: 80px;
+    right: var(--spacing-md);
+    z-index: var(--z-tooltip);
+    max-width: calc(100% - var(--spacing-lg) * 2);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .main-content {
+        padding: var(--spacing-sm);
+    }
+
+    .fab {
+        bottom: var(--spacing-md);
+        right: var(--spacing-md);
+    }
+
+    .toast-container {
+        right: var(--spacing-sm);
+        left: var(--spacing-sm);
+    }
+}
+
+@media (min-width: 769px) {
+    .app-container {
+        max-width: 768px;
+        margin: 0 auto;
+    }
+}

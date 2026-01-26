@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="description" content="FassadenFix Mobile Objekterfassung - Erfassen Sie Immobilien und Objekte vor Ort">
+    <meta name="theme-color" content="#7AB800">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="FF Objekt">
+
+    <title>FassadenFix Objekterfassung</title>
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Icons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/icons/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192x192.png">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <!-- App Container -->
+    <div id="app" class="app-container">
+
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="header-left">
+                    <button id="backButton" class="icon-button" style="display: none;">
+                        ← Zurück
+                    </button>
+                </div>
+                <div class="header-center">
+                    <h1 class="app-title">FassadenFix</h1>
+                    <p class="app-subtitle">Objekterfassung</p>
+                </div>
+                <div class="header-right">
+                    <button id="syncButton" class="icon-button" title="Synchronisieren">
+                        🔄
+                    </button>
+                </div>
+            </div>
+
+            <!-- Offline Indicator -->
+            <div id="offlineIndicator" class="offline-indicator" style="display: none;">
+                ⚠️ Offline-Modus - Daten werden lokal gespeichert
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main id="mainContent" class="main-content">
+            <!-- Dynamischer Content wird hier gerendert -->
+            <div class="loading-screen">
+                <div class="spinner"></div>
+                <p>Wird geladen...</p>
+            </div>
+        </main>
+
+        <!-- Floating Action Button (FAB) -->
+        <button id="fab" class="fab" style="display: none;" title="Neue Immobilie">
+            +
+        </button>
+
+        <!-- Toast Notifications -->
+        <div id="toastContainer" class="toast-container"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="data/constants.js"></script>
+    <script src="js/models/seite.js"></script>
+    <script src="js/models/immobilie.js"></script>
+    <script src="js/models/validation.js"></script>
+    <script src="js/utils/formatting.js"></script>
+    <script src="js/core/state.js"></script>
+    <script src="js/core/storage.js"></script>
+    <script src="js/core/sync.js"></script>
+    <script src="js/core/router.js"></script>
+    <script src="js/ui/renderer.js"></script>
+    <script src="js/ui/wizard.js"></script>
+    <script src="js/ui/components/immobilien-list.js"></script>
+    <script src="js/ui/components/immobilien-detail.js"></script>
+    <script src="js/ui/components/seiten-form.js"></script>
+    <script src="js/ui/components/validation-feedback.js"></script>
+    <script src="js/features/camera.js"></script>
+    <script src="js/features/geolocation.js"></script>
+    <script src="js/features/audio.js"></script>
+    <script src="js/features/export.js"></script>
+    <script src="js/integrations/hubspot.js"></script>
+    <script src="js/integrations/backend.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('SW registered:', registration);
+                    })
+                    .catch(error => {
+                        console.log('SW registration failed:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

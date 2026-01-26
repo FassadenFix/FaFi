@@ -2040,3 +2040,19 @@ window.renderImmobilien = renderImmobilien;
 window.renderPositions = renderPositions;
 
 console.info('✅ UI.js geladen - Alle Funktionen global exportiert');
+
+// ============================================
+// EXPLIZITE EXPORTS FÜR ROBUSTHEIT
+// ============================================
+window.addImmobilie = addImmobilie;
+window.removeImmobilie = removeImmobilie;
+window.renderImmobilien = renderImmobilien;
+// Weitere wichtige Funktionen für onclicks
+window.updateSeite = updateSeite;
+window.setZuReinigen = setZuReinigen;
+window.toggleAlleSeiten = toggleAlleSeiten;
+window.updateSeiteDimension = updateSeiteDimension;
+window.setBuehneTyp = setBuehneTyp;
+window.setSchaedenVorhanden = setSchaedenVorhanden;
+
+console.info('✅ ui.js geladen und Funktionen exportiert');

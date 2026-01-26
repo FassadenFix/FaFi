@@ -275,4 +275,6 @@ if (typeof BlockRegistry !== 'undefined') {
 // Global export
 if (typeof window !== 'undefined') {
     window.AuftraggeberModule = AuftraggeberModule;
+    // Legacy/HTML-Kompatibilität: Mapping für alte onclick/onchange Handler
+    window.checkBlock1Complete = () => AuftraggeberModule.validateBlock();
 }
