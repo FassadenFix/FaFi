@@ -14,13 +14,20 @@ const PORT = process.env.PORT || 3001;
 
 // === MIDDLEWARE ===
 // CORS für GitHub Pages (Production) und localhost (Development)
-const allowedOrigins = [
+let allowedOrigins = [
     'https://fassadenfix.github.io',
+    'https://alexanderretzlaff.github.io',
     'http://localhost:8888',
     'http://localhost:3000',
     'http://127.0.0.1:8888',
     'http://127.0.0.1:3000'
 ];
+
+// Add origins from environment variable (Render deployment)
+if (process.env.ALLOWED_ORIGINS) {
+    const envOrigins = process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim());
+    allowedOrigins = [...new Set([...allowedOrigins, ...envOrigins])];
+}
 
 app.use(cors({
     origin: function (origin, callback) {

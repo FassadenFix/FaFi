@@ -278,14 +278,5 @@ async function deleteImmobilie(idx) {
 
 /**
  * Zeigt Export-Dialog
+ * (Implementation in export.js)
  */
-function showExportDialog() {
-    // Wird in Phase 4 implementiert
-    showToast('Export-Funktion wird in Phase 4 implementiert', 'info');
-
-    // Vorschau in Console
-    exportAsJSON().then(data => {
-        console.log('📤 Export-Daten:', data);
-        console.log('💾 JSON:', JSON.stringify(data, null, 2));
-    });
-}

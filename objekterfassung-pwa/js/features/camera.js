@@ -413,7 +413,7 @@ function viewPhoto(photoId, immoIdx, seiteKey, schadenTyp = null) {
             <div class="lightbox-actions">
                 <button class="btn-secondary" onclick="closeLightbox()">Schließen</button>
                 <button class="btn-primary" onclick="annotatePhoto('${photoId}', ${immoIdx}, '${seiteKey}'${schadenTyp ? `, '${schadenTyp}'` : ''})">
-                    ✏️ Markieren (Phase 3.2)
+                    ✏️ Markieren
                 </button>
             </div>
         </div>
@@ -431,12 +431,9 @@ function closeLightbox() {
 }
 
 /**
- * Startet Foto-Annotation (Platzhalter für Phase 3.2)
+ * Startet Foto-Annotation
+ * (Implementation in annotation.js)
  */
-function annotatePhoto(photoId, immoIdx, seiteKey, schadenTyp = null) {
-    closeLightbox();
-    showToast('Foto-Annotation wird in Phase 3.2 implementiert', 'info');
-}
 
 /**
  * Prüft Kamera-Verfügbarkeit

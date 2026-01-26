@@ -1,0 +1,32 @@
+# OS Files
+.DS_Store
+Thumbs.db
+Icon?
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment (falls verwendet)
+.env
+.env.local
+
+# Test Coverage
+coverage/
+
+# Build (falls später verwendet)
+dist/
+build/
+
+# Node Modules (falls später npm genutzt wird)
+node_modules/
+
+# Temporary Files
+*.tmp
+.cache/
