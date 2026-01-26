@@ -233,17 +233,181 @@ const ObjekterfassungUI = {
     },
 
     renderSeiteDetails(immoIdx, seiteKey, seite, flaecheBerechnet) {
-        // Ruft die globale Render-Funktion für Details auf (um Redundanz zu vermeiden, oder wir kopieren auch diesen Teil)
-        // Für Phase 2 refactoring: Wir nutzen vorerst noch die bestehende globale Logik für das Innenleben der Seite, falls möglich, 
-        // oder wir portieren die gesamte renderSeiteDetails Funktion hierher. 
-        // Entscheidung: Wir kopieren die Funktion, um ui.js komplett obsolet zu machen.
-        
+        // Bühnen-Preis ermitteln
         const buehneTyp = seite.buehne?.typ || 'keine';
         const buehnePreisInfo = (window.BUEHNEN_PREISE && window.BUEHNEN_PREISE[buehneTyp]) || { preis: 0 }; 
         const istSonderbuehne = buehnePreisInfo.preis === 'anfrage';
 
-        // ...HTML String Bauen... (vereinfachte Version zur Integration)
-        return renderSeiteDetailsGlobal(immoIdx, seiteKey, seite, flaecheBerechnet);
+        // Helper für Produkte
+        const produkteHtml = (window.REINIGUNGSPRODUKTE && window.REINIGUNGSPRODUKTE.zusaetzlich) ? window.REINIGUNGSPRODUKTE.zusaetzlich.map(prod => `
+            <label class="checkbox-pill ${(seite.reinigungsprodukt?.zusaetzlichProdukte || []).includes(prod.id) ? 'checked' : ''}" onclick="toggleZusatzProdukt(${immoIdx},'${seiteKey}','${prod.id}',this)">
+                <input type="checkbox" ${(seite.reinigungsprodukt?.zusaetzlichProdukte || []).includes(prod.id) ? 'checked' : ''}>
+                ${prod.label}
+            </label>
+        `).join('') : '';
+
+        // Helper für Schäden
+        const schaedenHtml = (window.SCHADEN_TYPEN || []).map(schaden => `
+            <div class="schaden-item">
+                <label class="checkbox-label" style="font-size:12px;">
+                    <input type="checkbox" ${seite.schaeden?.[schaden.id]?.aktiv ? 'checked' : ''} onchange="toggleSchaden(${immoIdx},'${seiteKey}','${schaden.id}',this.checked)">
+                    ${schaden.label}
+                </label>
+                ${seite.schaeden?.[schaden.id]?.aktiv ? `
+                <div class="schaden-details-input">
+                    <input type="text" value="${seite.schaeden?.[schaden.id]?.beschreibung || ''}" placeholder="Beschreibung..." onchange="updateSchadenBeschreibung(${immoIdx},'${seiteKey}','${schaden.id}',this.value)">
+                    <button class="btn-camera" onclick="capturePhoto(${immoIdx},'${seiteKey}','${schaden.id}')">📷</button>
+                    ${(seite.schaeden?.[schaden.id]?.fotos || []).length > 0 ? `
+                        <div class="foto-preview-row">
+                            ${seite.schaeden[schaden.id].fotos.map(f => `<img src="${f}" class="mini-thumb">`).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+                ` : ''}
+            </div>
+        `).join('');
+
+        return `
+        <!-- 2.1 MASSE (PFLICHTFELDER) -->
+        <div class="dimension-fields-required ${(seite.breite > 0 && seite.hoehe > 0) ? 'valid' : ''}">
+            <div class="dimension-header">
+                ${(seite.breite > 0 && seite.hoehe > 0) ? '✓ Maße eingegeben' : '⚠️ Pflichtfelder: Breite und Höhe eingeben'}
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+                <div class="form-group">
+                    <label>Breite (m) <span class="required">*</span></label>
+                    <input type="number" step="0.5" min="0.5" max="100" value="${seite.breite || ''}" placeholder="z.B. 15" required
+                        onchange="updateSeiteDimension(${immoIdx},'${seiteKey}','breite',this.value)"
+                        onkeyup="updateSeiteDimension(${immoIdx},'${seiteKey}','breite',this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Höhe (m) <span class="required">*</span></label>
+                    <input type="number" step="0.5" min="0.5" max="50" value="${seite.hoehe || ''}" placeholder="z.B. 12" required
+                        onchange="updateSeiteDimension(${immoIdx},'${seiteKey}','hoehe',this.value)"
+                        onkeyup="updateSeiteDimension(${immoIdx},'${seiteKey}','hoehe',this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Fläche (m²)</label>
+                    <input type="number" value="${flaecheBerechnet}" style="background:#f0f0f0;font-weight:600;color:var(--ff-green);" readonly>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 2.2 ABFRAGEN A-G (PFLICHTANGABEN) -->
+        <div class="abfragen-container" style="display:flex;flex-direction:column;gap:12px;margin-top:12px;">
+            <div style="font-size:12px;font-weight:600;color:#92400e;margin-bottom:4px;">
+                ⚠️ Pflichtangaben (A-G ausfüllen)
+            </div>
+            
+            <!-- A) BALKONE -->
+            <div class="abfrage-item" style="background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid var(--ff-border);">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <span style="font-weight:600;font-size:13px;">A) Balkone vorhanden?</span>
+                    <div class="ja-nein-toggle" style="display:flex;gap:4px;">
+                        <button type="button" class="toggle-btn-sm ${seite.balkone === true ? 'active yes' : ''}" onclick="updateSeite(${immoIdx},'${seiteKey}','balkone',true)">Ja</button>
+                        <button type="button" class="toggle-btn-sm ${seite.balkone === false ? 'active no' : ''}" onclick="updateSeite(${immoIdx},'${seiteKey}','balkone',false)">Nein</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- B) BÜHNEN-TYP -->
+            <div class="abfrage-item" style="background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid ${istSonderbuehne ? '#f59e0b' : 'var(--ff-green)'};">
+                <div style="font-weight:600;font-size:13px;margin-bottom:8px;">B) Bühnen-Typ</div>
+                <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                    <label class="radio-pill ${buehneTyp === 'keine' ? 'selected' : ''}" onclick="setBuehneTyp(${immoIdx},'${seiteKey}','keine')">
+                        <input type="radio" name="buehne-${immoIdx}-${seiteKey}" ${buehneTyp === 'keine' ? 'checked' : ''}>
+                        Keine Bühne <span style="color:var(--ff-green);font-weight:600;">0 €</span>
+                    </label>
+                    <label class="radio-pill ${buehneTyp === 'standard' ? 'selected' : ''}" onclick="setBuehneTyp(${immoIdx},'${seiteKey}','standard')">
+                        <input type="radio" name="buehne-${immoIdx}-${seiteKey}" ${buehneTyp === 'standard' ? 'checked' : ''}>
+                        Standard <span style="color:var(--ff-green);font-weight:600;">390 €/Tag</span>
+                    </label>
+                    <label class="radio-pill ${istSonderbuehne ? 'selected warning' : ''}" onclick="setBuehneTyp(${immoIdx},'${seiteKey}','sonder')">
+                        <input type="radio" name="buehne-${immoIdx}-${seiteKey}" ${istSonderbuehne ? 'checked' : ''}>
+                        Sonderbühne <span style="color:#f59e0b;font-weight:600;">Auf Anfrage</span>
+                    </label>
+                </div>
+                
+                ${istSonderbuehne ? `
+                <div class="submenu" style="margin-top:10px;padding:10px;background:#fff;border-radius:6px;border:1px solid #f59e0b;">
+                    <label style="font-size:12px;font-weight:500;margin-bottom:6px;display:block;">Typ:</label>
+                    <select onchange="updateSeite(${immoIdx},'${seiteKey}','buehne',{...immobilien[${immoIdx}].seiten['${seiteKey}'].buehne, sonderTyp: this.value})" style="width:100%;">
+                        <option value="">-- Bitte wählen --</option>
+                        <option value="gelenkbuehne" ${seite.buehne?.sonderTyp === 'gelenkbuehne' ? 'selected' : ''}>Gelenkbühne</option>
+                        <option value="teleskopbuehne" ${seite.buehne?.sonderTyp === 'teleskopbuehne' ? 'selected' : ''}>Teleskopbühne</option>
+                        <option value="lkwbuehne" ${seite.buehne?.sonderTyp === 'lkwbuehne' ? 'selected' : ''}>LKW-Bühne</option>
+                        <option value="kletterer" ${seite.buehne?.sonderTyp === 'kletterer' ? 'selected' : ''}>Industriekletterer</option>
+                        <option value="geruest" ${seite.buehne?.sonderTyp === 'geruest' ? 'selected' : ''}>Gerüst</option>
+                        <option value="sonstiges" ${seite.buehne?.sonderTyp === 'sonstiges' ? 'selected' : ''}>Sonstiges</option>
+                    </select>
+                    <div class="form-group" style="margin-top:10px;">
+                        <label style="font-size:12px;font-weight:500;">Tage (Min. 6)</label>
+                        <input type="number" min="6" value="${seite.buehne?.tage || 6}" style="width:80px;" onchange="updateSeite(${immoIdx},'${seiteKey}','buehne',{...immobilien[${immoIdx}].seiten['${seiteKey}'].buehne, tage: Math.max(6, parseInt(this.value)||6)})">
+                    </div>
+                </div>
+                ` : ''}
+                
+                ${buehneTyp === 'standard' ? `
+                <div class="submenu" style="margin-top:10px;padding:10px;background:#fff;border-radius:6px;border:1px solid var(--ff-green);">
+                    <div class="form-group">
+                        <label style="font-size:12px;">Anzahl Tage</label>
+                        <input type="number" min="1" value="${seite.buehne?.tage || 1}" style="width:80px;" onchange="updateSeite(${immoIdx},'${seiteKey}','buehne',{...immobilien[${immoIdx}].seiten['${seiteKey}'].buehne, tage: parseInt(this.value)||1})">
+                    </div>
+                </div>
+                ` : ''}
+            </div>
+
+            <!-- C) REINIGUNGSPRODUKT -->
+            <div class="abfrage-item" style="background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid ${seite.reinigungsprodukt?.zusaetzlichErforderlich ? '#f59e0b' : 'var(--ff-green)'};">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                    <span style="font-weight:600;font-size:13px;">C) Reinigungsprodukt</span>
+                    <span style="font-size:11px;color:var(--ff-green);font-weight:500;">✓ Standard: HF1 plus</span>
+                </div>
+                <label class="checkbox-label" style="font-size:12px;">
+                    <input type="checkbox" ${seite.reinigungsprodukt?.zusaetzlichErforderlich ? 'checked' : ''} onchange="toggleReinigungsproduktZusatz(${immoIdx},'${seiteKey}',this.checked)">
+                    Anderes/Zusätzliches erforderlich
+                </label>
+                
+                ${seite.reinigungsprodukt?.zusaetzlichErforderlich ? `
+                <div class="submenu" style="margin-top:10px;padding:10px;background:#fff;border-radius:6px;border:1px solid #f59e0b;">
+                    <div style="margin-bottom:10px;">
+                        <label style="font-size:12px;font-weight:500;display:block;margin-bottom:6px;">Produkt (Multi-Select):</label>
+                        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                            ${produkteHtml}
+                        </div>
+                    </div>
+                    <div>
+                        <label style="font-size:12px;font-weight:500;display:block;margin-bottom:6px;">Anwendung:</label>
+                        <div style="display:flex;gap:8px;">
+                            <label class="radio-pill ${seite.reinigungsprodukt?.anwendung === 'zusaetzlich' ? 'selected' : ''}" onclick="setReinigungsproduktAnwendung(${immoIdx},'${seiteKey}','zusaetzlich')">
+                                <input type="radio" name="anwendung-${immoIdx}-${seiteKey}" ${seite.reinigungsprodukt?.anwendung === 'zusaetzlich' ? 'checked' : ''}>Zusätzlich
+                            </label>
+                            <label class="radio-pill ${seite.reinigungsprodukt?.anwendung === 'stattdessen' ? 'selected' : ''}" onclick="setReinigungsproduktAnwendung(${immoIdx},'${seiteKey}','stattdessen')">
+                                <input type="radio" name="anwendung-${immoIdx}-${seiteKey}" ${seite.reinigungsprodukt?.anwendung === 'stattdessen' ? 'checked' : ''}>Stattdessen
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                ` : ''}
+            </div>
+
+            <!-- F) SCHÄDEN -->
+            <div class="abfrage-item" style="background:#f8fafc;border-radius:8px;padding:12px;border-left:3px solid ${seite.schaeden?.vorhanden ? '#ef4444' : 'var(--ff-border)'};">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <span style="font-weight:600;font-size:13px;">F) Schäden / Besonderheiten?</span>
+                    <div class="ja-nein-toggle" style="display:flex;gap:4px;">
+                        <button type="button" class="toggle-btn-sm ${seite.schaeden?.vorhanden === true ? 'active yes' : ''}" onclick="setSchaedenVorhanden(${immoIdx},'${seiteKey}',true)">Ja</button>
+                        <button type="button" class="toggle-btn-sm ${seite.schaeden?.vorhanden === false ? 'active no' : ''}" onclick="setSchaedenVorhanden(${immoIdx},'${seiteKey}',false)">Nein</button>
+                    </div>
+                </div>
+                ${seite.schaeden?.vorhanden ? `
+                <div class="submenu" style="margin-top:10px;padding:10px;background:#fff;border-radius:6px;border:1px solid #ef4444;">
+                    ${schaedenHtml}
+                </div>
+                ` : ''}
+            </div>
+        </div>
+        `;
     },
 
     updateStats() {

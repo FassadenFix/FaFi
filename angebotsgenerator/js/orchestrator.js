@@ -25,9 +25,24 @@ const Orchestrator = {
      */
     async init() {
         console.info('🚀 Orchestrator: Initialisierung...');
+        
+        // Versuche, Module zu finden und zu registrieren
+        if (typeof AuftraggeberModule !== 'undefined') this.registerBlock('auftraggeber', AuftraggeberModule);
+        if (typeof AuftraggeberUI !== 'undefined') this.registerBlock('auftraggeberUI', AuftraggeberUI);
 
-        // State initialisieren
-        AppState.meta.initialized = false;
+        if (typeof ObjekterfassungModule !== 'undefined') this.registerBlock('objekterfassung', ObjekterfassungModule);
+        if (typeof ObjekterfassungUI !== 'undefined') this.registerBlock('objekterfassungUI', ObjekterfassungUI);
+
+        if (typeof AngebotModule !== 'undefined') this.registerBlock('angebot', AngebotModule);
+        if (typeof AngebotUI !== 'undefined') this.registerBlock('angebotUI', AngebotUI);
+
+        // State wiederherstellen oder Reset
+        this.restoreState();
+        
+        // Setup global listeners
+        this.setupGlobalListeners();
+        
+        console.info('✅ Orchestrator: Bereit');
 
         // Event-Listener für Block-Wechsel
         this.setupBlockEventListeners();
