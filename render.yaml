@@ -32,7 +32,6 @@ services:
   - type: web
     name: fassadenfix-app
     runtime: static
-    plan: free
     rootDir: angebotsgenerator
     buildCommand: ""  # Keine Build-Step nötig (reine HTML/JS/CSS)
     staticPublishPath: .
