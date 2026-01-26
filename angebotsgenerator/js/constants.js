@@ -5,13 +5,15 @@
 
 // ============================================
 // SEITEN-TYPEN
+// (Keys müssen mit createEmptyImmobilie übereinstimmen!)
 // ============================================
 const SEITEN_TYPEN = {
-    front: { label: 'Frontseite', icon: '🏠', beschreibung: 'Vorderseite des Gebäudes, typischerweise Straßenseite.' },
-    rueck: { label: 'Rückseite', icon: '🏡', beschreibung: 'Hinterer Teil des Gebäudes, oft Garten-/Hofseite.' },
+    frontseite: { label: 'Frontseite', icon: '🏠', beschreibung: 'Vorderseite des Gebäudes, typischerweise Straßenseite.' },
+    rueckseite: { label: 'Rückseite', icon: '🏡', beschreibung: 'Hinterer Teil des Gebäudes, oft Garten-/Hofseite.' },
     linkerGiebel: { label: 'Linker Giebel', icon: '◀️', beschreibung: 'Linke Seitenwand.' },
     rechterGiebel: { label: 'Rechter Giebel', icon: '▶️', beschreibung: 'Rechte Seitenwand.' }
 };
+
 
 // ============================================
 // BÜHNEN-PREISE
