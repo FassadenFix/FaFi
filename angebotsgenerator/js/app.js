@@ -857,5 +857,31 @@ ab 5.000 m²: 8,75 €/m²`;
     ];
 }
 
+// ============================================
+// GLOBAL EXPORTS - Für Module und onclick
+// ============================================
+// Diese Funktionen müssen global verfügbar sein
+window.createEmptySeite = createEmptySeite;
+window.createEmptyImmobilie = createEmptyImmobilie;
+window.calculateTotals = calculateTotals;
+window.generatePositionsFromImmobilien = generatePositionsFromImmobilien;
+window.getGesamtflaecheAllerImmobilien = getGesamtflaecheAllerImmobilien;
+window.getImmobilieGesamtflaeche = getImmobilieGesamtflaeche;
+window.getFormattedAdresse = getFormattedAdresse;
+window.formatCurrency = formatCurrency;
+window.formatDate = formatDate;
+window.loadPreisstufen = loadPreisstufen;
+window.getPreisForFlaeche = getPreisForFlaeche;
+window.loadArtikelKatalog = loadArtikelKatalog;
+window.renderArtikelDropdown = renderArtikelDropdown;
+window.selectArtikelFromKatalog = selectArtikelFromKatalog;
+window.SEITEN_TYPEN = SEITEN_TYPEN;
+window.BUEHNEN_PREISE = BUEHNEN_PREISE;
+window.SCHADEN_TYPEN = SCHADEN_TYPEN;
+window.hubspotOwners = hubspotOwners;
+window.REINIGUNGSPRODUKTE = REINIGUNGSPRODUKTE;
+
+console.info('✅ App.js geladen - Alle Kernfunktionen global exportiert');
+
 // DOM Ready
 document.addEventListener('DOMContentLoaded', initApp);
