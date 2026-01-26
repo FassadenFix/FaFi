@@ -4,7 +4,7 @@
 // ============================================
 
 // ============================================
-// DATEN UND KONSTANTEN
+// DATEN UND VARIABLEN
 // ============================================
 let positions = [];
 let immobilien = [];
@@ -15,7 +15,13 @@ let selectedContact = null;
 let selectedOwner = null;
 let artikelKatalog = null;
 
-// Artikelgruppen-Definition
+// ============================================
+// APP.JS SPEZIFISCHE KONSTANTEN
+// (Konstanten wie SEITEN_TYPEN, BUEHNEN_PREISE, etc. 
+//  sind in constants.js definiert und global verfügbar)
+// ============================================
+
+// Artikelgruppen-Definition (nur in app.js)
 const ARTIKELGRUPPEN = {
     reinigung: { range: [1, 9], label: 'Reinigung', prefix: '0' },
     rabatte: { range: [10, 19], label: 'Rabatte', prefix: '1' },
@@ -23,201 +29,7 @@ const ARTIKELGRUPPEN = {
     nebenkosten: { range: [30, 39], label: 'Nebenkosten', prefix: '3' }
 };
 
-// Seiten-Definitionen
-const SEITEN_TYPEN = {
-    frontseite: { label: 'Frontseite', icon: '🏠', beschreibung: 'Die Seite mit den Hauseingängen.' },
-    rueckseite: { label: 'Rückseite', icon: '🔙', beschreibung: 'Die gegenüberliegende Seite.' },
-    linkerGiebel: { label: 'Linker Giebel', icon: '◀️', beschreibung: 'Linke Seitenwand.' },
-    rechterGiebel: { label: 'Rechter Giebel', icon: '▶️', beschreibung: 'Rechte Seitenwand.' }
-};
-
-const MASSNAHMEN_OPTIONEN = [
-    { id: 'gruenschnitt', label: 'Grünschnitt erforderlich' },
-    { id: 'parkplatz', label: 'Parkplatzsperrung' },
-    { id: 'gehweg', label: 'Gehwegsperrung' },
-    { id: 'strasse', label: 'Straßensperrung' },
-    { id: 'sonstiges', label: 'Sonstiges' }
-];
-
-const BUEHNEN_OPTIONEN = [
-    { id: 'keine', label: 'Keine Bühne notwendig' },
-    { id: 'scherenbuhne', label: 'Scherenbühne (bis 15m)' },
-    { id: 'gelenkbuhne_klein', label: 'Gelenkbühne (bis 26m)' },
-    { id: 'gelenkbuhne_gross', label: 'Gelenkbühne (bis 45m)' },
-    { id: 'lkw_buhne', label: 'LKW-Bühne (bis 60m)' },
-    { id: 'kletterer', label: 'Industriekletterer' },
-    { id: 'geruest', label: 'Gerüst erforderlich' },
-    { id: 'sonstige', label: 'Sonstige Anforderung' }
-];
-
-const UNTERGRUND_OPTIONEN = [
-    { id: 'asphalt', label: 'Asphalt/Beton' },
-    { id: 'pflaster', label: 'Pflastersteine' },
-    { id: 'schotter', label: 'Schotter/Kies' },
-    { id: 'rasen', label: 'Rasen/Wiese' },
-    { id: 'erde', label: 'Unbefestigt/Erde' },
-    { id: 'gemischt', label: 'Gemischt' }
-];
-
-const ZUGAENGLICHKEIT_OPTIONEN = [
-    { id: 'gut', label: '✓ Gut zugänglich' },
-    { id: 'parkplatz', label: 'Über Parkplatz' },
-    { id: 'gehweg', label: 'Über Gehweg' },
-    { id: 'einfahrt', label: 'Über Einfahrt' },
-    { id: 'strasse', label: 'Straßensperrung nötig' },
-    { id: 'hinterhof', label: 'Hinterhof (eng)' },
-    { id: 'eingeschraenkt', label: '⚠ Eingeschränkt' }
-];
-
-const HINDERNISSE_OPTIONEN = [
-    { id: 'keine', label: 'Keine Hindernisse' },
-    { id: 'baeume', label: 'Bäume/Sträucher' },
-    { id: 'leitungen', label: 'Oberleitungen' },
-    { id: 'balkone', label: 'Viele Balkone' },
-    { id: 'vordaecher', label: 'Vordächer/Markisen' },
-    { id: 'spielgeraete', label: 'Spielgeräte' },
-    { id: 'parkende_autos', label: 'Parkende Autos' },
-    { id: 'sonstiges', label: 'Sonstiges' }
-];
-
-// Bühnen-Preislogik (NEU - gemäß Spezifikation)
-const BUEHNEN_PREISE = {
-    'keine': { preis: 0, label: 'Keine Bühne', einheit: '' },
-    'standard': { preis: 390, label: 'FassadenFix Standard', einheit: 'Tag' },
-    'sonder': { preis: 'anfrage', label: 'Sonderbühne', einheit: '' },
-    // Detail-Typen für Sonderbühnen (alle "Auf Anfrage")
-    'gelenkbuehne': { preis: 'anfrage', label: 'Gelenkbühne', einheit: 'Tag' },
-    'teleskopbuehne': { preis: 'anfrage', label: 'Teleskopbühne', einheit: 'Tag' },
-    'lkwbuehne': { preis: 'anfrage', label: 'LKW-Bühne', einheit: 'Tag' },
-    'kletterer': { preis: 'anfrage', label: 'Industriekletterer', einheit: 'Tag' },
-    'geruest': { preis: 'anfrage', label: 'Gerüst', einheit: 'Pausch.' },
-    'sonstiges': { preis: 'anfrage', label: 'Sonstiges', einheit: '' }
-};
-
-// Standard Bühne (390€)
-const FF_STANDARD_BUEHNE_PREIS = 390;
-
-// Reinigungsprodukte (gemäß HERMES Dokumentation 07/22)
-const REINIGUNGSPRODUKTE = {
-    // Kategorien nach Verschmutzungsart
-    kategorien: {
-        organisch: {
-            label: 'Organische Verschmutzung (Algen/Pilze)',
-            anteil: '90%',
-            color: '#22c55e'
-        },
-        atmosphaerisch: {
-            label: 'Atmosphärische Verschmutzung (Staub/Ruß)',
-            anteil: '10%',
-            color: '#3b82f6'
-        },
-        extrem: {
-            label: 'Extreme Verschmutzung (Ruß/Harz/Teer)',
-            anteil: 'sporadisch',
-            color: '#ef4444'
-        }
-    },
-
-    // Hauptprodukte
-    reiniger: [
-        {
-            id: 'hf1_plus',
-            label: 'HF1 plus',
-            typ: 'Putzfassadenreiniger (gebrauchsfertig)',
-            kategorie: 'organisch',
-            beschreibung: 'Standardreiniger für organische Verschmutzung',
-            selected: true // Standard vorausgewählt
-        },
-        {
-            id: 'hf1_plus_5',
-            label: 'HF1 plus-5',
-            typ: 'Putzfassadenreiniger (Konzentrat)',
-            kategorie: 'organisch',
-            beschreibung: 'Konzentrat zur Verdünnung'
-        },
-        {
-            id: 'alkalistar_5',
-            label: 'AlkaliStar-5',
-            typ: 'Universalreiniger (Konzentrat)',
-            kategorie: 'atmosphaerisch',
-            beschreibung: 'Für atmosphärische Verschmutzung (Staub, Ruß)'
-        },
-        {
-            id: 'spezial_s1',
-            label: 'Spezial S1',
-            typ: 'Spezialreiniger (Konzentrat)',
-            kategorie: 'extrem',
-            beschreibung: 'Für extreme Verschmutzung (Ruß, Harz, Teer)'
-        }
-    ],
-
-    // Schutzprodukte
-    schutz: [
-        {
-            id: 'hfs',
-            label: 'HFS',
-            typ: 'Fassadenschutz (gebrauchsfertig)',
-            kategorie: 'organisch',
-            beschreibung: 'Langzeitschutz gegen Algen/Pilze'
-        },
-        {
-            id: 'hfs_5',
-            label: 'HFS-5',
-            typ: 'Fassadenschutz (Konzentrat)',
-            kategorie: 'organisch',
-            beschreibung: 'Langzeitschutz Konzentrat'
-        },
-        {
-            id: 'hfi',
-            label: 'HFI',
-            typ: 'Universalhydrophobierung',
-            kategorie: 'atmosphaerisch',
-            beschreibung: 'Fassadenimprägnierung / Witterungsschutz'
-        }
-    ],
-
-    // Zusatzmittel
-    zusatzmittel: [
-        {
-            id: 'antimuff',
-            label: 'ANTIMUFF',
-            typ: 'Duftstoffkonzentrat',
-            verhaeltnis: '1:1000',
-            beschreibung: 'Überdeckt Schwimmbadgeruch, frisches Reinigungserlebnis'
-        },
-        {
-            id: 'reinigungsverstaerker',
-            label: 'Reinigungsverstärker',
-            typ: 'Reinigungsbooster',
-            verhaeltnis: '1:100',
-            beschreibung: 'Erhöht die Wirksamkeit der Hauptreiniger'
-        }
-    ],
-
-    // Legacy-Kompatibilität für UI
-    standard: [
-        { id: 'hf1_plus', label: 'HF1 plus (Standard)', selected: true }
-    ],
-    zusaetzlich: [
-        { id: 'hf1_plus_5', label: 'HF1 plus-5 (Konzentrat)' },
-        { id: 'alkalistar_5', label: 'AlkaliStar-5' },
-        { id: 'spezial_s1', label: 'Spezial S1' },
-        { id: 'hfs', label: 'HFS (Schutz)' },
-        { id: 'hfi', label: 'HFI (Imprägnierung)' },
-        { id: 'antimuff', label: 'ANTIMUFF (Duftstoff)' },
-        { id: 'reinigungsverstaerker', label: 'Reinigungsverstärker' },
-        { id: 'sonstiges', label: 'Sonstiges' }
-    ]
-};
-
-// Schaden-Typen (NEU)
-const SCHADEN_TYPEN = [
-    { id: 'graffiti', label: 'Graffiti', icon: '🎨' },
-    { id: 'loecher', label: 'Specht-Löcher/Löcher', icon: '🕳️' },
-    { id: 'risse', label: 'Risse/substanzielle Schäden', icon: '⚡' }
-];
-
-// HubSpot Owner Mapping (auch für FF-Mitarbeiter Dropdown)
+// HubSpot Owner Mapping (nur in app.js - erweiterte Version)
 const hubspotOwners = {
     '753843912': { name: 'Sebastian Siebenhühner', email: 's.siebenhuehner@fassadenfix.de', phone: '+4915792646863' },
     '522379976': { name: 'Alexander Retzlaff', email: 'a.retzlaff@fassadenfix.de', phone: '0345 218392 35' },
