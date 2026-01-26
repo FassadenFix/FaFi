@@ -2524,9 +2524,9 @@ details.optional-info[open] summary {
         min-height: 44px;
     }
 
-    /* Scroll-Verhalten */
+    /* Scroll-Verhalten - overscroll-behavior ist der moderne Standard */
     .block-content {
-        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
     }
 
     /* Keine Text-Selektion bei Buttons */

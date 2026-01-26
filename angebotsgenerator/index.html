@@ -112,7 +112,8 @@
                             <div class="form-subsection-title">Ansprechpartner</div>
                             <div class="form-group">
                                 <label>Kontakt auswählen</label>
-                                <select id="contactSelect" onchange="selectContact(this.value)">
+                                <select id="contactSelect" onchange="selectContact(this.value)"
+                                    title="Kontakt auswählen">
                                     <option value="">-- Kontakt wählen oder neu anlegen --</option>
                                 </select>
                             </div>
@@ -120,7 +121,7 @@
                             <div class="form-row" style="grid-template-columns: 100px 1fr 1fr;">
                                 <div class="form-group">
                                     <label>Anrede</label>
-                                    <select id="contactSalutation" onchange="updatePreview()">
+                                    <select id="contactSalutation" onchange="updatePreview()" title="Anrede auswählen">
                                         <option value="" selected>-</option>
                                         <option value="Herr">Herr</option>
                                         <option value="Frau">Frau</option>
@@ -218,7 +219,8 @@
                             <div class="form-group">
                                 <label>Mitarbeiter <span style="font-size:10px;color:#666;">(HubSpot
                                         Owner)</span></label>
-                                <select id="hubspotOwnerId" onchange="updateOwnerDetails();checkBlock1Complete()">
+                                <select id="hubspotOwnerId" onchange="updateOwnerDetails();checkBlock1Complete()"
+                                    title="FassadenFix Mitarbeiter auswählen">
                                     <option value="">Wird aus HubSpot geladen...</option>
                                 </select>
                             </div>
