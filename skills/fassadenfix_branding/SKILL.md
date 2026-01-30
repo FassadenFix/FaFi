@@ -1,6 +1,6 @@
 ---
 name: fassadenfix-branding
-description: "Wendet FassadenFix Corporate Design und Branding-Richtlinien automatisch an. STANDARD-SKILL: Ist bei allen Anwendungen, Modulen, Agents und Plattformen standardmäßig aktiviert (Opt-Out-Prinzip). Verwenden für: visuelle Gestaltung, Farbschemata, Typografie, UI-Komponenten, Dokumente, Präsentationen, Webanwendungen, CSS-Styling, Markenkonformität."
+description: "Erstellt und wendet FassadenFix Corporate Design und Branding-Richtlinien automatisch an. Verwenden für: visuelle Gestaltung, Farbschemata, Typografie, UI-Komponenten, CSS-Styling, Webanwendungen, Dokumente, Präsentationen, Markenkonformität. STANDARD-SKILL mit Opt-Out-Prinzip."
 default_enabled: true
 priority: 100
 scope: global
