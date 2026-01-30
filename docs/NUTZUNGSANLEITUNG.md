@@ -1,167 +1,181 @@
-# Nutzungsanleitung: Multi-Agent-Orchestrierungssystem
+# Skill & Agent Hub - Nutzungsanleitung (Version 2.1)
 
-**Autor:** Manus AI
-**Version:** 2.0
-**Datum:** 23. Januar 2026
+Diese Anleitung beschreibt, wie Sie das Multi-Agent-Orchestrierungssystem einrichten, nutzen und erweitern können.
 
-Dieses Dokument beschreibt, wie Sie das Multi-Agent-Orchestrierungssystem in Ihre verschiedenen KI-Arbeitsumgebungen integrieren und nutzen können. Version 2.0 führt **bidirektionale Adapter** ein, die eine tiefere Integration und plattformübergreifende Orchestrierung ermöglichen.
+## 1. Installation und Setup
 
-## Systemübersicht
+Folgen Sie den Schritten in der `README.md`-Datei, um das System zu klonen, Abhängigkeiten zu installieren und den API-Server zu starten.
 
-Das System besteht aus mehreren Kernkomponenten, die zusammenarbeiten, um eine nahtlose Integration zu ermöglichen.
+## 2. API-Schlüssel konfigurieren
 
-![Architektur-Diagramm](architecture.png)
-
-### Bidirektionale Integration
-
-Die bidirektionale Anbindung erlaubt es dem Hub, nicht nur eigene Skills bereitzustellen (**Export**), sondern auch die Fähigkeiten externer Plattformen als **importierte Skills** zu nutzen (**Import**). Dies ermöglicht komplexe, plattformübergreifende Workflows.
-
-## Schnellstart
-
-### 1. API-Server starten
-
-Der API-Server ist der zentrale Zugangspunkt für alle Plattformen. Er muss auf einem Server laufen, der von Ihren KI-Tools erreichbar ist.
+Das System verwendet Umgebungsvariablen, um auf die APIs der verschiedenen Plattformen zuzugreifen. Erstellen Sie eine `.env`-Datei im Hauptverzeichnis oder setzen Sie die Variablen in Ihrer Shell:
 
 ```bash
-# Navigieren Sie zum Projektverzeichnis
-cd /pfad/zu/skill-agent-hub
-
-# Setzen Sie die notwendigen API-Schlüssel als Umgebungsvariablen
-export PERPLEXITY_API_KEY="IHR_SCHLÜSSEL"
-export GOOGLE_AI_API_KEY="IHR_SCHLÜSSEL"
-# ... weitere Schlüssel für andere Plattformen
-
-# Starten Sie den Server
-python3 adapters/api_server.py
+export OPENAI_API_KEY="sk-..."
+export ANTHROPIC_API_KEY="sk-ant-...
+export PERPLEXITY_API_KEY="pplx-..."
+export GOOGLE_AI_API_KEY="...
+# ... und so weiter für alle benötigten Dienste
 ```
 
-Der Server läuft standardmäßig auf `http://localhost:5000`.
+## 3. Integration in Ihre KI-Plattform
 
-### 2. Verfügbare Skills und Agents abrufen
+Der Hub generiert für jede Plattform spezifische Konfigurationen, um die Integration so einfach wie möglich zu machen.
 
-Sobald der Server läuft, können Sie die verfügbaren Fähigkeiten abfragen.
+### OpenAI / ChatGPT (GPTs)
+
+1.  **OpenAPI Schema**: Holen Sie das für GPT Actions generierte OpenAPI-Schema.
+    ```bash
+    curl http://localhost:5000/api/v1/openapi-schema
+    ```
+2.  **GPT erstellen**: Erstellen oder bearbeiten Sie ein GPT und fügen Sie eine neue "Action" hinzu. Importieren Sie das OpenAPI-Schema.
+3.  **Anweisungen**: Fügen Sie die generierten Anweisungen zum System-Prompt Ihres GPTs hinzu.
+    ```bash
+    curl http://localhost:5000/api/v1/instructions/chatgpt_codex
+    ```
+
+### Claude (Cowork & Code)
+
+1.  **Tool-Katalog**: Holen Sie den Katalog im Anthropic Tool-Format.
+    ```bash
+    curl http://localhost:5000/api/v1/catalog/claude
+    ```
+2.  **System-Prompt**: Fügen Sie den Tool-Katalog in den System-Prompt Ihres Claude-Modells ein.
+3.  **Slash-Commands (Claude Code)**: Für eine IDE-Integration können Sie die generierten Slash-Commands nutzen.
+    ```bash
+    curl http://localhost:5000/api/v1/platforms/claude_code/slash-commands
+    ```
+
+### Manus 1.6
+
+1.  **Function Calling**: Holen Sie den Katalog im Manus Function-Calling-Format.
+    ```bash
+    curl http://localhost:5000/api/v1/catalog/manus
+    ```
+2.  **System-Prompt**: Integrieren Sie die Funktionen in den System-Prompt Ihres Manus-Agenten.
+
+### Microsoft 365 Copilot
+
+1.  **Plugin-Manifest**: Holen Sie das vollständige Plugin-Manifest.
+    ```bash
+    curl http://localhost:5000/api/v1/platforms/microsoft365/copilot-manifest
+    ```
+2.  **Plugin installieren**: Laden Sie das Manifest in Ihrer Microsoft 365-Entwicklungsumgebung hoch, um das Plugin zu installieren.
+
+### Google Gemini & AI Studio
+
+1.  **Tools-Konfiguration**: Holen Sie die Konfiguration im Gemini-Format.
+    ```bash
+    curl http://localhost:5000/api/v1/platforms/gemini/tools-config
+    ```
+2.  **API-Aufruf**: Übergeben Sie diese Konfiguration an die `tools`-Eigenschaft bei Ihrem Gemini-API-Aufruf.
+
+## 4. Skills und Agents nutzen
+
+Alle Interaktionen mit dem Hub laufen über die REST-API.
+
+### Einen Skill ausführen
+
+Führen Sie einen beliebigen Skill (nativ oder importiert) über seinen Namen aus.
+
+**Beispiel: `manus_shell_execute` (importiert)**
+```bash
+curl -X POST http://localhost:5000/api/v1/execute/skill/manus_shell_execute \
+-H "Content-Type: application/json" \
+-d '{
+  "command": "ls -la ~"
+}'
+```
+
+### Einen Agent ausführen
+
+Starten Sie einen Agenten, um eine komplexere Aufgabe zu erledigen.
+
+**Beispiel: `research_agent`**
+```bash
+curl -X POST http://localhost:5000/api/v1/execute/agent/research_agent \
+-H "Content-Type: application/json" \
+-d '{
+  "topic": "Die Zukunft der KI-Agenten",
+  "questions": [
+    "Welche Architekturen sind am vielversprechendsten?",
+    "Was sind die größten Herausforderungen?"
+  ]
+}'
+```
+
+### Skills dynamisch entdecken
+
+Nutzen Sie den Discovery-Endpunkt, um zur Laufzeit den besten Skill für eine Aufgabe zu finden.
 
 ```bash
-# Liste aller Skills (native und importierte)
-curl http://localhost:5000/api/v1/registry/list?type=skill
-
-# Liste nur der importierten Skills
-curl http://localhost:5000/api/v1/registry/list?type=skill&imported=true
-
-# Katalog für eine spezifische Plattform (z.B. Microsoft 365 Copilot)
-curl http://localhost:5000/api/v1/catalog/microsoft365_copilot
-```
-
-## Integration in die verschiedenen Plattformen
-
-### Integration mit Microsoft 365 Copilot
-
-Die Integration erfolgt über ein **Copilot Plugin**. Der Hub generiert automatisch das notwendige Manifest und die OpenAPI-Spezifikation.
-
-1.  **Manifest abrufen:** Rufen Sie den Endpunkt `GET /api/v1/platforms/microsoft365/copilot-manifest` auf. Dieser liefert das vollständige Plugin-Manifest.
-2.  **Plugin registrieren:** Verwenden Sie das Manifest, um das Plugin im Microsoft 365 Admin Center zu registrieren. Stellen Sie sicher, dass die im Manifest angegebene `api.url` auf Ihren laufenden API-Server verweist.
-3.  **Nutzen:** Nach der Aktivierung können Sie die Hub-Skills direkt im Copilot-Chat verwenden (z.B. "Fasse diesen Text mit dem Skill Hub zusammen").
-
-### Integration mit Google (Gemini, NotebookLM, AI Studio)
-
-Die Integration mit dem Google-Ökosystem erfolgt über das **Function Calling**-Feature von Gemini.
-
-1.  **Tool-Konfiguration abrufen:** Der Endpunkt `GET /api/v1/platforms/gemini/tools-config` liefert eine vollständige Tool-Konfiguration für die Gemini API.
-2.  **API-Anfragen:** Verwenden Sie die erhaltene Konfiguration im `tools`-Parameter Ihrer API-Anfragen an die Gemini API.
-3.  **Ausführung:** Wenn das Modell einen Tool-Aufruf generiert, leiten Sie die Anfrage an den entsprechenden `/api/v1/execute/skill/<name>`-Endpunkt des Hubs weiter.
-
-### Integration mit Perplexity AI
-
-Perplexity unterstützt ebenfalls Function Calling.
-
-1.  **Katalog abrufen:** Nutzen Sie `GET /api/v1/catalog/perplexity`, um die Tool-Definitionen zu erhalten.
-2.  **API-Anfragen:** Fügen Sie die Definitionen zum `tools`-Parameter Ihrer Anfragen an die Perplexity Chat-API hinzu.
-
-### Integration mit HubSpot & HubSpot Breeze
-
-Die Integration erfolgt über **Custom Code Actions** in HubSpot Workflows und über den **HubSpot MCP-Server**.
-
-1.  **Custom Actions:** Der Endpunkt `GET /api/v1/catalog/hubspot` liefert Definitionen für Custom Code Actions. Diese können in HubSpot importiert werden, um Hub-Skills in Workflows zu nutzen.
-2.  **MCP-Server:** Die importierten HubSpot-Skills (`hubspot_crm_operations`) nutzen den bereits konfigurierten `manus-mcp-cli`, um direkt mit der HubSpot-API zu interagieren.
-
-### Integration mit Abacus AI
-
-Die Integration erfolgt über **Custom Functions** für Chat LLMs und die Konfiguration von **Deep Agents**.
-
-1.  **Funktionskatalog:** Der Endpunkt `GET /api/v1/catalog/abacus_ai` liefert einen Katalog, der in Abacus AI importiert werden kann.
-2.  **Deep Agent Konfiguration:** Der Endpunkt `GET /api/v1/platforms/abacus/deep-agent-config` generiert eine Konfiguration, um einen Deep Agent mit dem Skill Hub als externes Tool zu verbinden.
-
-## Einen neuen importierten Skill hinzufügen
-
-Das Hinzufügen von Fähigkeiten externer Plattformen ist der Kern der bidirektionalen Erweiterbarkeit.
-
-### Schritt 1: Verzeichnis erstellen
-
-Erstellen Sie ein Verzeichnis unter `/skills/imported/<plattform_name>/<skill_name>`.
-
-```bash
-mkdir -p skills/imported/neue_plattform/neuer_skill
-```
-
-### Schritt 2: `manifest.json` anlegen
-
-Erstellen Sie eine Manifest-Datei mit `implementation.type: "remote"`.
-
-```json
-{
-  "manifest_version": "1.0",
+curl -X POST http://localhost:5000/api/v1/discover \
+-H "Content-Type: application/json" \
+-d '{
+  "query": "Fasse mir diesen langen Text zusammen",
   "type": "skill",
-  "name": "neuer_remote_skill",
-  "description": "Beschreibung des Remote-Skills.",
-  "implementation": {
-    "type": "remote",
-    "language": "python",
-    "entrypoint": "main.py",
-    "remote_config": {
-      "service": "neue_plattform_api",
-      "api_key_env": "NEUE_PLATTFORM_API_KEY"
-    }
-  },
-  "interface": { ... },
-  "metadata": {
-    "source_platform": "Neue Plattform",
-    "imported": true
-  }
-}
+  "limit": 1
+}'
 ```
 
-### Schritt 3: Implementierung erstellen
+## 5. Eigene Skills und Agents erstellen
 
-Erstellen Sie die `main.py`-Datei, die die API-Aufrufe an die externe Plattform durchführt. Lesen Sie den API-Schlüssel aus den Umgebungsvariablen.
+Die Erweiterung des Hubs ist einfach und erfordert keine Code-Änderungen am Kernsystem.
 
-```python
-import os
-import requests
+### Einen neuen nativen Skill erstellen
 
-def execute(parameter: str) -> dict:
-    api_key = os.environ.get("NEUE_PLATTFORM_API_KEY")
-    # ... Ihre API-Logik hier ...
-    return {"ergebnis": "..."}
-```
+1.  **Verzeichnis erstellen**: Erstellen Sie ein neues Verzeichnis unter `/skills/native/ihr_skill_name`.
+2.  **`manifest.json` erstellen**: Definieren Sie die Metadaten, Inputs und Outputs Ihres Skills.
+3.  **`main.py` implementieren**: Schreiben Sie die Python-Logik für Ihren Skill.
+4.  **Registry aktualisieren**: Starten Sie den API-Server neu oder rufen Sie den `scan`-Endpunkt auf.
+    ```bash
+    curl -X POST http://localhost:5000/api/v1/registry/scan
+    ```
 
-### Schritt 4: Registry aktualisieren
+### Einen neuen importierten Skill hinzufügen
 
-Starten Sie den API-Server neu oder rufen Sie `POST /api/v1/registry/scan` auf. Der neue importierte Skill ist nun im gesamten System verfügbar.
+Der Prozess ist ähnlich, aber die Implementierung ruft eine externe API auf.
 
-## API-Referenz (Version 2.0)
+1.  **Verzeichnis erstellen**: `/skills/imported/neue_plattform/neuer_skill`.
+2.  **`manifest.json` erstellen**: Setzen Sie `implementation.type` auf `remote` und `metadata.imported` auf `true`.
+3.  **`main.py` implementieren**: Implementieren Sie den API-Aufruf an die externe Plattform. Nutzen Sie `os.environ.get()` für API-Schlüssel.
+4.  **Registry aktualisieren**.
 
-| Endpunkt | Methode | Beschreibung |
-| :--- | :--- | :--- |
-| `/api/v1/health` | GET | Health-Check |
-| `/api/v1/info` | GET | Systeminformationen (Version 2.0) |
-| `/api/v1/registry/scan` | POST | Scannt und registriert alle Skills/Agents |
-| `/api/v1/registry/list` | GET | Listet Entities auf (Filter: `type`, `imported`) |
-| `/api/v1/registry/imported` | GET | Listet alle importierten Skills, gruppiert nach Plattform |
-| `/api/v1/discover` | POST | Sucht nach Skills (Filter: `include_imported`) |
-| `/api/v1/execute/skill/<name>` | POST | Führt einen nativen oder importierten Skill aus |
-| `/api/v1/execute/agent/<name>` | POST | Führt einen Agent aus |
-| `/api/v1/catalog/<platform>` | GET | Gibt den Katalog für eine Plattform zurück |
-| `/api/v1/bidirectional/available-skills/<platform>` | GET | Zeigt importierbare Skills einer Plattform |
-| `/api/v1/platforms/microsoft365/copilot-manifest` | GET | Generiert das M365 Copilot Plugin Manifest |
-| `/api/v1/platforms/gemini/tools-config` | GET | Generiert die Gemini Tools-Konfiguration |
-| `/api/v1/platforms/abacus/deep-agent-config` | GET | Generiert die Abacus Deep Agent Konfiguration |
+## 6. Vollständige API-Referenz (v2.1)
+
+- `GET /api/v1/info`: Allgemeine Informationen über den Hub.
+- `GET /api/v1/health`: Health-Check.
+
+**Registry:**
+- `POST /api/v1/registry/scan`: Scannt und registriert alle Entities.
+- `GET /api/v1/registry/list`: Listet alle Entities (filterbar nach `type`, `imported`, `platform`).
+- `GET /api/v1/registry/get/<name>`: Holt eine spezifische Entity.
+- `GET /api/v1/registry/imported`: Listet alle importierten Skills (filterbar nach `platform`).
+
+**Discovery:**
+- `POST /api/v1/discover`: Findet passende Skills/Agents für eine Aufgabe.
+- `POST /api/v1/suggest-composition`: Schlägt eine Skill-Komposition vor.
+
+**Execution:**
+- `POST /api/v1/execute/skill/<name>`: Führt einen Skill aus.
+- `POST /api/v1/execute/agent/<name>`: Führt einen Agent aus.
+- `POST /api/v1/execute/task`: Führt eine Aufgabe mit dynamischer Skill-Auswahl aus.
+
+**Adapter & Kataloge:**
+- `GET /api/v1/catalog/<platform>`: Generiert den Katalog für eine Plattform.
+- `GET /api/v1/instructions/<platform>`: Generiert Integrationsanweisungen.
+- `GET /api/v1/openapi-schema`: Generiert das OpenAPI-Schema für GPTs.
+
+**Bidirektionale Endpunkte:**
+- `GET /api/v1/bidirectional/available-skills/<platform>`: Zeigt importierbare Skills einer Plattform.
+- `POST /api/v1/bidirectional/import-skill`: (Für zukünftige Automatisierung) Importiert einen Skill.
+- `POST /api/v1/bidirectional/export-to/<platform>`: (Für zukünftige Automatisierung) Exportiert Skills.
+
+**Plattform-spezifische Endpunkte:**
+- `GET /api/v1/platforms/microsoft365/copilot-manifest`
+- `GET /api/v1/platforms/gemini/tools-config`
+- `GET /api/v1/platforms/abacus/deep-agent-config`
+- `GET /api/v1/platforms/antigravity/manifest`
+- `GET /api/v1/platforms/claude/mcp-config`
+- `GET /api/v1/platforms/claude_code/slash-commands`
+- ... und weitere.

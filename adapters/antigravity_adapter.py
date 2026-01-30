@@ -1,8 +1,9 @@
 """
-Antigravity Adapter
-===================
-Adapter für Antigravity AI Platform.
-Formatiert Skills und Agents für die Integration in Antigravity-Workflows.
+Antigravity Adapter (Bidirektional)
+===================================
+Bidirektionaler Adapter für Antigravity AI Platform.
+- Export: Stellt Hub-Skills für Antigravity-Workflows bereit
+- Import: Integriert Antigravity-Actions und Workflows als Hub-Skills
 """
 
 import json
@@ -12,8 +13,13 @@ from adapters.base_adapter import BaseAdapter
 
 class AntigravityAdapter(BaseAdapter):
     """
-    Adapter für Antigravity.
-    Generiert Definitionen im Antigravity-kompatiblen Format.
+    Bidirektionaler Adapter für Antigravity.
+    
+    Unterstützt:
+    - Export von Hub-Skills als Antigravity Actions
+    - Export von Hub-Agents als Antigravity Workflows
+    - Import von Antigravity-Actions als Hub-Skills
+    - Import von Antigravity-Workflows als Hub-Agents
     """
     
     @property
@@ -127,6 +133,18 @@ class AntigravityAdapter(BaseAdapter):
         }
         return type_mapping.get(hub_type, 'text')
     
+    def _map_type_from_antigravity(self, ag_type: str) -> str:
+        """Mappt Antigravity-Typen auf Hub-Typen."""
+        type_mapping = {
+            'text': 'string',
+            'number': 'number',
+            'boolean': 'boolean',
+            'list': 'array',
+            'json': 'object',
+            'file': 'file'
+        }
+        return type_mapping.get(ag_type, 'string')
+    
     def _infer_category(self, skill: Dict) -> str:
         """Inferiert eine Kategorie basierend auf Tags."""
         tags = skill.get('tags', [])
@@ -149,6 +167,175 @@ class AntigravityAdapter(BaseAdapter):
         
         return 'General'
     
+    # ============== Bidirektionale Import-Funktionen ==============
+    
+    def generate_antigravity_skills(self) -> List[Dict]:
+        """
+        Generiert Skill-Manifeste für Antigravity-spezifische Funktionen.
+        Diese Skills ermöglichen den Zugriff auf Antigravity-Features vom Hub aus.
+        """
+        antigravity_skills = [
+            # Workflow-Ausführung
+            {
+                'name': 'antigravity_execute_workflow',
+                'description': 'Führt einen Antigravity-Workflow aus.',
+                'tags': ['antigravity', 'workflow', 'automation', 'imported'],
+                'capabilities': ['workflow_execution', 'automation'],
+                'implementation': {
+                    'type': 'remote',
+                    'language': 'antigravity_api',
+                    'target': {
+                        'service': 'antigravity',
+                        'endpoint': '/workflows/execute'
+                    }
+                },
+                'interface': {
+                    'inputs': [
+                        {'name': 'workflow_id', 'type': 'string', 'description': 'ID des Workflows', 'required': True},
+                        {'name': 'inputs', 'type': 'object', 'description': 'Workflow-Eingaben', 'required': True},
+                        {'name': 'async_mode', 'type': 'boolean', 'description': 'Asynchrone Ausführung', 'required': False, 'default': False}
+                    ],
+                    'outputs': [
+                        {'name': 'result', 'type': 'object', 'description': 'Workflow-Ergebnis'},
+                        {'name': 'execution_id', 'type': 'string', 'description': 'Ausführungs-ID'},
+                        {'name': 'status', 'type': 'string', 'description': 'Ausführungsstatus'}
+                    ]
+                }
+            },
+            # Action-Ausführung
+            {
+                'name': 'antigravity_execute_action',
+                'description': 'Führt eine einzelne Antigravity-Action aus.',
+                'tags': ['antigravity', 'action', 'automation', 'imported'],
+                'capabilities': ['action_execution'],
+                'implementation': {
+                    'type': 'remote',
+                    'language': 'antigravity_api',
+                    'target': {
+                        'service': 'antigravity',
+                        'endpoint': '/actions/execute'
+                    }
+                },
+                'interface': {
+                    'inputs': [
+                        {'name': 'action_id', 'type': 'string', 'description': 'ID der Action', 'required': True},
+                        {'name': 'inputs', 'type': 'object', 'description': 'Action-Eingaben', 'required': True}
+                    ],
+                    'outputs': [
+                        {'name': 'result', 'type': 'object', 'description': 'Action-Ergebnis'},
+                        {'name': 'status', 'type': 'string', 'description': 'Ausführungsstatus'}
+                    ]
+                }
+            },
+            # Workflow-Erstellung
+            {
+                'name': 'antigravity_create_workflow',
+                'description': 'Erstellt einen neuen Antigravity-Workflow.',
+                'tags': ['antigravity', 'workflow', 'create', 'imported'],
+                'capabilities': ['workflow_management'],
+                'implementation': {
+                    'type': 'remote',
+                    'language': 'antigravity_api',
+                    'target': {
+                        'service': 'antigravity',
+                        'endpoint': '/workflows/create'
+                    }
+                },
+                'interface': {
+                    'inputs': [
+                        {'name': 'name', 'type': 'string', 'description': 'Name des Workflows', 'required': True},
+                        {'name': 'description', 'type': 'string', 'description': 'Beschreibung', 'required': False},
+                        {'name': 'steps', 'type': 'array', 'description': 'Workflow-Schritte', 'required': True},
+                        {'name': 'trigger', 'type': 'object', 'description': 'Trigger-Konfiguration', 'required': False}
+                    ],
+                    'outputs': [
+                        {'name': 'workflow_id', 'type': 'string', 'description': 'ID des erstellten Workflows'},
+                        {'name': 'status', 'type': 'string', 'description': 'Erstellungsstatus'}
+                    ]
+                }
+            },
+            # Workflow-Liste
+            {
+                'name': 'antigravity_list_workflows',
+                'description': 'Listet alle verfügbaren Antigravity-Workflows auf.',
+                'tags': ['antigravity', 'workflow', 'list', 'imported'],
+                'capabilities': ['workflow_management'],
+                'implementation': {
+                    'type': 'remote',
+                    'language': 'antigravity_api',
+                    'target': {
+                        'service': 'antigravity',
+                        'endpoint': '/workflows/list'
+                    }
+                },
+                'interface': {
+                    'inputs': [
+                        {'name': 'category', 'type': 'string', 'description': 'Filter nach Kategorie', 'required': False},
+                        {'name': 'limit', 'type': 'number', 'description': 'Maximale Anzahl', 'required': False, 'default': 50}
+                    ],
+                    'outputs': [
+                        {'name': 'workflows', 'type': 'array', 'description': 'Liste der Workflows'},
+                        {'name': 'total', 'type': 'number', 'description': 'Gesamtanzahl'}
+                    ]
+                }
+            },
+            # Daten-Connector
+            {
+                'name': 'antigravity_data_connector',
+                'description': 'Verbindet mit einer Antigravity-Datenquelle.',
+                'tags': ['antigravity', 'data', 'connector', 'imported'],
+                'capabilities': ['data_integration'],
+                'implementation': {
+                    'type': 'remote',
+                    'language': 'antigravity_api',
+                    'target': {
+                        'service': 'antigravity',
+                        'endpoint': '/data/connect'
+                    }
+                },
+                'interface': {
+                    'inputs': [
+                        {'name': 'connector_type', 'type': 'string', 'description': 'Typ des Connectors (database, api, file)', 'required': True},
+                        {'name': 'config', 'type': 'object', 'description': 'Connector-Konfiguration', 'required': True},
+                        {'name': 'query', 'type': 'string', 'description': 'Datenabfrage', 'required': False}
+                    ],
+                    'outputs': [
+                        {'name': 'data', 'type': 'array', 'description': 'Abgerufene Daten'},
+                        {'name': 'schema', 'type': 'object', 'description': 'Datenschema'}
+                    ]
+                }
+            },
+            # Scheduling
+            {
+                'name': 'antigravity_schedule_workflow',
+                'description': 'Plant die zeitgesteuerte Ausführung eines Workflows.',
+                'tags': ['antigravity', 'workflow', 'schedule', 'automation', 'imported'],
+                'capabilities': ['scheduling', 'automation'],
+                'implementation': {
+                    'type': 'remote',
+                    'language': 'antigravity_api',
+                    'target': {
+                        'service': 'antigravity',
+                        'endpoint': '/workflows/schedule'
+                    }
+                },
+                'interface': {
+                    'inputs': [
+                        {'name': 'workflow_id', 'type': 'string', 'description': 'ID des Workflows', 'required': True},
+                        {'name': 'cron', 'type': 'string', 'description': 'Cron-Ausdruck', 'required': True},
+                        {'name': 'inputs', 'type': 'object', 'description': 'Workflow-Eingaben', 'required': False},
+                        {'name': 'enabled', 'type': 'boolean', 'description': 'Zeitplan aktiviert', 'required': False, 'default': True}
+                    ],
+                    'outputs': [
+                        {'name': 'schedule_id', 'type': 'string', 'description': 'ID des Zeitplans'},
+                        {'name': 'next_run', 'type': 'string', 'description': 'Nächste geplante Ausführung'}
+                    ]
+                }
+            }
+        ]
+        
+        return antigravity_skills
+    
     def generate_antigravity_manifest(self) -> Dict:
         """
         Generiert ein Antigravity-Paket-Manifest.
@@ -156,8 +343,8 @@ class AntigravityAdapter(BaseAdapter):
         return {
             'package': {
                 'name': 'skill-agent-hub',
-                'version': '1.0.0',
-                'description': 'Zentraler Hub für wiederverwendbare Skills und Agents',
+                'version': '2.0.0',
+                'description': 'Zentraler Hub für wiederverwendbare Skills und Agents (Bidirektional)',
                 'author': 'Manus AI',
                 'license': 'MIT'
             },
@@ -167,6 +354,10 @@ class AntigravityAdapter(BaseAdapter):
             'exports': {
                 'actions': True,
                 'workflows': True
+            },
+            'imports': {
+                'enabled': True,
+                'skills': [s['name'] for s in self.generate_antigravity_skills()]
             }
         }
     
@@ -174,7 +365,7 @@ class AntigravityAdapter(BaseAdapter):
         """
         Generiert eine Workflow-Vorlage für einen Agent.
         """
-        agent = self.registry.get_by_name(agent_name)
+        agent = self.registry.get_by_name(agent_name) if hasattr(self, 'registry') else None
         if not agent:
             return {}
         
@@ -201,14 +392,14 @@ class AntigravityAdapter(BaseAdapter):
         Generiert eine Integrationsanleitung für Antigravity.
         """
         return """
-# Antigravity Integration Guide
+# Antigravity Integration Guide (Bidirektional)
 
 ## Installation
 
 1. Importiere das Skill-Hub-Paket in deinen Antigravity-Workspace
 2. Die Actions und Workflows werden automatisch verfügbar
 
-## Verwendung von Actions (Skills)
+## Export: Hub-Skills in Antigravity nutzen
 
 Actions können in Workflows per Drag-and-Drop hinzugefügt werden:
 
@@ -217,14 +408,23 @@ Actions können in Workflows per Drag-and-Drop hinzugefügt werden:
 3. Ziehe die Action in deinen Workflow
 4. Konfiguriere die Inputs
 
-## Verwendung von Workflows (Agents)
+## Import: Antigravity-Features im Hub nutzen
 
-Agents sind vorkonfigurierte Workflows:
+Der Hub kann Antigravity-Workflows und Actions aufrufen:
 
-1. Öffne den Workflow-Katalog
-2. Wähle einen Agent-Workflow
-3. Passe die Inputs an
-4. Führe den Workflow aus
+```python
+# Workflow ausführen
+result = hub.execute_skill('antigravity_execute_workflow', {
+    'workflow_id': 'mein_workflow',
+    'inputs': {'param1': 'wert1'}
+})
+
+# Action ausführen
+result = hub.execute_skill('antigravity_execute_action', {
+    'action_id': 'meine_action',
+    'inputs': {'text': 'Eingabetext'}
+})
+```
 
 ## Dynamische Erweiterung
 
