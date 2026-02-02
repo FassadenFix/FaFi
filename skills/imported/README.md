@@ -1,7 +1,7 @@
 <div align="center">
   <img src="/home/ubuntu/skills/fassadenfix-assets/templates/logos/standard/FassadenFix_Logo_bunt_transparent_300px.png" alt="FassadenFix Logo" width="300">
   
-  # FaFi
+  # imported
   
   **[Kurze, prägnante Beschreibung des Projekts in 1-2 Sätzen]**
   
@@ -41,8 +41,8 @@
 
 ```bash
 # Repository klonen
-git clone https://github.com/FassadenFix/fafi.git
-cd fafi
+git clone https://github.com/FassadenFix/imported.git
+cd imported
 
 # Abhängigkeiten installieren
 [Installationsbefehl]
@@ -85,7 +85,7 @@ cd fafi
 ## Projektstruktur
 
 ```
-fafi/
+imported/
 ├── src/                    # Quellcode
 │   ├── [modul]/           # [Beschreibung]
 │   └── [modul]/           # [Beschreibung]

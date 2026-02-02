@@ -1,113 +1,149 @@
-# FassadenFix Intranet
+<div align="center">
+  <img src="/home/ubuntu/skills/fassadenfix-assets/templates/logos/standard/FassadenFix_Logo_bunt_transparent_300px.png" alt="FassadenFix Logo" width="300">
+  
+  # skill-agent-hub-repo
+  
+  **[Kurze, prägnante Beschreibung des Projekts in 1-2 Sätzen]**
+  
+  [![FassadenFix](https://img.shields.io/badge/FassadenFix-Projekt-77bc1f?style=flat-square)](https://fassadenfix.de)
+  [![Status](https://img.shields.io/badge/Status-Aktiv-77bc1f?style=flat-square)]()
+  [![Version](https://img.shields.io/badge/Version-1.0.0-77bc1f?style=flat-square)]()
+</div>
 
-SharePoint-basiertes Intranet für die FassadenFix GmbH.
+---
 
-## Struktur
+## Übersicht
 
-```
-FassadenFix Intranet (Hub-Site)
-├── Start
-├── Unternehmen
-│   ├── Unternehmen - Überblick
-│   ├── Organisation & Werte
-│   └── Arbeitsschutz & Pflichtunterweisungen
-├── Abteilungen
-│   ├── Anwendungstechnik
-│   ├── Verwaltung
-│   ├── Vertrieb
-│   └── Operative Teams
-├── Teams (erweiterbar nach 2-Pizza-Prinzip)
-└── Mein Bereich
-    ├── Urlaub beantragen
-    ├── Krankmeldung
-    ├── Meine Aufgaben
-    ├── Meine Dokumente
-    └── Mein Kalender
-```
+[Ausführlichere Beschreibung des Projekts. Was macht es? Warum wurde es entwickelt? Welches Problem löst es?]
 
-## Voraussetzungen
+> "Wie bei allen FassadenFix-Lösungen steht Qualität und Transparenz im Vordergrund."
 
-- Microsoft 365 Business mit SharePoint Online
-- SharePoint Administrator-Rechte
-- PowerShell 5.1 oder höher
+---
 
-### PnP PowerShell installieren
+## Funktionen
 
-```powershell
-Install-Module -Name PnP.PowerShell -Scope CurrentUser
-```
+| Funktion | Beschreibung |
+|----------|--------------|
+| **[Feature 1]** | [Kurze Beschreibung der Funktion] |
+| **[Feature 2]** | [Kurze Beschreibung der Funktion] |
+| **[Feature 3]** | [Kurze Beschreibung der Funktion] |
 
-## Schnellstart
+---
 
-1. Konfiguration anpassen:
-   ```
-   config/settings.json → Tenant-URL eintragen
-   ```
+## Installation
 
-2. Deployment starten:
-   ```powershell
-   cd scripts
-   .\Deploy-Intranet.ps1
-   ```
+### Voraussetzungen
 
-## Skripte
+- [Voraussetzung 1, z.B. Node.js >= 18]
+- [Voraussetzung 2, z.B. Python 3.11+]
 
-| Skript | Beschreibung |
-|--------|--------------|
-| `Deploy-Intranet.ps1` | Master-Skript - führt alle Schritte aus |
-| `01-Create-HubSite.ps1` | Erstellt Communication Site als Hub |
-| `02-Create-Pages.ps1` | Legt Seitenstruktur an |
-| `03-Setup-Navigation.ps1` | Konfiguriert Top-Navigation |
-| `04-Setup-Permissions.ps1` | Richtet Berechtigungen ein |
-| `05-Create-TeamTemplate.ps1` | Erstellt Team-Bereiche |
-| `06-Setup-MeinBereich.ps1` | Konfiguriert persönliche Seite |
+### Schnellstart
 
-## Team-Bereich erstellen
+```bash
+# Repository klonen
+git clone https://github.com/FassadenFix/skill-agent-hub-repo.git
+cd skill-agent-hub-repo
 
-Neues Team nach 2-Pizza-Prinzip anlegen:
+# Abhängigkeiten installieren
+[Installationsbefehl]
 
-```powershell
-.\05-Create-TeamTemplate.ps1 -TeamName "Fassadenbau Nord"
+# Projekt starten
+[Startbefehl]
 ```
 
-Jedes Team erhält:
-- Eigene Seite
-- Dokumentenbibliothek
-- Aufgabenliste
-- Berechtigungsgruppe
+---
 
-## Berechtigungskonzept
+## Verwendung
 
-| Bereich | Gruppe | Berechtigung |
-|---------|--------|--------------|
-| Hub-Site | Alle Mitarbeiter | Lesen |
-| Abteilungen | Abteilungsgruppe | Lesen/Bearbeiten |
-| Teams | Team-Gruppe | Vollzugriff |
-| Administration | Besitzer | Vollzugriff |
+### Grundlegende Verwendung
+
+```[sprache]
+# Beispielcode für die grundlegende Verwendung
+[Code-Beispiel]
+```
+
+### Erweiterte Optionen
+
+[Beschreibung erweiterter Funktionen oder Konfigurationsmöglichkeiten]
+
+```[sprache]
+# Beispiel für erweiterte Verwendung
+[Code-Beispiel]
+```
+
+---
+
+## Konfiguration
+
+| Parameter | Beschreibung | Standard | Erforderlich |
+|-----------|--------------|----------|--------------|
+| `[PARAM_1]` | [Beschreibung] | `[Standardwert]` | Ja/Nein |
+| `[PARAM_2]` | [Beschreibung] | `[Standardwert]` | Ja/Nein |
+
+---
 
 ## Projektstruktur
 
 ```
-FaFi/
-├── README.md
-├── SETUP.md
-├── config/
-│   └── settings.json
-├── scripts/
-│   ├── Deploy-Intranet.ps1
-│   ├── 01-Create-HubSite.ps1
-│   ├── 02-Create-Pages.ps1
-│   ├── 03-Setup-Navigation.ps1
-│   ├── 04-Setup-Permissions.ps1
-│   ├── 05-Create-TeamTemplate.ps1
-│   └── 06-Setup-MeinBereich.ps1
-└── templates/
-    └── mein-bereich-template.json
+skill-agent-hub-repo/
+├── src/                    # Quellcode
+│   ├── [modul]/           # [Beschreibung]
+│   └── [modul]/           # [Beschreibung]
+├── tests/                  # Tests
+├── docs/                   # Dokumentation
+└── README.md              # Diese Datei
 ```
 
-## Design-Prinzipien
+---
 
-- Schlicht und übersichtlich
-- Keine Überfrachtung
-- Fokus auf Navigation und Klarheit
-- Skalierbar für zukünftige Erweiterungen
+## Beitrag
+
+Wir freuen uns über Beiträge! So können Sie mitwirken:
+
+1. **Fork** des Repositories erstellen
+2. **Feature-Branch** anlegen (`git checkout -b feature/NeuesFunktion`)
+3. **Änderungen committen** (`git commit -m 'feat: Neue Funktion hinzugefügt'`)
+4. **Branch pushen** (`git push origin feature/NeuesFunktion`)
+5. **Pull Request** erstellen
+
+### Commit-Konventionen
+
+Wir verwenden [Conventional Commits](https://www.conventionalcommits.org/):
+
+- `feat:` Neue Funktionen
+- `fix:` Fehlerbehebungen
+- `docs:` Dokumentationsänderungen
+- `style:` Formatierung, keine Code-Änderungen
+- `refactor:` Code-Refactoring
+
+---
+
+## Lizenz
+
+Dieses Projekt ist unter der [MIT/Apache/Proprietär] Lizenz lizenziert. Siehe [LICENSE](LICENSE) für Details.
+
+---
+
+## Kontakt
+
+**FassadenFix GmbH**
+
+| Kanal | Kontakt |
+|-------|---------|
+| 🌐 Website | [www.fassadenfix.de](https://www.fassadenfix.de) |
+| 📧 E-Mail | [kontakt@fassadenfix.de](mailto:kontakt@fassadenfix.de) |
+| 📞 Telefon | [Telefonnummer] |
+
+---
+
+## Danksagung
+
+- [Anerkennung für Mitwirkende, Bibliotheken oder Ressourcen]
+
+---
+
+<div align="center">
+  <sub>Erstellt mit 💚 von FassadenFix</sub>
+  <br>
+  <sub><em>"Ihr sicherer Weg zur sauberen Fassade"</em></sub>
+</div>
