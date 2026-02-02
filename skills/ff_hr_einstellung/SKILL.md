@@ -1,6 +1,6 @@
 ---
 name: ff-hr-einstellung
-description: "Erfasst und verarbeitet Personalfrageboegen fuer neue Mitarbeiter. Verwenden für: Eingabe von Stammdaten (Name, Adresse, Geburtsdatum), Bankverbindung mit IBAN-Validierung, Steuerklasse und Sozialversicherung, PDF-Generierung."
+description: "Verarbeitet und digitalisiert Personalfrageboegen fuer neue Mitarbeiter. Verwenden für: Eingabe von Stammdaten (Name, Adresse, Bankverbindung), Dokumenten-Upload, IBAN-Validierung, PDF-Generierung."
 ---
 
 # Skill: FassadenFix HR-Einstellung

@@ -1,6 +1,6 @@
 ---
 name: ff-schadensmeldung
-description: "Verarbeitet und meldet Fassadenschaeden digital an den Projektleiter. Verwenden für: Eingabe von Schadensdaten (Art, Beschreibung, Standort), Foto-Upload zur Dokumentation, automatische Benachrichtigung, PDF-Generierung."
+description: "Verarbeitet und dokumentiert Schadensmeldungen digital. Verwenden für: Eingabe von Schadensdaten (Objektadresse, Schadensart), Foto-Upload zur Dokumentation, automatische Benachrichtigung des Projektleiters."
 ---
 
 # Skill: FassadenFix Schadensmeldung

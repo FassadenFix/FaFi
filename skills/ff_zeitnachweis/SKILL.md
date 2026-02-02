@@ -1,6 +1,6 @@
 ---
 name: ff-zeitnachweis
-description: "Verarbeitet und berechnet Arbeitszeiten mit automatischer Ueberstundenberechnung. Verwenden für: Tageserfassung (Beginn, Ende, Pausen), Projektzuordnung zu Baustellen, monatliche Zusammenfassung, PDF-Generierung."
+description: "Verarbeitet und berechnet Arbeitszeiten fuer Mitarbeiter digital. Verwenden für: Tageserfassung (Beginn, Ende, Pausen), Projektzuordnung, Ueberstundenberechnung, monatliche PDF-Zusammenfassung."
 ---
 
 # Skill: FassadenFix Zeitnachweis

@@ -1,6 +1,6 @@
 ---
 name: ff-garantie
-description: "Generiert professionelle Garantieurkunden nach erfolgreicher Projektabnahme. Verwenden für: Erstellung von 5-Jahre-Algenfreiheit-Garantien, Kundendaten (Name, Adresse), Garantiezeitraum-Berechnung, PDF-Generierung."
+description: "Generiert professionelle Garantieurkunden nach Projektabnahme. Verwenden für: Eingabe von Kundendaten (Name, Adresse), Berechnung des Garantiezeitraums (5 Jahre), PDF-Generierung im Corporate Design."
 ---
 
 # Skill: FassadenFix Garantieurkunde
