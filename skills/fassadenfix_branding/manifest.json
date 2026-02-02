@@ -3,27 +3,18 @@
   "type": "skill",
   "name": "fassadenfix_branding",
   "version": "1.0.0",
-  "description": "Wendet FassadenFix Corporate Design und Branding-Richtlinien automatisch an. STANDARD-SKILL mit höchster Priorität - bei allen Anwendungen, Modulen, Agents und Plattformen standardmäßig aktiviert (Opt-Out-Prinzip/Widerspruchslösung).",
+  "description": "Erstellt und wendet FassadenFix Corporate Design automatisch an. Verwenden für: visuelle Gestaltung, Farbschemata, Typografie, UI-Komponenten, CSS-Styling, Webanwendungen, Dokumente, Präsentationen, Markenkonformität. Unterstützt Claude, Manus, ChatGPT, Gemini. STANDARD-SKILL mit Opt-Out-Prinzip.",
   "author": "FassadenFix",
   "tags": [
-    "branding",
-    "corporate-design",
     "styling",
-    "css",
-    "ui",
-    "ux",
-    "colors",
-    "typography",
     "fassadenfix",
-    "default",
-    "global"
+    "branding",
+    "corporate-design"
   ],
   "capabilities": [
-    "branding",
     "styling",
-    "visual_design",
-    "css_generation",
-    "ui_theming"
+    "branding",
+    "visual_design"
   ],
   "implementation": {
     "language": "python",
@@ -32,71 +23,38 @@
   "interface": {
     "inputs": [
       {
-        "name": "apply_branding",
-        "type": "boolean",
-        "description": "Branding anwenden (Standard: true). Auf false setzen für Opt-Out.",
-        "required": false,
-        "default": true
-      },
-      {
-        "name": "output_format",
+        "name": "input",
         "type": "string",
-        "description": "Ausgabeformat für Branding-Ressourcen",
-        "required": false,
-        "default": "css",
-        "enum": ["css", "tailwind", "json", "scss"]
-      },
-      {
-        "name": "components",
-        "type": "array",
-        "description": "Spezifische Komponenten zum Stylen (leer = alle)",
-        "required": false,
-        "default": []
+        "description": "Eingabe für den Skill",
+        "required": true
       }
     ],
     "outputs": [
       {
-        "name": "styles",
+        "name": "output",
         "type": "string",
-        "description": "Generierte Styles im gewählten Format"
-      },
-      {
-        "name": "colors",
-        "type": "object",
-        "description": "FassadenFix Farbpalette"
-      },
-      {
-        "name": "typography",
-        "type": "object",
-        "description": "Typografie-Einstellungen"
-      },
-      {
-        "name": "branding_applied",
-        "type": "boolean",
-        "description": "Ob Branding angewendet wurde"
+        "description": "Ausgabe des Skills"
       }
     ]
   },
   "dependencies": [],
+  "metadata": {
+    "created_at": "2026-02-02T00:00:00Z",
+    "updated_at": "2026-02-02T00:00:00Z",
+    "license": "Proprietary - FassadenFix GmbH",
+    "documentation": "SKILL.md"
+  },
+  "platforms": [
+    "claude",
+    "manus",
+    "chatgpt_codex",
+    "gemini",
+    "antigravity"
+  ],
   "orchestration": {
     "default_enabled": true,
     "priority": 100,
     "scope": "global",
-    "auto_inject": true,
-    "opt_out_keywords": [
-      "--no-branding",
-      "--skip-fassadenfix-style",
-      "branding: false",
-      "ohne FassadenFix Branding",
-      "abweichendes Design",
-      "custom branding",
-      "eigenes Design"
-    ]
-  },
-  "metadata": {
-    "created_at": "2026-01-30T11:15:00Z",
-    "updated_at": "2026-01-30T11:15:00Z",
-    "license": "Proprietary - FassadenFix GmbH",
-    "documentation": "SKILL.md"
+    "auto_inject": true
   }
 }

@@ -1,9 +1,15 @@
 ---
 name: fassadenfix-branding
-description: "Erstellt und wendet FassadenFix Corporate Design und Branding-Richtlinien automatisch an. Verwenden für: visuelle Gestaltung, Farbschemata, Typografie, UI-Komponenten, CSS-Styling, Webanwendungen, Dokumente, Präsentationen, Markenkonformität. STANDARD-SKILL mit Opt-Out-Prinzip."
+description: "Erstellt und wendet FassadenFix Corporate Design automatisch an. Verwenden für: visuelle Gestaltung, Farbschemata, Typografie, UI-Komponenten, CSS-Styling, Webanwendungen, Dokumente, Präsentationen, Markenkonformität. Unterstützt Claude, Manus, ChatGPT, Gemini. STANDARD-SKILL mit Opt-Out-Prinzip."
 default_enabled: true
 priority: 100
 scope: global
+platforms:
+  - claude
+  - manus
+  - chatgpt_codex
+  - gemini
+  - antigravity
 ---
 
 # FassadenFix Corporate Design & Branding Skill
@@ -16,7 +22,30 @@ Dieser Skill stellt die offiziellen FassadenFix Branding-Richtlinien bereit und 
 **Priorität:** Höchste (100)
 **Geltungsbereich:** Global - alle Anwendungen, Module, Agents und Plattformen
 
-**Keywords:** branding, corporate identity, visual identity, styling, brand colors, typography, FassadenFix brand, visual formatting, visual design, CSS, UI, UX, Fassadenreinigung, grün, Raleway
+## Plattform-Integration
+
+Dieser Skill unterstützt die Integration in verschiedene KI-Plattformen. Die plattformspezifischen Anleitungen befinden sich in den Referenz-Dateien.
+
+| Plattform | Integration | Dokumentation |
+|-----------|-------------|---------------|
+| **Claude (Anthropic)** | System Prompt, MCP Tools, Projects | `references/claude-integration.md` |
+| **Manus** | Native Skill | Automatisch aktiv |
+| **ChatGPT Codex** | Custom Instructions | Via Hub Connector |
+| **Gemini** | System Instructions | Via Hub Connector |
+
+### Claude-Integration
+
+Für die Integration in Claude von Anthropic stehen mehrere Optionen zur Verfügung:
+
+**Option 1: System Prompt** - Verwende `templates/claude-system-prompt.txt` als System-Anweisung.
+
+**Option 2: Claude Projects** - Lade diese SKILL.md als Knowledge-Dokument hoch.
+
+**Option 3: MCP Tools** - Nutze die Tool-Definitionen aus `templates/claude-mcp-tools.json`.
+
+**Option 4: API Integration** - Verwende `scripts/claude_branding_client.py` für programmatische Integration.
+
+Detaillierte Anleitung: `references/claude-integration.md`
 
 ## Aktivierungsverhalten
 
@@ -45,27 +74,29 @@ branding: false
 
 ## Farbpalette
 
-### Primärfarbe: FassadenFix Grün
+> **⚠️ OFFIZIELLE CI-FARBEN** - Bestätigt durch Logo-Finale.pdf
 
-| Eigenschaft | Wert |
-|-------------|------|
-| **Pantone** | 368 C |
-| **CMYK** | C 59, M 0, Y 100, K 0 |
-| **RGB** | R 119, G 188, B 31 |
-| **HEX** | `#77bc1f` |
-| **CSS Variable** | `--ff-green` / `--color-primary` |
-| **Verwendung** | Hauptmarkenfarbe, primäre Akzente, Logo-Icon, Call-to-Action-Buttons |
+### Primärfarbe: FassadenFix Grün (Pantone 368 C)
 
-### Sekundärfarbe: Dunkelgrau
+| Eigenschaft | Wert | Quelle |
+|-------------|------|--------|
+| **Pantone** | **368 C** | Logo-Finale.pdf |
+| **CMYK** | C 59, M 0, Y 100, K 0 | Logo-Finale.pdf |
+| **RGB** | R 119, G 188, B 31 | Logo-Finale.pdf |
+| **HEX** | **`#77bc1f`** | Logo-Finale.pdf |
+| **CSS Variable** | `--ff-green` / `--color-primary` | - |
+| **Verwendung** | Hauptmarkenfarbe, primäre Akzente, Logo-Icon, Call-to-Action-Buttons | - |
 
-| Eigenschaft | Wert |
-|-------------|------|
-| **Pantone** | 445 C |
-| **CMYK** | C 65, M 48, Y 49, K 41 |
-| **RGB** | R 78, G 87, B 88 |
-| **HEX** | `#4e5758` |
-| **CSS Variable** | `--ff-gray` / `--color-secondary` |
-| **Verwendung** | Text, sekundäre UI-Elemente, Hintergründe, Footer |
+### Sekundärfarbe: Dunkelgrau (Pantone 445 C)
+
+| Eigenschaft | Wert | Quelle |
+|-------------|------|--------|
+| **Pantone** | **445 C** | Logo-Finale.pdf |
+| **CMYK** | C 65, M 48, Y 49, K 41 | Logo-Finale.pdf |
+| **RGB** | R 78, G 87, B 88 | Logo-Finale.pdf |
+| **HEX** | **`#4e5758`** | Logo-Finale.pdf |
+| **CSS Variable** | `--ff-gray` / `--color-secondary` | - |
+| **Verwendung** | Text, sekundäre UI-Elemente, Hintergründe, Footer | - |
 
 ### Erweiterte Farbpalette
 
@@ -94,18 +125,20 @@ branding: false
 
 ## Typografie
 
+> **⚠️ OFFIZIELLE SCHRIFTART** - Bestätigt durch Logo-Finale.pdf: **Raleway Bold**
+
 ### Hauptschriftart: Raleway
 
-| Verwendung | Gewicht | Größe |
-|------------|---------|-------|
-| **Logo** | Bold (700) | - |
-| **H1** | Bold (700) | 3rem (48px) |
-| **H2** | Bold (700) | 2.25rem (36px) |
-| **H3** | SemiBold (600) | 1.875rem (30px) |
-| **H4** | SemiBold (600) | 1.5rem (24px) |
-| **Body** | Regular (400) / Medium (500) | 1rem (16px) |
-| **Buttons** | Bold (700) / SemiBold (600) | 1rem (16px) |
-| **Small** | Regular (400) | 0.875rem (14px) |
+| Verwendung | Gewicht | Größe | Quelle |
+|------------|---------|-------|--------|
+| **Logo** | **Bold (700)** | - | Logo-Finale.pdf |
+| **H1** | Bold (700) | 3rem (48px) | CI-Richtlinie |
+| **H2** | Bold (700) | 2.25rem (36px) | CI-Richtlinie |
+| **H3** | SemiBold (600) | 1.875rem (30px) | CI-Richtlinie |
+| **H4** | SemiBold (600) | 1.5rem (24px) | CI-Richtlinie |
+| **Body** | Regular (400) / Medium (500) | 1rem (16px) | CI-Richtlinie |
+| **Buttons** | Bold (700) / SemiBold (600) | 1rem (16px) | CI-Richtlinie |
+| **Small** | Regular (400) | 0.875rem (14px) | CI-Richtlinie |
 
 ### Google Fonts Import
 
@@ -130,17 +163,48 @@ h1, h2, h3, h4, h5, h6 {
 }
 ```
 
+## ⚠️ VERPFLICHTENDE CI-REGELN
+
+> **WICHTIG:** Die folgenden Regeln sind **STRIKT EINZUHALTEN**. Abweichungen sind nur mit expliziter Genehmigung zulässig.
+
+### Verpflichtende Farbverwendung
+
+| Farbe | HEX | Verwendung | Regel |
+|-------|-----|------------|-------|
+| **FassadenFix Grün** | `#77bc1f` | Primärfarbe, CTAs, Akzente | **PFLICHT** für alle Primärelemente |
+| **Dunkelgrau** | `#4e5758` | Text, Sekundärelemente | **PFLICHT** für Fließtext |
+| **Weiß** | `#ffffff` | Hintergründe | Standard-Hintergrund |
+
+### Verpflichtende Typografie
+
+| Element | Schriftart | Gewicht | Regel |
+|---------|------------|---------|-------|
+| **Alle Texte** | Raleway | 400-700 | **PFLICHT** - Keine anderen Schriftarten |
+
+---
+
 ## Logo-Verwendung
 
-### Varianten
+> **⚠️ VERPFLICHTEND:** Ausschließlich die offiziellen Logo-Dateien aus dem `fassadenfix-assets` Skill verwenden. Siehe: `/home/ubuntu/skills/fassadenfix-assets/templates/logos/`
 
-| Variante | Icon | Text | Hintergrund | Verwendung |
-|----------|------|------|-------------|------------|
-| **Standard** | Grün | Grün | Weiß/Hell | Header, Dokumente |
-| **Invertiert** | Weiß | Weiß | Dunkelgrau | Footer, dunkle Bereiche |
-| **Akzent** | Grün | Grün | Dunkelgrau | Alternative dunkel |
-| **CTA** | Weiß | Weiß | Grün | Banner, Buttons |
-| **Kontrast** | Dunkelgrau | Dunkelgrau | Grün | Grüne Hintergründe |
+### Genehmigte Logo-Dateien
+
+| Anwendungsfall | Datei | Pfad |
+|----------------|-------|------|
+| **Website Header** | `FassadenFix_Logo_bunt_transparent_300px.png` | `standard/` |
+| **Website Footer** | `FassadenFix_Logo_weiß.png` | `varianten/` |
+| **Dokumente** | `FassadenFix_Logo_bunt_1000px.png` | `standard/` |
+| **E-Mail** | `FassadenFix_Logo_400x80.png` | `varianten/` |
+| **Favicon** | `FassadenFix_Logo_96x96.jpg` | `varianten/` |
+| **Monochrom** | `FassadenFix_Logo_schwarz_transparent.png` | `varianten/` |
+
+### ❌ VERBOTEN
+
+- Erstellung eigener Logo-Varianten
+- Änderung der Logo-Farben
+- Verzerrung des Seitenverhältnisses
+- Hinzufügen von Effekten
+- Verwendung nicht genehmigter Dateien
 
 ### Richtlinien
 
@@ -449,10 +513,20 @@ Dieser Skill wird automatisch als Abhängigkeit für alle anderen Skills und Age
   "default_enabled": true,
   "priority": 100,
   "scope": "global",
+  "platforms": ["claude", "manus", "chatgpt_codex", "gemini", "antigravity"],
   "dependencies": [],
   "dependents": ["*"]
 }
 ```
+
+## Ressourcen
+
+| Datei | Beschreibung |
+|-------|--------------|
+| `references/claude-integration.md` | Detaillierte Claude-Integrationsanleitung |
+| `templates/claude-system-prompt.txt` | System Prompt für Claude |
+| `templates/claude-mcp-tools.json` | MCP Tool-Definitionen |
+| `scripts/claude_branding_client.py` | Python-Client für API-Integration |
 
 ## Zusammenfassung
 
@@ -463,5 +537,6 @@ Der FassadenFix Branding Skill stellt sicher, dass alle visuellen Artefakte der 
 ---
 
 **Erstellt:** 30. Januar 2026
+**Aktualisiert:** 02. Februar 2026
 **Basis:** FassadenFix Corporate Design & Branding-Richtlinien
-**Version:** 1.0.0
+**Version:** 2.0.0 (mit Claude-Integration)
