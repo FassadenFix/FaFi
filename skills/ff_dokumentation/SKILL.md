@@ -1,6 +1,6 @@
 ---
 name: ff-dokumentation
-description: Erstellt und verarbeitet Ff Dokumentation. Verwenden fuer: Gegenueberstellung von Bildern, digitale Unterschriften, PDF-Zusammenfuehrung.
+description: "Erstellt Vorher-Nachher-Dokumentationen und Abnahmeprotokolle fuer Fassadenprojekte. Verwenden für: Bildgegenueberstellung (vorher/nachher), Checklisten zur Zustandserfassung, Wasseruhren-Dokumentation, PDF-Generierung."
 ---
 
 # Skill: FassadenFix Objektdokumentation

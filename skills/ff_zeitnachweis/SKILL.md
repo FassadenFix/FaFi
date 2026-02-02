@@ -1,6 +1,6 @@
 ---
 name: ff-zeitnachweis
-description: "Digitaler Stundenzettel fuer Mitarbeiter. Verwenden fuer: Tageserfassung von Arbeitszeiten, Projektzuordnung, Pausen, Ueberstunden, monatliche Zusammenfassung."
+description: "Verarbeitet und berechnet Arbeitszeiten mit automatischer Ueberstundenberechnung. Verwenden für: Tageserfassung (Beginn, Ende, Pausen), Projektzuordnung zu Baustellen, monatliche Zusammenfassung, PDF-Generierung."
 ---
 
 # Skill: FassadenFix Zeitnachweis

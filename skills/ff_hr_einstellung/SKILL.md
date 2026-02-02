@@ -1,6 +1,6 @@
 ---
 name: ff-hr-einstellung
-description: "Digitalisiert den Personalfragebogen und Einstellungsprozess. Verwenden fuer: Erfassung von Mitarbeiterdaten, Dokumenten-Upload, automatische Validierung, PDF-Generierung."
+description: "Erfasst und verarbeitet Personalfrageboegen fuer neue Mitarbeiter. Verwenden für: Eingabe von Stammdaten (Name, Adresse, Geburtsdatum), Bankverbindung mit IBAN-Validierung, Steuerklasse und Sozialversicherung, PDF-Generierung."
 ---
 
 # Skill: FassadenFix HR-Einstellung

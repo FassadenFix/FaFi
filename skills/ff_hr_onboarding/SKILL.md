@@ -1,6 +1,6 @@
 ---
 name: ff-hr-onboarding
-description: "Fuehrt neue Mitarbeiter durch den strukturierten Onboarding-Prozess. Verwenden fuer: Checklisten-Workflow, Dokumenten-Sammlung, Statusverfolgung, automatische Erinnerungen."
+description: "Verwaltet den strukturierten Onboarding-Prozess fuer neue Mitarbeiter. Verwenden für: 17-Punkte-Checkliste (Bewerberverfahren, Dokumente, Vertrag), Statusverfolgung mit Fortschrittsanzeige, automatische Erinnerungen, PDF-Generierung."
 ---
 
 # Skill: FassadenFix HR-Onboarding
