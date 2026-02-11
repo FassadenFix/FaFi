@@ -1,8 +1,14 @@
-# FassadenFix Konnektoren-Bibliothek
-
-**Version:** 1.0.0
-**Datum:** 2026-02-08
-**Autor:** Manus AI
+<div align="center">
+  <img src="/home/ubuntu/skills/fassadenfix-assets/templates/logos/standard/FassadenFix_Logo_bunt_transparent_300px.png" alt="FassadenFix Logo" width="300">
+  
+  # connectors
+  
+  **[Kurze, prägnante Beschreibung des Projekts in 1-2 Sätzen]**
+  
+  [![FassadenFix](https://img.shields.io/badge/FassadenFix-Projekt-77bc1f?style=flat-square)](https://fassadenfix.de)
+  [![Status](https://img.shields.io/badge/Status-Aktiv-77bc1f?style=flat-square)]()
+  [![Version](https://img.shields.io/badge/Version-1.0.0-77bc1f?style=flat-square)]()
+</div>
 
 ---
 
@@ -12,76 +18,134 @@ Diese Bibliothek enthält eine Sammlung von Python API-Clients und MCP-Konfigura
 
 Die Konnektoren wurden auf Basis einer umfassenden Analyse der Systemlandschaft entwickelt und decken die kritischsten Integrationslücken ab.
 
-### Enthaltene Konnektoren
-
-| Anwendung | Typ | Priorität | Status |
-| :--- | :--- | :--- | :--- |
-| **HERO Handwerkersoftware** | GraphQL API Client | **Hoch** | ✅ Fertiggestellt |
-| **Google Ads** | MCP Server Config | **Hoch** | ✅ Fertiggestellt |
-| **Sipgate VoIP** | REST API Client | Mittel | ✅ Fertiggestellt |
-| **WhatsApp Business** | Cloud API Client | Mittel | ✅ Fertiggestellt |
-| **Make.com** | MCP Server Config | Mittel | ✅ Fertiggestellt |
-| **Ricoh360 Tours** | REST API Client | Niedrig | ✅ Fertiggestellt |
+> "Wie bei allen FassadenFix-Lösungen steht Qualität und Transparenz im Vordergrund."
 
 ---
 
-## Erste Schritte
+## Funktionen
 
-### 1. Umgebungsvariablen konfigurieren
-
-Kopieren Sie die Vorlage `.env.template` in diesem Verzeichnis zu einer neuen Datei namens `.env`:
-
-```bash
-cp .env.template .env
-```
-
-Öffnen Sie die `.env`-Datei und tragen Sie die erforderlichen API-Schlüssel und Zugangsdaten für jede Anwendung ein. Detaillierte Anweisungen zur Beschaffung der einzelnen Schlüssel finden Sie als Kommentare in der `.env.template`-Datei.
-
-> **WICHTIG:** Die `.env`-Datei enthält sensible Zugangsdaten und darf **niemals** in ein Git-Repository eingecheckt werden. Sie ist bereits in der `.gitignore`-Datei des Projekts eingetragen.
-
-### 2. Python-Abhängigkeiten installieren
-
-Die erforderlichen Python-Pakete für die API-Clients wurden bereits installiert. Falls eine Neuinstallation notwendig ist, können Sie die Pakete wie folgt installieren:
-
-```bash
-sudo pip3 install gql aiohttp requests-toolbelt
-```
-
-### 3. API-Clients verwenden
-
-Die Python-Clients können direkt in Ihren Skripten und Manus-Skills importiert und verwendet werden. Die Clients laden die Zugangsdaten automatisch aus der `.env`-Datei.
-
-**Beispiel: HERO Software Client**
-
-```python
-import os
-from dotenv import load_dotenv
-from connectors.hero_software import get_hero_client
-
-# .env-Datei laden
-load_dotenv()
-
-# HERO Client initialisieren (API-Key wird automatisch geladen)
-hero_client = get_hero_client()
-
-# Alle Kunden-Kontakte abrufen
-contacts = hero_client.get_contacts(category="customer")
-
-for contact in contacts:
-    print(f"Kunde: {contact.company_name or contact.first_name + ' ' + contact.last_name}")
-```
-
-### 4. MCP-Server in Manus konfigurieren
-
-Die Konnektoren für **Google Ads** und **Make.com** sind als MCP-Server konzipiert. Um diese in Manus zu nutzen, müssen sie in den MCP-Einstellungen Ihrer Manus-Instanz konfiguriert werden.
-
-Die notwendigen Konfigurations-JSONs und Anleitungen finden Sie in den jeweiligen `mcp_setup.py`-Dateien der Konnektoren:
-
-- `connectors/google_ads/mcp_setup.py`
-- `connectors/make_com/mcp_setup.py`
+| Funktion | Beschreibung |
+|----------|--------------|
+| **[Feature 1]** | [Kurze Beschreibung der Funktion] |
+| **[Feature 2]** | [Kurze Beschreibung der Funktion] |
+| **[Feature 3]** | [Kurze Beschreibung der Funktion] |
 
 ---
 
-## Detaillierte Dokumentation
+## Installation
 
-Eine umfassende Analyse der Systemlandschaft, die Gap-Analyse und die detaillierte Integrations-Roadmap finden Sie im Dokument `Integrations-Roadmap.md`.
+### Voraussetzungen
+
+- [Voraussetzung 1, z.B. Node.js >= 18]
+- [Voraussetzung 2, z.B. Python 3.11+]
+
+### Schnellstart
+
+```bash
+# Repository klonen
+git clone https://github.com/FassadenFix/connectors.git
+cd connectors
+
+# Abhängigkeiten installieren
+[Installationsbefehl]
+
+# Projekt starten
+[Startbefehl]
+```
+
+---
+
+## Verwendung
+
+### Grundlegende Verwendung
+
+```[sprache]
+# Beispielcode für die grundlegende Verwendung
+[Code-Beispiel]
+```
+
+### Erweiterte Optionen
+
+[Beschreibung erweiterter Funktionen oder Konfigurationsmöglichkeiten]
+
+```[sprache]
+# Beispiel für erweiterte Verwendung
+[Code-Beispiel]
+```
+
+---
+
+## Konfiguration
+
+| Parameter | Beschreibung | Standard | Erforderlich |
+|-----------|--------------|----------|--------------|
+| `[PARAM_1]` | [Beschreibung] | `[Standardwert]` | Ja/Nein |
+| `[PARAM_2]` | [Beschreibung] | `[Standardwert]` | Ja/Nein |
+
+---
+
+## Projektstruktur
+
+```
+connectors/
+├── src/                    # Quellcode
+│   ├── [modul]/           # [Beschreibung]
+│   └── [modul]/           # [Beschreibung]
+├── tests/                  # Tests
+├── docs/                   # Dokumentation
+└── README.md              # Diese Datei
+```
+
+---
+
+## Beitrag
+
+Wir freuen uns über Beiträge! So können Sie mitwirken:
+
+1. **Fork** des Repositories erstellen
+2. **Feature-Branch** anlegen (`git checkout -b feature/NeuesFunktion`)
+3. **Änderungen committen** (`git commit -m 'feat: Neue Funktion hinzugefügt'`)
+4. **Branch pushen** (`git push origin feature/NeuesFunktion`)
+5. **Pull Request** erstellen
+
+### Commit-Konventionen
+
+Wir verwenden [Conventional Commits](https://www.conventionalcommits.org/):
+
+- `feat:` Neue Funktionen
+- `fix:` Fehlerbehebungen
+- `docs:` Dokumentationsänderungen
+- `style:` Formatierung, keine Code-Änderungen
+- `refactor:` Code-Refactoring
+
+---
+
+## Lizenz
+
+Dieses Projekt ist unter der [MIT/Apache/Proprietär] Lizenz lizenziert. Siehe [LICENSE](LICENSE) für Details.
+
+---
+
+## Kontakt
+
+**FassadenFix GmbH**
+
+| Kanal | Kontakt |
+|-------|---------|
+| 🌐 Website | [www.fassadenfix.de](https://www.fassadenfix.de) |
+| 📧 E-Mail | [kontakt@fassadenfix.de](mailto:kontakt@fassadenfix.de) |
+| 📞 Telefon | [Telefonnummer] |
+
+---
+
+## Danksagung
+
+- [Anerkennung für Mitwirkende, Bibliotheken oder Ressourcen]
+
+---
+
+<div align="center">
+  <sub>Erstellt mit 💚 von FassadenFix</sub>
+  <br>
+  <sub><em>"Ihr sicherer Weg zur sauberen Fassade"</em></sub>
+</div>

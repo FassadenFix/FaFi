@@ -71,5 +71,5 @@ Dieser Skill ist Teil des **FassadenFix Skill & Agent Hub** Ökosystems.
 <div align="center">
   <sub>Erstellt mit 💚 von FassadenFix</sub>
   <br>
-  <sub>Letzte Aktualisierung: 2026-02-04</sub>
+  <sub>Letzte Aktualisierung: 2026-02-11</sub>
 </div>
