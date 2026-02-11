@@ -1,0 +1,241 @@
+/**
+ * Tablet-Responsive Optimierungen für den Baustellen-Manager
+ * Zielgeräte: iPad (768-1024px), Android-Tablets
+ * Fokus: Touch-Targets, Landscape-Layout, Lesbarkeit
+ */
+
+/* ============================================
+   Tablet Breakpoint: 768px - 1024px
+   ============================================ */
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  /* Größere Touch-Targets für Tablet-Nutzung */
+  .touch-target {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  /* Buttons mindestens 44px hoch (Apple HIG) */
+  button,
+  [role="button"],
+  a.btn {
+    min-height: 44px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  /* Karten mit mehr Padding für Touch */
+  .card-touch {
+    padding: 16px;
+  }
+
+  /* Baustellen-Grid: 2 Spalten auf Tablet */
+  .baustellen-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  /* Foto-Upload: Größere Vorschau auf Tablet */
+  .foto-preview {
+    width: 120px;
+    height: 120px;
+  }
+
+  /* Logbuch-Einträge: Kompaktere Darstellung */
+  .logbuch-entry {
+    padding: 12px 16px;
+  }
+
+  /* Navigation: Sidebar schmaler auf Tablet */
+  .sidebar-tablet {
+    width: 240px;
+  }
+}
+
+/* ============================================
+   Tablet Landscape: > 1024px Breite
+   ============================================ */
+
+@media (min-width: 1024px) and (max-width: 1366px) and (orientation: landscape) {
+  /* Baustellen-Grid: 3 Spalten im Landscape */
+  .baustellen-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Split-View: Baustellen-Liste links, Detail rechts */
+  .split-view {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 24px;
+  }
+
+  /* Foto-Galerie: 4 Spalten im Landscape */
+  .foto-galerie {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ============================================
+   Tablet Portrait: 768px - 1024px
+   ============================================ */
+
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+  /* Baustellen-Grid: 1 Spalte im Portrait */
+  .baustellen-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Foto-Galerie: 3 Spalten im Portrait */
+  .foto-galerie {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  /* Wizard: Volle Breite im Portrait */
+  .wizard-container {
+    max-width: 100%;
+    padding: 0 16px;
+  }
+}
+
+/* ============================================
+   Touch-Optimierungen (alle Touch-Geräte)
+   ============================================ */
+
+@media (pointer: coarse) {
+  /* Größere Checkboxen und Radio-Buttons */
+  input[type="checkbox"],
+  input[type="radio"] {
+    width: 24px;
+    height: 24px;
+  }
+
+  /* Größere Select-Dropdowns */
+  select {
+    min-height: 44px;
+    font-size: 16px; /* Verhindert iOS-Zoom */
+  }
+
+  /* Input-Felder: Größer für Touch */
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  input[type="tel"],
+  textarea {
+    min-height: 44px;
+    font-size: 16px; /* Verhindert iOS-Zoom */
+  }
+
+  /* Tabellen-Zeilen: Mehr Abstand für Touch */
+  table tbody tr {
+    min-height: 48px;
+  }
+
+  table tbody td {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  /* Scroll-Snap für horizontale Listen */
+  .horizontal-scroll {
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .horizontal-scroll > * {
+    scroll-snap-align: start;
+  }
+
+  /* Swipe-freundliche Karten */
+  .swipeable-card {
+    touch-action: pan-x;
+  }
+}
+
+/* ============================================
+   Baustellen-Manager spezifische Optimierungen
+   ============================================ */
+
+/* Wetter-Widget: Kompakt auf Tablet */
+@media (max-width: 1024px) {
+  .wetter-widget {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .wetter-widget .temp {
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+
+  .wetter-widget .details {
+    display: flex;
+    gap: 16px;
+    font-size: 0.875rem;
+  }
+}
+
+/* Fortschrittsbalken: Dicker auf Touch-Geräten */
+@media (pointer: coarse) {
+  .progress-bar {
+    height: 12px;
+    border-radius: 6px;
+  }
+}
+
+/* Bautagebuch: Optimierte Eingabe auf Tablet */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .bautagebuch-form textarea {
+    min-height: 120px;
+    font-size: 16px;
+  }
+
+  .bautagebuch-form .foto-upload-zone {
+    min-height: 200px;
+    border: 3px dashed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* Abnahme-Checkliste: Große Checkboxen */
+@media (pointer: coarse) {
+  .abnahme-checklist .check-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border-bottom: 1px solid;
+    min-height: 56px;
+  }
+
+  .abnahme-checklist .check-item input[type="checkbox"] {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+  }
+}
+
+/* ============================================
+   iPad-spezifische Fixes
+   ============================================ */
+
+/* Verhindere iOS-Bounce-Effekt in Scrollbereichen */
+@supports (-webkit-touch-callout: none) {
+  .scroll-container {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+
+  /* Safe Area Insets für iPad mit Notch/Home-Indicator */
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "timestamp": "2026-02-09T11:02:32.379354",
+  "project_path": "/home/ubuntu/fafi-pm-mockup",
+  "project_info": {
+    "has_package_json": true,
+    "has_tsconfig": true,
+    "has_eslint": false,
+    "has_prettier": true,
+    "has_vite": true,
+    "has_next": false,
+    "has_react": true,
+    "has_tailwind": false,
+    "package_manager": "pnpm",
+    "framework": "vite"
+  },
+  "checks": {
+    "structure": {
+      "tool": "structure_check",
+      "status": "warn",
+      "issues": [
+        "3 Dateien > 500KB gefunden"
+      ],
+      "stats": {
+        "total_files": 543,
+        "ts_files": 267,
+        "js_files": 65,
+        "css_files": 3,
+        "test_files": 34
+      }
+    },
+    "eslint": {
+      "tool": "eslint",
+      "status": "not_configured",
+      "errors": 0,
+      "warnings": 0,
+      "details": [],
+      "message": "Keine ESLint-Konfiguration gefunden"
+    },
+    "typescript": {
+      "tool": "typescript",
+      "status": "pass",
+      "errors": 0,
+      "details": [],
+      "message": "Keine Type-Fehler gefunden"
+    },
+    "dependencies": {
+      "tool": "dependency_audit",
+      "status": "warn",
+      "vulnerabilities": 0,
+      "details": []
+    }
+  },
+  "overall": "WARN"
+}

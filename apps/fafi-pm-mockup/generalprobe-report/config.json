@@ -1,0 +1,39 @@
+{
+  "project": {
+    "name": "FaFi PM - FassadenFix Projektmanagement",
+    "path": "/home/ubuntu/fafi-pm-mockup",
+    "url": "https://3000-iw76jxpuc8j7t75j3zzt0-e0cdebba.us2.manus.computer",
+    "description": "Projektmanagement-Software fuer FassadenFix Fassadenreinigung. Verwaltet den gesamten Lebenszyklus von der Objektaufnahme ueber Angebotserstellung, Auftragsabwicklung, Baustellenmanagement bis zur Abnahme und Garantie.",
+    "type": "web-app"
+  },
+  "intentions": {
+    "description": "FaFi PM digitalisiert den kompletten Projektmanagement-Prozess der FassadenFix GmbH.",
+    "target_users": ["Geschaeftsfuehrung", "Kundenberater", "AT-Leiter", "Projektleiter", "Buero"],
+    "key_features": [
+      "Dashboard mit KPIs und Aktivitaeten",
+      "Phasenbasiertes Projektmanagement (10 Phasen)",
+      "Immobilienverwaltung mit Fotos",
+      "Baustellenmanagement mit Bautagebuch",
+      "Vorbereitungsaufgaben-Board (Kanban mit Ampelsystem)",
+      "Angebotserstellung per Wizard",
+      "Rechnungen und Mahnwesen",
+      "Garantien und Inspektionen",
+      "CRM mit HubSpot-Sync",
+      "Zentrales Dokumentenarchiv mit Auto-Archivierung",
+      "Benachrichtigungen bei ueberfaelligen Aufgaben"
+    ],
+    "interview_notes": "MVP-Spezifikation und Konzeptionsdokument definieren den Funktionsumfang."
+  },
+  "dimensions": {
+    "code_quality": { "enabled": true, "eslint": true, "typescript": true, "dependencies": true },
+    "design": { "enabled": true, "viewports": ["mobile", "tablet", "desktop"], "brand_guidelines": "FassadenFix CI: #77bc1f, #4e5758, Font Inter", "screenshots": true },
+    "functionality": { "enabled": true, "features_to_test": ["Dashboard", "Projekte", "Immobilien", "Baustellen", "Vorbereitungsaufgaben", "Angebote", "Rechnungen", "Archiv", "Benachrichtigungen"] },
+    "intention_check": { "enabled": true },
+    "e2e_tests": { "enabled": true, "scenarios_file": "/home/ubuntu/projects/sandbox-projektmanager-vorab-tes-9a8aa46b/TESTPLAN-GENERALPROBE.md" },
+    "user_perspectives": { "enabled": true, "perspectives": ["Geschaeftsfuehrer", "Kundenberater", "AT-Leiter", "Projektleiter", "Buero-Mitarbeiter"] },
+    "realdata": { "enabled": true, "data_sources": ["Mock-Projekte", "Baustellendaten", "Angebote"] },
+    "accessibility": { "enabled": true, "standard": "wcag2aa", "pages": ["/", "/projekte", "/baustellen", "/vorbereitungsaufgaben", "/archiv", "/angebote", "/rechnungen"] },
+    "performance": { "enabled": true, "threshold": 70, "devices": ["mobile", "desktop"] }
+  },
+  "output": { "report_dir": "./generalprobe-report", "screenshots_dir": "./generalprobe-report/screenshots", "format": "markdown" }
+}

@@ -1,0 +1,794 @@
+{
+  "accessibility": [
+    {
+      "page": "Dashboard",
+      "url": "/",
+      "status": "FAIL",
+      "violations": [
+        {
+          "id": "html-has-lang",
+          "impact": "serious",
+          "description": "Ensure every HTML document has a lang attribute",
+          "help": "<html> element must have a lang attribute",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/html-has-lang?application=axeAPI",
+          "tags": [
+            "cat.language",
+            "wcag2a",
+            "wcag311",
+            "TTv5",
+            "TT11.a",
+            "EN-301-549",
+            "EN-9.3.1.1",
+            "ACT"
+          ],
+          "nodes": 1
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "description": "Ensure the document has a main landmark",
+          "help": "Document should have one main landmark",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/landmark-one-main?application=axeAPI",
+          "tags": [
+            "cat.semantics",
+            "best-practice"
+          ],
+          "nodes": 1
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "help": "All page content should be contained by landmarks",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/region?application=axeAPI",
+          "tags": [
+            "cat.keyboard",
+            "best-practice"
+          ],
+          "nodes": 3
+        }
+      ],
+      "passes": 8,
+      "incomplete": 0,
+      "summary": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 2,
+        "minor": 0,
+        "total": 3
+      }
+    },
+    {
+      "page": "Projekte",
+      "url": "/projekte",
+      "status": "FAIL",
+      "violations": [
+        {
+          "id": "html-has-lang",
+          "impact": "serious",
+          "description": "Ensure every HTML document has a lang attribute",
+          "help": "<html> element must have a lang attribute",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/html-has-lang?application=axeAPI",
+          "tags": [
+            "cat.language",
+            "wcag2a",
+            "wcag311",
+            "TTv5",
+            "TT11.a",
+            "EN-301-549",
+            "EN-9.3.1.1",
+            "ACT"
+          ],
+          "nodes": 1
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "description": "Ensure the document has a main landmark",
+          "help": "Document should have one main landmark",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/landmark-one-main?application=axeAPI",
+          "tags": [
+            "cat.semantics",
+            "best-practice"
+          ],
+          "nodes": 1
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "help": "All page content should be contained by landmarks",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/region?application=axeAPI",
+          "tags": [
+            "cat.keyboard",
+            "best-practice"
+          ],
+          "nodes": 3
+        }
+      ],
+      "passes": 8,
+      "incomplete": 0,
+      "summary": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 2,
+        "minor": 0,
+        "total": 3
+      }
+    },
+    {
+      "page": "Immobilien",
+      "url": "/immobilien",
+      "status": "FAIL",
+      "violations": [
+        {
+          "id": "html-has-lang",
+          "impact": "serious",
+          "description": "Ensure every HTML document has a lang attribute",
+          "help": "<html> element must have a lang attribute",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/html-has-lang?application=axeAPI",
+          "tags": [
+            "cat.language",
+            "wcag2a",
+            "wcag311",
+            "TTv5",
+            "TT11.a",
+            "EN-301-549",
+            "EN-9.3.1.1",
+            "ACT"
+          ],
+          "nodes": 1
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "description": "Ensure the document has a main landmark",
+          "help": "Document should have one main landmark",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/landmark-one-main?application=axeAPI",
+          "tags": [
+            "cat.semantics",
+            "best-practice"
+          ],
+          "nodes": 1
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "help": "All page content should be contained by landmarks",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/region?application=axeAPI",
+          "tags": [
+            "cat.keyboard",
+            "best-practice"
+          ],
+          "nodes": 3
+        }
+      ],
+      "passes": 8,
+      "incomplete": 0,
+      "summary": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 2,
+        "minor": 0,
+        "total": 3
+      }
+    },
+    {
+      "page": "Baustellen",
+      "url": "/baustellen",
+      "status": "FAIL",
+      "violations": [
+        {
+          "id": "html-has-lang",
+          "impact": "serious",
+          "description": "Ensure every HTML document has a lang attribute",
+          "help": "<html> element must have a lang attribute",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/html-has-lang?application=axeAPI",
+          "tags": [
+            "cat.language",
+            "wcag2a",
+            "wcag311",
+            "TTv5",
+            "TT11.a",
+            "EN-301-549",
+            "EN-9.3.1.1",
+            "ACT"
+          ],
+          "nodes": 1
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "description": "Ensure the document has a main landmark",
+          "help": "Document should have one main landmark",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/landmark-one-main?application=axeAPI",
+          "tags": [
+            "cat.semantics",
+            "best-practice"
+          ],
+          "nodes": 1
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "help": "All page content should be contained by landmarks",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/region?application=axeAPI",
+          "tags": [
+            "cat.keyboard",
+            "best-practice"
+          ],
+          "nodes": 3
+        }
+      ],
+      "passes": 8,
+      "incomplete": 0,
+      "summary": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 2,
+        "minor": 0,
+        "total": 3
+      }
+    },
+    {
+      "page": "Unternehmen & Kontakte",
+      "url": "/kontakte",
+      "status": "FAIL",
+      "violations": [
+        {
+          "id": "html-has-lang",
+          "impact": "serious",
+          "description": "Ensure every HTML document has a lang attribute",
+          "help": "<html> element must have a lang attribute",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/html-has-lang?application=axeAPI",
+          "tags": [
+            "cat.language",
+            "wcag2a",
+            "wcag311",
+            "TTv5",
+            "TT11.a",
+            "EN-301-549",
+            "EN-9.3.1.1",
+            "ACT"
+          ],
+          "nodes": 1
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "description": "Ensure the document has a main landmark",
+          "help": "Document should have one main landmark",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/landmark-one-main?application=axeAPI",
+          "tags": [
+            "cat.semantics",
+            "best-practice"
+          ],
+          "nodes": 1
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "help": "All page content should be contained by landmarks",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/region?application=axeAPI",
+          "tags": [
+            "cat.keyboard",
+            "best-practice"
+          ],
+          "nodes": 3
+        }
+      ],
+      "passes": 8,
+      "incomplete": 0,
+      "summary": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 2,
+        "minor": 0,
+        "total": 3
+      }
+    },
+    {
+      "page": "Angebote",
+      "url": "/angebote",
+      "status": "FAIL",
+      "violations": [
+        {
+          "id": "html-has-lang",
+          "impact": "serious",
+          "description": "Ensure every HTML document has a lang attribute",
+          "help": "<html> element must have a lang attribute",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/html-has-lang?application=axeAPI",
+          "tags": [
+            "cat.language",
+            "wcag2a",
+            "wcag311",
+            "TTv5",
+            "TT11.a",
+            "EN-301-549",
+            "EN-9.3.1.1",
+            "ACT"
+          ],
+          "nodes": 1
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "description": "Ensure the document has a main landmark",
+          "help": "Document should have one main landmark",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/landmark-one-main?application=axeAPI",
+          "tags": [
+            "cat.semantics",
+            "best-practice"
+          ],
+          "nodes": 1
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "help": "All page content should be contained by landmarks",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/region?application=axeAPI",
+          "tags": [
+            "cat.keyboard",
+            "best-practice"
+          ],
+          "nodes": 3
+        }
+      ],
+      "passes": 8,
+      "incomplete": 0,
+      "summary": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 2,
+        "minor": 0,
+        "total": 3
+      }
+    },
+    {
+      "page": "Aufträge",
+      "url": "/auftraege",
+      "status": "FAIL",
+      "violations": [
+        {
+          "id": "html-has-lang",
+          "impact": "serious",
+          "description": "Ensure every HTML document has a lang attribute",
+          "help": "<html> element must have a lang attribute",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/html-has-lang?application=axeAPI",
+          "tags": [
+            "cat.language",
+            "wcag2a",
+            "wcag311",
+            "TTv5",
+            "TT11.a",
+            "EN-301-549",
+            "EN-9.3.1.1",
+            "ACT"
+          ],
+          "nodes": 1
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "description": "Ensure the document has a main landmark",
+          "help": "Document should have one main landmark",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/landmark-one-main?application=axeAPI",
+          "tags": [
+            "cat.semantics",
+            "best-practice"
+          ],
+          "nodes": 1
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "help": "All page content should be contained by landmarks",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/region?application=axeAPI",
+          "tags": [
+            "cat.keyboard",
+            "best-practice"
+          ],
+          "nodes": 3
+        }
+      ],
+      "passes": 8,
+      "incomplete": 0,
+      "summary": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 2,
+        "minor": 0,
+        "total": 3
+      }
+    },
+    {
+      "page": "Garantien",
+      "url": "/garantien",
+      "status": "FAIL",
+      "violations": [
+        {
+          "id": "html-has-lang",
+          "impact": "serious",
+          "description": "Ensure every HTML document has a lang attribute",
+          "help": "<html> element must have a lang attribute",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/html-has-lang?application=axeAPI",
+          "tags": [
+            "cat.language",
+            "wcag2a",
+            "wcag311",
+            "TTv5",
+            "TT11.a",
+            "EN-301-549",
+            "EN-9.3.1.1",
+            "ACT"
+          ],
+          "nodes": 1
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "description": "Ensure the document has a main landmark",
+          "help": "Document should have one main landmark",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/landmark-one-main?application=axeAPI",
+          "tags": [
+            "cat.semantics",
+            "best-practice"
+          ],
+          "nodes": 1
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "help": "All page content should be contained by landmarks",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/region?application=axeAPI",
+          "tags": [
+            "cat.keyboard",
+            "best-practice"
+          ],
+          "nodes": 3
+        }
+      ],
+      "passes": 8,
+      "incomplete": 0,
+      "summary": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 2,
+        "minor": 0,
+        "total": 3
+      }
+    },
+    {
+      "page": "Finanzen",
+      "url": "/finanzen",
+      "status": "FAIL",
+      "violations": [
+        {
+          "id": "html-has-lang",
+          "impact": "serious",
+          "description": "Ensure every HTML document has a lang attribute",
+          "help": "<html> element must have a lang attribute",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/html-has-lang?application=axeAPI",
+          "tags": [
+            "cat.language",
+            "wcag2a",
+            "wcag311",
+            "TTv5",
+            "TT11.a",
+            "EN-301-549",
+            "EN-9.3.1.1",
+            "ACT"
+          ],
+          "nodes": 1
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "description": "Ensure the document has a main landmark",
+          "help": "Document should have one main landmark",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/landmark-one-main?application=axeAPI",
+          "tags": [
+            "cat.semantics",
+            "best-practice"
+          ],
+          "nodes": 1
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "help": "All page content should be contained by landmarks",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/region?application=axeAPI",
+          "tags": [
+            "cat.keyboard",
+            "best-practice"
+          ],
+          "nodes": 3
+        }
+      ],
+      "passes": 8,
+      "incomplete": 0,
+      "summary": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 2,
+        "minor": 0,
+        "total": 3
+      }
+    },
+    {
+      "page": "Kundenportal",
+      "url": "/kundenportal",
+      "status": "FAIL",
+      "violations": [
+        {
+          "id": "html-has-lang",
+          "impact": "serious",
+          "description": "Ensure every HTML document has a lang attribute",
+          "help": "<html> element must have a lang attribute",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/html-has-lang?application=axeAPI",
+          "tags": [
+            "cat.language",
+            "wcag2a",
+            "wcag311",
+            "TTv5",
+            "TT11.a",
+            "EN-301-549",
+            "EN-9.3.1.1",
+            "ACT"
+          ],
+          "nodes": 1
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "description": "Ensure the document has a main landmark",
+          "help": "Document should have one main landmark",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/landmark-one-main?application=axeAPI",
+          "tags": [
+            "cat.semantics",
+            "best-practice"
+          ],
+          "nodes": 1
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "help": "All page content should be contained by landmarks",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/region?application=axeAPI",
+          "tags": [
+            "cat.keyboard",
+            "best-practice"
+          ],
+          "nodes": 3
+        }
+      ],
+      "passes": 8,
+      "incomplete": 0,
+      "summary": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 2,
+        "minor": 0,
+        "total": 3
+      }
+    },
+    {
+      "page": "Archiv",
+      "url": "/archiv",
+      "status": "FAIL",
+      "violations": [
+        {
+          "id": "html-has-lang",
+          "impact": "serious",
+          "description": "Ensure every HTML document has a lang attribute",
+          "help": "<html> element must have a lang attribute",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/html-has-lang?application=axeAPI",
+          "tags": [
+            "cat.language",
+            "wcag2a",
+            "wcag311",
+            "TTv5",
+            "TT11.a",
+            "EN-301-549",
+            "EN-9.3.1.1",
+            "ACT"
+          ],
+          "nodes": 1
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "description": "Ensure the document has a main landmark",
+          "help": "Document should have one main landmark",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/landmark-one-main?application=axeAPI",
+          "tags": [
+            "cat.semantics",
+            "best-practice"
+          ],
+          "nodes": 1
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "help": "All page content should be contained by landmarks",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/region?application=axeAPI",
+          "tags": [
+            "cat.keyboard",
+            "best-practice"
+          ],
+          "nodes": 3
+        }
+      ],
+      "passes": 8,
+      "incomplete": 0,
+      "summary": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 2,
+        "minor": 0,
+        "total": 3
+      }
+    },
+    {
+      "page": "Vorbereitungsaufgaben",
+      "url": "/vorbereitungsaufgaben",
+      "status": "FAIL",
+      "violations": [
+        {
+          "id": "html-has-lang",
+          "impact": "serious",
+          "description": "Ensure every HTML document has a lang attribute",
+          "help": "<html> element must have a lang attribute",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/html-has-lang?application=axeAPI",
+          "tags": [
+            "cat.language",
+            "wcag2a",
+            "wcag311",
+            "TTv5",
+            "TT11.a",
+            "EN-301-549",
+            "EN-9.3.1.1",
+            "ACT"
+          ],
+          "nodes": 1
+        },
+        {
+          "id": "landmark-one-main",
+          "impact": "moderate",
+          "description": "Ensure the document has a main landmark",
+          "help": "Document should have one main landmark",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/landmark-one-main?application=axeAPI",
+          "tags": [
+            "cat.semantics",
+            "best-practice"
+          ],
+          "nodes": 1
+        },
+        {
+          "id": "region",
+          "impact": "moderate",
+          "description": "Ensure all page content is contained by landmarks",
+          "help": "All page content should be contained by landmarks",
+          "helpUrl": "https://dequeuniversity.com/rules/axe/4.10/region?application=axeAPI",
+          "tags": [
+            "cat.keyboard",
+            "best-practice"
+          ],
+          "nodes": 3
+        }
+      ],
+      "passes": 8,
+      "incomplete": 0,
+      "summary": {
+        "critical": 0,
+        "serious": 1,
+        "moderate": 2,
+        "minor": 0,
+        "total": 3
+      }
+    }
+  ],
+  "performance": [
+    {
+      "page": "Dashboard",
+      "url": "/",
+      "domContentLoaded": 436.7000000476837,
+      "loadComplete": 443.2000000476837,
+      "fcp": 768,
+      "transferSize": 106067,
+      "domInteractive": 98.30000001192093,
+      "lcp": 0
+    },
+    {
+      "page": "Projekte",
+      "url": "/projekte",
+      "domContentLoaded": 457,
+      "loadComplete": 464.39999997615814,
+      "fcp": 712,
+      "transferSize": 106069,
+      "domInteractive": 107.80000001192093,
+      "lcp": 0
+    },
+    {
+      "page": "Immobilien",
+      "url": "/immobilien",
+      "domContentLoaded": 482.39999997615814,
+      "loadComplete": 489,
+      "fcp": 540,
+      "transferSize": 106068,
+      "domInteractive": 159.80000001192093,
+      "lcp": 0
+    },
+    {
+      "page": "Baustellen",
+      "url": "/baustellen",
+      "domContentLoaded": 524.3000000119209,
+      "loadComplete": 532.5999999642372,
+      "fcp": 604,
+      "transferSize": 106070,
+      "domInteractive": 112.30000001192093,
+      "lcp": 0
+    },
+    {
+      "page": "Unternehmen & Kontakte",
+      "url": "/kontakte",
+      "domContentLoaded": 422.80000001192093,
+      "loadComplete": 429.5,
+      "fcp": 480,
+      "transferSize": 106068,
+      "domInteractive": 97,
+      "lcp": 0
+    }
+  ],
+  "contrast": [
+    {
+      "page": "Dashboard",
+      "url": "/",
+      "contrast_violations": 0,
+      "contrast_passes": 1
+    },
+    {
+      "page": "Projekte",
+      "url": "/projekte",
+      "contrast_violations": 0,
+      "contrast_passes": 1
+    },
+    {
+      "page": "Immobilien",
+      "url": "/immobilien",
+      "contrast_violations": 0,
+      "contrast_passes": 1
+    },
+    {
+      "page": "Baustellen",
+      "url": "/baustellen",
+      "contrast_violations": 0,
+      "contrast_passes": 1
+    },
+    {
+      "page": "Unternehmen & Kontakte",
+      "url": "/kontakte",
+      "contrast_violations": 0,
+      "contrast_passes": 1
+    }
+  ],
+  "summary": {
+    "total_pages": 12,
+    "pages_pass": 0,
+    "pages_fail": 12,
+    "total_violations": 36,
+    "critical": 0,
+    "serious": 12,
+    "moderate": 24,
+    "minor": 0
+  }
+}

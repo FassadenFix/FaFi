@@ -1,0 +1,1107 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "./styles/tablet-responsive.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * DESIGN PHILOSOPHY: "Organic Flow" – Biophiles Dashboard-Design
+ * - Organische Formen, natürliche Übergänge, lebendige Oberflächen
+ * - Reflektiert FassadenFix' Nachhaltigkeits-Mission
+ * - Weiche Border-Radii (16-24px), großzügige Whitespace
+ * - Fließende Animationen (300-500ms ease-in-out)
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  
+  /* FassadenFix Brand Colors */
+  --ff-green: oklch(0.72 0.19 130);
+  --ff-green-dark: oklch(0.65 0.17 130);
+  --ff-green-light: oklch(0.78 0.15 130);
+  --ff-gray: oklch(0.42 0.01 240);
+  --ff-gray-light: oklch(0.52 0.01 240);
+}
+
+:root {
+  /* FassadenFix Primary: #77bc1f (Pantone 368 C) */
+  --primary: oklch(0.72 0.19 130);
+  --primary-foreground: oklch(1 0 0);
+  
+  /* FassadenFix Secondary: #4e5758 (Pantone 445 C) */
+  --sidebar-primary: oklch(0.72 0.19 130);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  
+  /* Chart colors using FassadenFix green palette */
+  --chart-1: oklch(0.78 0.15 130);
+  --chart-2: oklch(0.72 0.19 130);
+  --chart-3: oklch(0.65 0.17 130);
+  --chart-4: oklch(0.55 0.14 130);
+  --chart-5: oklch(0.45 0.12 130);
+  
+  /* MVP-Spec: 8px (Buttons), 12px (Cards) */
+  --radius: 0.75rem;
+  --radius-button: 0.5rem;
+  --radius-card: 0.75rem;
+  
+  /* Organic Flow: Warm, creamy background */
+  --background: oklch(0.995 0.002 90);
+  --foreground: oklch(0.42 0.01 240);
+  
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.42 0.01 240);
+  
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.42 0.01 240);
+  
+  --secondary: oklch(0.97 0.005 130);
+  --secondary-foreground: oklch(0.42 0.01 240);
+  
+  --muted: oklch(0.96 0.005 90);
+  --muted-foreground: oklch(0.52 0.01 240);
+  
+  --accent: oklch(0.92 0.04 130);
+  --accent-foreground: oklch(0.35 0.01 240);
+  
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0 0);
+  
+  --border: oklch(0.92 0.01 90);
+  --input: oklch(0.94 0.01 90);
+  --ring: oklch(0.72 0.19 130);
+  
+  /* Sidebar with FassadenFix gray */
+  --sidebar: oklch(0.42 0.01 240);
+  --sidebar-foreground: oklch(0.95 0 0);
+  --sidebar-accent: oklch(0.35 0.01 240);
+  --sidebar-accent-foreground: oklch(1 0 0);
+  --sidebar-border: oklch(0.35 0.01 240);
+  --sidebar-ring: oklch(0.72 0.19 130);
+}
+
+.dark {
+  --primary: oklch(0.72 0.19 130);
+  --primary-foreground: oklch(1 0 0);
+  --sidebar-primary: oklch(0.72 0.19 130);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --background: oklch(0.18 0.01 240);
+  --foreground: oklch(0.92 0 0);
+  --card: oklch(0.22 0.01 240);
+  --card-foreground: oklch(0.92 0 0);
+  --popover: oklch(0.22 0.01 240);
+  --popover-foreground: oklch(0.92 0 0);
+  --secondary: oklch(0.28 0.01 240);
+  --secondary-foreground: oklch(0.85 0 0);
+  --muted: oklch(0.30 0.01 240);
+  --muted-foreground: oklch(0.70 0.01 240);
+  --accent: oklch(0.32 0.02 130);
+  --accent-foreground: oklch(0.95 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --destructive-foreground: oklch(0.985 0 0);
+  --border: oklch(0.30 0.01 240);
+  --input: oklch(0.28 0.01 240);
+  --ring: oklch(0.72 0.19 130);
+  --chart-1: oklch(0.78 0.15 130);
+  --chart-2: oklch(0.72 0.19 130);
+  --chart-3: oklch(0.65 0.17 130);
+  --chart-4: oklch(0.55 0.14 130);
+  --chart-5: oklch(0.45 0.12 130);
+  --sidebar: oklch(0.22 0.01 240);
+  --sidebar-foreground: oklch(0.92 0 0);
+  --sidebar-accent: oklch(0.30 0.01 240);
+  --sidebar-accent-foreground: oklch(0.95 0 0);
+  --sidebar-border: oklch(0.30 0.01 240);
+  --sidebar-ring: oklch(0.72 0.19 130);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Raleway', sans-serif;
+  }
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [type="button"]:not(:disabled),
+  [type="submit"]:not(:disabled),
+  [type="reset"]:not(:disabled),
+  a[href],
+  select:not(:disabled),
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled) {
+    @apply cursor-pointer;
+  }
+  
+  /* Organic Flow Typography */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 700;
+  }
+  
+  h1 {
+    @apply text-3xl md:text-4xl leading-tight;
+  }
+  
+  h2 {
+    @apply text-2xl md:text-3xl leading-tight;
+  }
+  
+  h3 {
+    @apply text-xl md:text-2xl leading-snug;
+  }
+}
+
+@layer components {
+  .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .flex {
+    min-height: 0;
+    min-width: 0;
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      padding-left: 2rem;
+      padding-right: 2rem;
+      max-width: 1400px;
+    }
+  }
+  
+  /* Organic Flow: Floating cards with soft shadows */
+  /* MVP-Spec: 12px border-radius for cards */
+  .ff-card {
+    @apply bg-card;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(78, 87, 88, 0.08), 0 2px 8px rgba(78, 87, 88, 0.04);
+    transition: all 0.4s ease-in-out;
+  }
+  
+  .ff-card:hover {
+    box-shadow: 0 12px 48px rgba(78, 87, 88, 0.12), 0 4px 12px rgba(78, 87, 88, 0.06);
+    transform: translateY(-2px);
+  }
+  
+  /* Organic Flow: Smooth transitions */
+  .ff-transition {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  /* Organic Flow: Growing buttons */
+  .ff-button {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  .ff-button:hover {
+    transform: scale(1.02);
+  }
+  
+  /* Status colors */
+  .status-green {
+    color: #77bc1f;
+    background-color: rgba(119, 188, 31, 0.1);
+  }
+  
+  .status-yellow {
+    color: #f59e0b;
+    background-color: rgba(245, 158, 11, 0.1);
+  }
+  
+  .status-red {
+    color: #ef4444;
+    background-color: rgba(239, 68, 68, 0.1);
+  }
+  
+  /* Kanban column styling */
+  .kanban-column {
+    @apply bg-muted/50 rounded-2xl p-4;
+    min-height: 400px;
+  }
+  
+  /* Timeline styling */
+  .timeline-dot {
+    @apply w-4 h-4 rounded-full bg-primary;
+    box-shadow: 0 0 0 4px rgba(119, 188, 31, 0.2);
+  }
+  
+  .timeline-line {
+    @apply w-0.5 bg-primary/30;
+  }
+}
+
+/* Organic Flow: Fade-in animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease-out forwards;
+}
+
+/* Staggered animation delays */
+.animate-delay-100 { animation-delay: 100ms; }
+.animate-delay-200 { animation-delay: 200ms; }
+.animate-delay-300 { animation-delay: 300ms; }
+.animate-delay-400 { animation-delay: 400ms; }
+.animate-delay-500 { animation-delay: 500ms; }
+
+/* Pulse animation for active status */
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2s ease-in-out infinite;
+}
+
+
+/* ============================================
+   iPad / Tablet Responsive Optimierung
+   ============================================ */
+
+/* Touch-optimierte Mindestgrößen (44px nach Apple HIG) */
+@layer components {
+  /* Touch-friendly buttons */
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* iPad-optimierte Sidebar */
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .sidebar-tablet {
+      width: 80px;
+    }
+    
+    .sidebar-tablet .sidebar-label {
+      display: none;
+    }
+    
+    .sidebar-tablet .sidebar-icon {
+      margin: 0 auto;
+    }
+  }
+}
+
+/* iPad Portrait (768px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+  /* Größere Touch-Targets */
+  button, 
+  [role="button"],
+  a.nav-link,
+  .clickable {
+    min-height: 44px;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+  
+  /* Größere Abstände für Touch */
+  .space-y-3 {
+    --tw-space-y-reverse: 0;
+    margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));
+    margin-bottom: calc(1rem * var(--tw-space-y-reverse));
+  }
+  
+  /* Optimierte Kartengrößen */
+  .ff-card {
+    padding: 1.25rem;
+  }
+  
+  /* Größere Icons */
+  .icon-tablet {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+/* iPad Landscape (1024px) */
+@media (min-width: 1024px) and (max-width: 1366px) {
+  /* Optimierte Grid-Layouts */
+  .grid-cols-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  
+  .grid-cols-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  
+  /* Sidebar bleibt sichtbar */
+  .sidebar-desktop {
+    width: 280px;
+  }
+}
+
+/* iPad Pro (1366px+) */
+@media (min-width: 1366px) {
+  .container {
+    max-width: 1400px;
+  }
+  
+  /* Volle Grid-Layouts */
+  .grid-cols-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Swipe-Gesten Unterstützung */
+@layer utilities {
+  .swipe-container {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  
+  .swipe-container::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .swipe-item {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+  }
+}
+
+/* Landscape/Portrait Anpassungen */
+@media (orientation: portrait) {
+  /* Vertikale Layouts bevorzugen */
+  .flex-tablet-col {
+    flex-direction: column;
+  }
+  
+  /* Vollbreite Karten */
+  .card-portrait-full {
+    width: 100%;
+  }
+}
+
+@media (orientation: landscape) {
+  /* Horizontale Layouts */
+  .flex-tablet-row {
+    flex-direction: row;
+  }
+  
+  /* Sidebar immer sichtbar */
+  .sidebar-landscape {
+    display: flex;
+  }
+}
+
+/* Hover-States nur für Geräte mit Maus */
+@media (hover: hover) and (pointer: fine) {
+  .ff-card:hover {
+    transform: translateY(-2px);
+  }
+  
+  .ff-button:hover {
+    transform: scale(1.02);
+  }
+}
+
+/* Touch-Geräte: Kein Hover-Transform */
+@media (hover: none) and (pointer: coarse) {
+  .ff-card:hover {
+    transform: none;
+  }
+  
+  .ff-button:hover {
+    transform: none;
+  }
+  
+  /* Aktiver Zustand statt Hover */
+  .ff-card:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+  
+  .ff-button:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+  }
+}
+
+/* Safe Area für Notch-Geräte */
+@supports (padding: max(0px)) {
+  .safe-area-inset {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+}
+
+/* Optimierte Schriftgrößen für Tablets */
+@media (min-width: 768px) and (max-width: 1366px) {
+  html {
+    font-size: 17px;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+  }
+  
+  h3 {
+    font-size: 1.25rem;
+  }
+}
+
+/* Drag-and-Drop Touch-Optimierung */
+.draggable-touch {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.dragging {
+  opacity: 0.8;
+  transform: scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+.drop-target {
+  border: 2px dashed #77bc1f;
+  background-color: rgba(119, 188, 31, 0.05);
+}
+
+
+/* ============================================
+   Handwerker-optimierte Styles
+   Zielgruppe: Praktiker, 25-50 Jahre
+   Fokus: Große Buttons, klare Hierarchie
+   ============================================ */
+
+@layer components {
+  /* Große, eindeutige Primär-Buttons */
+  .btn-handwerker {
+    @apply font-bold text-base;
+    min-height: 52px;
+    padding: 0.875rem 1.5rem;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-handwerker:active {
+    transform: scale(0.97);
+  }
+  
+  /* Erfolgs-Button (Grün) - für "Fertig", "Speichern" */
+  .btn-success {
+    @apply bg-primary text-white font-bold;
+    min-height: 52px;
+    padding: 0.875rem 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(119, 188, 31, 0.3);
+  }
+  
+  .btn-success:hover {
+    box-shadow: 0 6px 16px rgba(119, 188, 31, 0.4);
+  }
+  
+  .btn-success:active {
+    transform: scale(0.97);
+  }
+  
+  /* Gefahr-Button (Rot) - für "Löschen", "Abbrechen" */
+  .btn-danger {
+    @apply bg-destructive text-white font-bold;
+    min-height: 52px;
+    padding: 0.875rem 1.5rem;
+    border-radius: 10px;
+  }
+  
+  /* Große Eingabefelder */
+  .input-handwerker {
+    @apply text-base;
+    min-height: 52px;
+    padding: 0.875rem 1rem;
+    border-radius: 10px;
+    border-width: 2px;
+  }
+  
+  .input-handwerker:focus {
+    border-color: #77bc1f;
+    box-shadow: 0 0 0 3px rgba(119, 188, 31, 0.2);
+  }
+  
+  /* Klare Status-Badges */
+  .badge-status {
+    @apply font-bold text-sm uppercase tracking-wide;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+  }
+  
+  .badge-ok {
+    @apply bg-primary/15 text-primary;
+  }
+  
+  .badge-warnung {
+    @apply bg-amber-100 text-amber-700;
+  }
+  
+  .badge-dringend {
+    @apply bg-red-100 text-red-700;
+  }
+  
+  /* Große Karten mit klarer Hierarchie */
+  .card-handwerker {
+    @apply bg-card;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 20px rgba(78, 87, 88, 0.08);
+  }
+  
+  .card-handwerker-title {
+    @apply text-xl font-bold mb-4;
+    color: #4e5758;
+  }
+  
+  /* Große Touch-Targets für Listen */
+  .list-item-touch {
+    min-height: 64px;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .list-item-touch:active {
+    background-color: rgba(119, 188, 31, 0.1);
+  }
+  
+  /* Klare Trennlinien */
+  .divider-clear {
+    height: 2px;
+    background: linear-gradient(to right, transparent, #e5e7eb, transparent);
+    margin: 1.5rem 0;
+  }
+  
+  /* Große Icons für Aktionen */
+  .icon-action {
+    width: 28px;
+    height: 28px;
+    stroke-width: 2.5;
+  }
+  
+  /* Fortschrittsbalken mit klarer Anzeige */
+  .progress-handwerker {
+    height: 12px;
+    border-radius: 6px;
+    background-color: #e5e7eb;
+  }
+  
+  .progress-handwerker-fill {
+    height: 100%;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #77bc1f, #8fce3a);
+    transition: width 0.3s ease;
+  }
+  
+  /* Tabs mit großen Touch-Targets */
+  .tab-handwerker {
+    min-height: 48px;
+    padding: 0.75rem 1.25rem;
+    font-weight: 600;
+    border-radius: 10px 10px 0 0;
+  }
+  
+  .tab-handwerker.active {
+    background-color: #77bc1f;
+    color: white;
+  }
+  
+  /* Wizard-Schritte mit klarer Nummerierung */
+  .wizard-step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.125rem;
+  }
+  
+  .wizard-step-number.active {
+    background-color: #77bc1f;
+    color: white;
+  }
+  
+  .wizard-step-number.completed {
+    background-color: #77bc1f;
+    color: white;
+  }
+  
+  .wizard-step-number.pending {
+    background-color: #e5e7eb;
+    color: #9ca3af;
+  }
+}
+
+/* Animations für Feedback */
+@keyframes success-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(119, 188, 31, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(119, 188, 31, 0);
+  }
+}
+
+.animate-success {
+  animation: success-pulse 0.6s ease-out;
+}
+
+/* Shake-Animation für Fehler */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.animate-shake {
+  animation: shake 0.3s ease-in-out;
+}
+
+
+/* ============================================
+   Mobile-Optimierung (Phase 2.1)
+   Bottom Navigation, Safe Areas, Responsive Tables
+   ============================================ */
+
+/* Safe Area für Bottom Navigation */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Platz für Bottom Navigation auf Mobile */
+@media (max-width: 767px) {
+  .main-content-mobile {
+    padding-bottom: 5rem;
+  }
+  
+  /* Responsive Tabellen auf Mobile */
+  .table-responsive {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  .table-responsive table {
+    min-width: 600px;
+  }
+  
+  /* Card-View statt Tabelle auf sehr kleinen Screens */
+  @media (max-width: 480px) {
+    .hide-on-mobile {
+      display: none;
+    }
+    
+    .show-on-mobile {
+      display: block;
+    }
+  }
+  
+  /* Wizard auf Mobile: Vollbild */
+  .wizard-mobile-fullscreen {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    background: var(--background);
+    overflow-y: auto;
+  }
+  
+  /* Wizard Steps auf Mobile: Horizontal scrollbar */
+  .wizard-steps-mobile {
+    display: flex;
+    overflow-x: auto;
+    gap: 0.5rem;
+    padding: 1rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  
+  .wizard-steps-mobile::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Größere Buttons auf Mobile */
+  .btn-mobile {
+    min-height: 48px;
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem;
+  }
+  
+  /* Vollbreite Inputs auf Mobile */
+  .input-mobile-full {
+    width: 100%;
+  }
+}
+
+/* Tablet-spezifische Anpassungen */
+@media (min-width: 768px) and (max-width: 1024px) {
+  /* 2-Spalten-Grid für Tablets */
+  .grid-tablet-2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  /* Sidebar auf Tablet: Kompakt */
+  .sidebar-tablet-compact {
+    width: 72px;
+  }
+  
+  .sidebar-tablet-compact .nav-label {
+    display: none;
+  }
+  
+  /* Dialog auf Tablet: 80% Breite */
+  .dialog-tablet {
+    max-width: 80vw;
+  }
+}
+
+/* Landscape-Modus Optimierungen */
+@media (orientation: landscape) and (max-height: 500px) {
+  /* Kompaktere Header in Landscape */
+  .header-compact {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  
+  /* Wizard: Side-by-Side Layout */
+  .wizard-landscape {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+}
+
+/* Print-Optimierung */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  .print-full-width {
+    width: 100% !important;
+    max-width: none !important;
+  }
+  
+  /* Keine Schatten im Druck */
+  .ff-card {
+    box-shadow: none;
+    border: 1px solid #e5e7eb;
+  }
+}
+
+
+/* ============================================
+   v3.7 - Erweiterte iPad-Touch-Optimierungen
+   Wizard-spezifische Touch-Targets
+   ============================================ */
+
+@layer components {
+  /* Wizard-Schritte mit größeren Touch-Targets */
+  .wizard-step-touch {
+    min-height: 56px;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.2s ease;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .wizard-step-touch:active {
+    transform: scale(0.98);
+    background-color: rgba(119, 188, 31, 0.1);
+  }
+  
+  /* Große Checkboxen für Wizard */
+  .checkbox-touch {
+    width: 28px !important;
+    height: 28px !important;
+    border-radius: 6px !important;
+  }
+  
+  .checkbox-touch [data-state="checked"] {
+    background-color: #77bc1f;
+  }
+  
+  /* Große Select-Trigger für Wizard */
+  .select-touch {
+    min-height: 52px;
+    font-size: 1rem;
+    padding: 0.875rem 1rem;
+    border-radius: 10px;
+    border-width: 2px;
+  }
+  
+  .select-touch:focus {
+    border-color: #77bc1f;
+    box-shadow: 0 0 0 3px rgba(119, 188, 31, 0.2);
+  }
+  
+  /* Große Select-Items */
+  .select-item-touch {
+    min-height: 48px;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+  
+  /* Wizard Navigation Buttons */
+  .wizard-nav-btn {
+    min-height: 52px;
+    min-width: 120px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 10px;
+    transition: all 0.2s ease;
+    touch-action: manipulation;
+  }
+  
+  .wizard-nav-btn:active {
+    transform: scale(0.97);
+  }
+  
+  /* Fertig-Button (Extra groß) */
+  .wizard-finish-btn {
+    min-height: 56px;
+    min-width: 160px;
+    font-size: 1.125rem;
+    font-weight: 700;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #77bc1f 0%, #6aa91b 100%);
+    box-shadow: 0 4px 16px rgba(119, 188, 31, 0.3);
+    transition: all 0.2s ease;
+    touch-action: manipulation;
+  }
+  
+  .wizard-finish-btn:hover {
+    box-shadow: 0 6px 20px rgba(119, 188, 31, 0.4);
+  }
+  
+  .wizard-finish-btn:active {
+    transform: scale(0.97);
+  }
+  
+  /* Accordion Touch-Optimierung */
+  .accordion-touch [data-state] {
+    min-height: 56px;
+    padding: 1rem 1.25rem;
+  }
+  
+  /* Card-Actions mit Touch-Targets */
+  .card-action-touch {
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    touch-action: manipulation;
+  }
+  
+  .card-action-touch:active {
+    background-color: rgba(119, 188, 31, 0.1);
+    transform: scale(0.95);
+  }
+  
+  /* Multiselect-Items mit großen Touch-Targets */
+  .multiselect-item-touch {
+    min-height: 56px;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    touch-action: manipulation;
+    cursor: pointer;
+  }
+  
+  .multiselect-item-touch:active {
+    transform: scale(0.98);
+  }
+  
+  .multiselect-item-touch.selected {
+    border-color: #77bc1f;
+    background-color: rgba(119, 188, 31, 0.05);
+  }
+  
+  /* Input-Gruppen mit Touch-Optimierung */
+  .input-group-touch {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .input-group-touch label {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: #4e5758;
+  }
+  
+  .input-group-touch input,
+  .input-group-touch textarea {
+    min-height: 52px;
+    font-size: 1rem;
+    padding: 0.875rem 1rem;
+    border-radius: 10px;
+    border: 2px solid #e5e7eb;
+    transition: all 0.2s ease;
+  }
+  
+  .input-group-touch input:focus,
+  .input-group-touch textarea:focus {
+    border-color: #77bc1f;
+    box-shadow: 0 0 0 3px rgba(119, 188, 31, 0.2);
+    outline: none;
+  }
+  
+  /* Toggle/Switch mit größerem Touch-Target */
+  .switch-touch {
+    min-width: 52px;
+    min-height: 28px;
+    padding: 4px;
+  }
+  
+  .switch-touch [data-state="checked"] {
+    background-color: #77bc1f;
+  }
+  
+  /* Badge-Buttons (z.B. für Filter) */
+  .badge-btn-touch {
+    min-height: 40px;
+    padding: 0.5rem 1rem;
+    font-size: 0.9375rem;
+    border-radius: 20px;
+    transition: all 0.2s ease;
+    touch-action: manipulation;
+  }
+  
+  .badge-btn-touch:active {
+    transform: scale(0.95);
+  }
+  
+  .badge-btn-touch.active {
+    background-color: #77bc1f;
+    color: white;
+  }
+}
+
+/* iPad-spezifische Touch-Optimierungen */
+@media (min-width: 768px) and (max-width: 1366px) and (pointer: coarse) {
+  /* Alle interaktiven Elemente: Mindestgröße 44px */
+  button,
+  [role="button"],
+  a,
+  input[type="checkbox"],
+  input[type="radio"],
+  select,
+  .clickable {
+    min-height: 44px;
+  }
+  
+  /* Größere Abstände zwischen Touch-Elementen */
+  .space-y-2 {
+    gap: 0.75rem;
+  }
+  
+  .space-y-3 {
+    gap: 1rem;
+  }
+  
+  .space-y-4 {
+    gap: 1.25rem;
+  }
+  
+  /* Größere Schrift für bessere Lesbarkeit */
+  .text-sm {
+    font-size: 0.9375rem;
+  }
+  
+  .text-xs {
+    font-size: 0.8125rem;
+  }
+  
+  /* Wizard-spezifisch */
+  .wizard-content {
+    padding: 1.5rem;
+  }
+  
+  .wizard-footer {
+    padding: 1rem 1.5rem;
+    gap: 1rem;
+  }
+}
