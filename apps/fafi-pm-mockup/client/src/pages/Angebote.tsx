@@ -182,8 +182,10 @@ export default function Angebote() {
   };
 
   const handleGeneratePDF = (offerId: number) => {
+    // Öffne das PDF in einem neuen Tab (Server-seitige Generierung mit Briefbogen)
+    window.open(`/api/pdf/offer/${offerId}`, '_blank');
     toast.success("PDF wird generiert...", {
-      description: "Das Angebot wird als PDF erstellt.",
+      description: "Das Angebot wird als PDF mit Briefbogen erstellt.",
     });
   };
 

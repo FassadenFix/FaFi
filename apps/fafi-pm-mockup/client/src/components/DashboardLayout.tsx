@@ -62,7 +62,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { Menu, X } from "lucide-react";
 import { toast } from "sonner";
 import NotificationDropdown from "@/components/NotificationDropdown";
@@ -433,6 +433,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="w-72 p-0 bg-sidebar text-sidebar-foreground border-0">
+            <SheetHeader className="sr-only">
+              <SheetTitle>Navigation</SheetTitle>
+              <SheetDescription>Hauptnavigation der Anwendung</SheetDescription>
+            </SheetHeader>
             <SidebarContent />
           </SheetContent>
         </Sheet>

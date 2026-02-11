@@ -1584,7 +1584,7 @@
 - [ ] KA-34: Finanzen-Modul: Umsätze aus Aufträgen/Rechnungen aggregieren statt erfundene Zahlen
 - [x] KA-35: Einsatzplanung: 23 aktive Employees aus DB geladen (umgesetzt als EP-01 bis EP-05)
 - [x] KA-36: Ressourcenplaner: Team-Mitglieder aus DB geladen (umgesetzt als RS-01 bis RS-04)
-- [ ] KA-37: PDF-Entwürfe: tRPC-Anbindung implementieren (aktuell komplett ohne Backend)
+- [x] KA-37: PDF-Entwürfe: Server-seitige PDF-Generierung mit echtem Briefbogen als Hintergrund (pdf-lib + Raleway-Fonts)
 - [ ] KA-38: CustomerPortal: Echte Projektdaten statt Mock-Projekt "Sonnenhof"
 
 
@@ -1690,3 +1690,21 @@
 - [x] HR-DK-02: Mitarbeiter-Seite: DashboardLayout hinzugefügt – 30 MA mit Filter/Sortierung, konsistentes Layout
 - [x] HR-DK-03: HR Dokumente: DashboardLayout hinzugefügt – 113 Dokumente in 9 Kategorien, konsistentes Layout
 - [ ] HR-DK-04: GitHub-Export: Aktuellen Stand ins FassadenFix/FaFi-Repository pushen
+
+---
+
+## KA-37 – PDF-Generierung mit echtem Briefbogen als Hintergrund
+
+### Intention: Professionelle, druckfertige PDFs die exakt dem Corporate Design entsprechen, weil der echte Briefbogen als Hintergrund dient – kein Nachbauen nötig.
+
+- [x] KA-37-01: Briefbogen-PDF als Server-Asset eingebunden (FF_Briefbogen.pdf in server/services/)
+- [x] KA-37-02: pdf-lib + @pdf-lib/fontkit installiert, Raleway-Fonts (Regular, SemiBold, Bold) eingebettet
+- [x] KA-37-03: Angebots-PDF Template – Adressblock, Metadaten, Positionen, Nebenkosten, Summen, Störer, Bedingungen
+- [x] KA-37-04: Rechnungs-PDF Template – Rechnungsdaten, Positionen, Summen, Zahlungsinformationen
+- [x] KA-37-05: Express-Endpunkte /api/pdf/offer/:id und /api/pdf/invoice/:id mit DB-Daten-Transformation
+- [x] KA-37-06: Frontend-Download-Buttons in Angebote.tsx, Rechnungen.tsx und RechnungDetail.tsx
+- [x] KA-37-07: Mehrseitige PDFs – automatischer Seitenumbruch bei langen Positionslisten implementiert
+- [x] KA-37-08: 12 Vitest-Tests für PDF-Generierung (Angebot + Rechnung, mit/ohne Positionen, Rabatt, Nebenkosten, alle Rechnungstypen)
+- [ ] KA-37-09: PDFEntwuerfe-Seite aktualisieren mit Live-Vorschau der generierten PDFs (ausstehend)
+
+- [x] BUG-FIX: DialogContent ohne DialogTitle auf Dashboard (/) – Accessibility-Fehler in Radix UI (SheetContent in DashboardLayout fehlte SheetTitle)

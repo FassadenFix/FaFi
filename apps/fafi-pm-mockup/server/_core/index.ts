@@ -244,6 +244,42 @@ async function startServer() {
       res.status(500).json({ error: "Photo upload failed" });
     }
   });
+
+  // ============================================
+  // PDF-Download-Endpunkte (Briefbogen-basiert)
+  // ============================================
+  app.get("/api/pdf/offer/:id", async (req, res) => {
+    try {
+      const { generateOfferPdfFromDb } = await import("../services/pdfRouteHandler");
+      const pdfBytes = await generateOfferPdfFromDb(parseInt(req.params.id));
+      if (!pdfBytes) {
+        return res.status(404).json({ error: "Angebot nicht gefunden" });
+      }
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", `inline; filename="Angebot-${req.params.id}.pdf"`);
+      res.send(Buffer.from(pdfBytes));
+    } catch (error) {
+      console.error("[PDF] Angebots-PDF Fehler:", error);
+      res.status(500).json({ error: "PDF-Generierung fehlgeschlagen" });
+    }
+  });
+
+  app.get("/api/pdf/invoice/:id", async (req, res) => {
+    try {
+      const { generateInvoicePdfFromDb } = await import("../services/pdfRouteHandler");
+      const pdfBytes = await generateInvoicePdfFromDb(parseInt(req.params.id));
+      if (!pdfBytes) {
+        return res.status(404).json({ error: "Rechnung nicht gefunden" });
+      }
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", `inline; filename="Rechnung-${req.params.id}.pdf"`);
+      res.send(Buffer.from(pdfBytes));
+    } catch (error) {
+      console.error("[PDF] Rechnungs-PDF Fehler:", error);
+      res.status(500).json({ error: "PDF-Generierung fehlgeschlagen" });
+    }
+  });
+
   // tRPC API
   app.use(
     "/api/trpc",

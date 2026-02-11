@@ -361,7 +361,11 @@ export default function Rechnungen() {
                                 <Eye className="w-4 h-4 mr-2" />
                                 Details anzeigen
                               </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => toast.info("PDF herunterladen - Funktion in Entwicklung")}>
+                              <DropdownMenuItem onClick={(e) => {
+                                e.stopPropagation();
+                                window.open(`/api/pdf/invoice/${invoice.id}`, '_blank');
+                                toast.success("PDF wird generiert...");
+                              }}>
                                 <Download className="w-4 h-4 mr-2" />
                                 PDF herunterladen
                               </DropdownMenuItem>
@@ -475,7 +479,12 @@ export default function Rechnungen() {
               <Button variant="outline" onClick={() => setIsDetailOpen(false)}>
                 Schließen
               </Button>
-              <Button variant="outline" onClick={() => toast.info("PDF herunterladen - Funktion in Entwicklung")}>
+              <Button variant="outline" onClick={() => {
+                if (selectedInvoice) {
+                  window.open(`/api/pdf/invoice/${selectedInvoice.id}`, '_blank');
+                  toast.success("PDF wird generiert...");
+                }
+              }}>
                 <Download className="w-4 h-4 mr-2" />
                 PDF
               </Button>

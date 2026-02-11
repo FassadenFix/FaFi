@@ -207,43 +207,11 @@ export default function RechnungDetail() {
           </div>
           <div className="flex gap-2">
             <Button variant="outline" className="gap-2" onClick={() => {
-              // Prepare invoice data for PDF
-              const pdfData: RechnungData = {
-                rechnungNummer: invoice.invoiceNumber || "",
-                auftragNummer: order?.orderNumber,
-                datum: formatDate(invoice.invoiceDate),
-                faelligBis: formatDate(invoice.dueDate),
-                rechnungsTyp: invoice.invoiceType || "schlussrechnung",
-                firma: company?.name || "Unbekannt",
-                ansprechpartner: contact ? `${contact.firstName} ${contact.lastName}` : "",
-                strasse: company?.street || "",
-                plz: company?.postalCode || "",
-                ort: company?.city || "",
-                ffAnsprechpartner: "Alexander Retzlaff",
-                ffEmail: "info@fassadenfix.de",
-                ffTelefon: "0345 218392 35",
-                positionen: [
-                  {
-                    pos: 1,
-                    menge: "1",
-                    bezeichnung: invoice.notes || "FassadenFix Systemreinigung",
-                    einzelpreis: parseFloat(invoice.netTotal || "0"),
-                    gesamt: parseFloat(invoice.netTotal || "0"),
-                  },
-                ],
-                nettobetrag: parseFloat(invoice.netTotal || "0"),
-                mwst: parseFloat(invoice.vatAmount || "0"),
-                gesamtsumme: parseFloat(invoice.grossTotal || "0"),
-                zahlungsziel: "7 Tage netto",
-                bankverbindung: {
-                  bank: "Sparkasse Halle",
-                  iban: "DE89 8005 3762 0123 4567 89",
-                  bic: "NOLADE21HAL",
-                },
-                projektName: order?.orderNumber,
-              };
-              generateRechnungPDF(pdfData);
-              toast.success("PDF wird heruntergeladen...");
+              // Server-seitige PDF-Generierung mit Briefbogen
+              window.open(`/api/pdf/invoice/${invoice.id}`, '_blank');
+              toast.success("PDF wird generiert...", {
+                description: "Die Rechnung wird als PDF mit Briefbogen erstellt.",
+              });
             }}>
               <Download className="w-4 h-4" />
               PDF
