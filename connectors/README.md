@@ -24,6 +24,8 @@ Die Konnektoren wurden auf Basis einer umfassenden Analyse der Systemlandschaft 
 
 > "Wie bei allen FassadenFix-Lösungen steht Qualität und Transparenz im Vordergrund."
 
+> "Wie bei allen FassadenFix-Lösungen steht Qualität und Transparenz im Vordergrund."
+
 ---
 
 ## Funktionen
