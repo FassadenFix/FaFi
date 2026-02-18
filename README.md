@@ -34,21 +34,33 @@
 
 ### Voraussetzungen
 
-- [Voraussetzung 1, z.B. Node.js >= 18]
-- [Voraussetzung 2, z.B. Python 3.11+]
+- Python 3.8+
+- Git
+- pip
 
 ### Schnellstart
 
 ```bash
+# Automatische Installation
+curl -fsSL https://raw.githubusercontent.com/FassadenFix/FaFi/main/install.sh | bash
+```
+
+Oder manuell:
+
+```bash
 # Repository klonen
-git clone https://github.com/FassadenFix/fafi.git
-cd fafi
+git clone https://github.com/FassadenFix/FaFi.git
+cd FaFi
+
+# Virtual Environment erstellen & aktivieren
+python3 -m venv .venv
+source .venv/bin/activate
 
 # Abhängigkeiten installieren
-[Installationsbefehl]
+pip install -r requirements.txt
 
-# Projekt starten
-[Startbefehl]
+# API-Server starten
+python adapters/api_server.py
 ```
 
 ---
