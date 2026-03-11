@@ -1,0 +1,1 @@
+ALTER TABLE `contacts` ADD `isOrphaned` boolean DEFAULT false;

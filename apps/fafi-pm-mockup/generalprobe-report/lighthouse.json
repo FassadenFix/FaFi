@@ -1,0 +1,14 @@
+{
+  "timestamp": "2026-02-09T11:05:14.891748",
+  "url": "https://3000-iw76jxpuc8j7t75j3zzt0-e0cdebba.us2.manus.computer",
+  "threshold": 70,
+  "results": {
+    "mobile": {
+      "error": "Lighthouse-Ausführung fehlgeschlagen"
+    },
+    "desktop": {
+      "error": "Lighthouse-Ausführung fehlgeschlagen"
+    }
+  },
+  "overall": "FAIL"
+}

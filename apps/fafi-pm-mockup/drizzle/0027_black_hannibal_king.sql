@@ -1,0 +1,2 @@
+ALTER TABLE `activityLogs` MODIFY COLUMN `action` enum('created','updated','deleted','sent','synced','status_changed','assigned','completed','uploaded','downloaded','login','logout','deactivated') NOT NULL;--> statement-breakpoint
+ALTER TABLE `activityLogs` MODIFY COLUMN `entityType` enum('project','property','construction_site','offer','company','contact','task','user','hubspot','system','document','library_vehicle','library_equipment','library_cleaning_agent','library_discount','library_service','library_work_clothing','library_asset') NOT NULL;

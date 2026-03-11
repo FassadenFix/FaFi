@@ -1,0 +1,1 @@
+ALTER TABLE `activityLogs` MODIFY COLUMN `entityType` enum('project','property','construction_site','offer','company','contact','task','user','hubspot','system','document') NOT NULL;
